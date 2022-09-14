@@ -1,0 +1,41 @@
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header__logoContainer {
+  cursor: pointer;
+}
+
+.header__logo {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 26px;
+  line-height: 31px;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.logo__red {
+  color: #e10000;
+}
+
+.header__subline {
+  font-style: normal;
+  font-weight: 100;
+  font-size: 10px;
+  line-height: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.header__mobileMenu {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  background: url('/images/icon_burger.svg') center no-repeat;
+}
