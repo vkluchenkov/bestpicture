@@ -37,5 +37,6 @@
   cursor: pointer;
   width: 44px;
   height: 44px;
+  margin: 0 -8px 0 0;
   background: url('/images/icon_burger.svg') center no-repeat;
 }
