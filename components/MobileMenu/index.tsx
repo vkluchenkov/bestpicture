@@ -8,10 +8,11 @@ import { useEffect } from "react";
 export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
 
-  useEffect(() => {
-    if (isOpen) document.body.classList.add("no-scroll");
-    return () => document.body.classList.remove("no-scroll");
-  }, [isOpen]);
+  // Blocking body scroll when menu visible
+  // useEffect(() => {
+  //   if (isOpen) document.body.classList.add("no-scroll");
+  //   return () => document.body.classList.remove("no-scroll");
+  // }, [isOpen]);
 
   const renderMenu = menu.map((item, index) => {
     return (

@@ -18,7 +18,7 @@ export const menu: Menu[] = [
     link: "/2020",
   },
   {
-    name: "Older videos",
+    name: "Older events",
     link: "/older",
   },
 ];
