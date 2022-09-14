@@ -8,6 +8,10 @@ import { useEffect } from "react";
 export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
 
+  const handleClose = async () => {
+    await setTimeout(() => {}, 1000);
+    onClose();
+  };
   // Blocking body scroll when menu visible
   // useEffect(() => {
   //   if (isOpen) document.body.classList.add("no-scroll");
@@ -24,7 +28,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                 ? `${styles.mobileMenu__item} ${styles.mobileMenu__item_active}`
                 : styles.mobileMenu__item
             }
-            onClick={onClose}
+            onClick={handleClose}
           >
             {item.name}
           </a>
@@ -50,7 +54,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                   ? `${styles.mobileMenu__item} ${styles.mobileMenu__item_active}`
                   : styles.mobileMenu__item
               }
-              onClick={onClose}
+              onClick={handleClose}
             >
               Home
             </a>
@@ -61,7 +65,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
       <button
         type="button"
         className={styles.mobileMenu__close}
-        onClick={onClose}
+        onClick={handleClose}
       ></button>
     </nav>
   );

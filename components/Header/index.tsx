@@ -18,15 +18,17 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <header className={styles.header}>
-      <div className={styles.header__logoContainer}>
-        <div className={styles.header__logo}>
-          <span className={styles.logo__red}>best</span>picture.pro
+    <>
+      <header className={styles.header}>
+        <div className={styles.header__logoContainer}>
+          <div className={styles.header__logo}>
+            <span className={styles.logo__red}>best</span>picture.pro
+          </div>
+          <p className={styles.header__subline}>event videos from Vladimir Kluchenkov</p>
         </div>
-        <p className={styles.header__subline}>event videos from Vladimir Kluchenkov</p>
-      </div>
-      <button type='button' className={styles.header__mobileMenu} onClick={openMenu} />
+        <button type='button' className={styles.header__mobileMenu} onClick={openMenu} />
+      </header>
       <MobileMenu isOpen={isMenuOpen} onClose={closeMenu} />
-    </header>
+    </>
   );
 };

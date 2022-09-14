@@ -1,18 +1,23 @@
 .mobileMenu {
-  display: none;
+  display: flex;
+  justify-content: flex-end;
+
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 100vh;
+  overflow: hidden;
+
   backdrop-filter: blur(10px);
   background: rgba(22, 22, 22, 0.8);
+  z-index: 99;
+
+  transition: all 0.3s ease-in-out;
 }
 
 .mobileMenu_open {
-  display: flex;
-  justify-content: flex-end;
-  z-index: 99;
+  bottom: 0;
 }
 
 .mobileMenu__items {
