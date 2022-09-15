@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { MobileMenu } from '../MobileMenu';
 import styles from './Header.module.css';
@@ -20,12 +21,14 @@ export const Header: React.FC = () => {
   return (
     <>
       <header className={styles.header}>
-        <div className={styles.header__logoContainer}>
-          <div className={styles.header__logo}>
-            <span className={styles.logo__red}>best</span>picture.pro
+        <Link href={'/'}>
+          <div className={styles.header__logoContainer}>
+            <div className={styles.header__logo}>
+              <span className={styles.logo__red}>best</span>picture.pro
+            </div>
+            <p className={styles.header__subline}>event videos from Vladimir Kluchenkov</p>
           </div>
-          <p className={styles.header__subline}>event videos from Vladimir Kluchenkov</p>
-        </div>
+        </Link>
         <button type='button' className={styles.header__mobileMenu} onClick={openMenu} />
       </header>
       <MobileMenu isOpen={isMenuOpen} onClose={closeMenu} />
