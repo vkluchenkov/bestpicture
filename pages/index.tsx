@@ -15,8 +15,10 @@ import {
   WINDOW_SIZE_EXTRALARGE,
   INITIAL_CARDS_LARGE,
   INITIAL_CARDS_EXTRALARGE,
+  backendUrl,
 } from '../utils/constants';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 const Home: NextPage<HomeProps> = ({ productCategories }) => {
   const [CardsQty, setCardsQty] = useState(INITIAL_CARDS_SMALL);
@@ -42,9 +44,9 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const categoryCards = productCategories.map(
-    (c, index) => index <= CardsQty - 1 && <CategoryCard key={c.id} productCategory={c} />
-  );
+  const categoryCards = productCategories.map((c, index) => {
+    if (index <= CardsQty - 1) return <CategoryCard productCategory={c} key={c.id} />;
+  });
 
   return (
     <>

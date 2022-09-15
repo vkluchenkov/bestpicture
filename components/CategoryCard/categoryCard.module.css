@@ -5,6 +5,7 @@
   background-color: #161616;
   overflow: hidden;
   padding: 0 0 11px;
+  cursor: pointer;
 }
 
 .imageWrapper {

@@ -2,24 +2,26 @@ interface Menu {
   name: string;
   link: string;
 }
+// With trailng slash!
+export const backendUrl = 'https://www.bestpicture.pro/';
 
 // TMP menu
 export const menu: Menu[] = [
   {
     name: '2022',
-    link: '/2022',
+    link: '/videos/2022',
   },
   {
     name: '2021',
-    link: '/2021',
+    link: '/videos/2021',
   },
   {
     name: '2020',
-    link: '/2020',
+    link: '/videos/2020',
   },
   {
     name: 'Older events',
-    link: '/older',
+    link: '/videos/older',
   },
 ];
 
