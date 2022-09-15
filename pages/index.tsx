@@ -1,8 +1,8 @@
 import type { GetStaticProps, NextPage } from 'next';
-import { client } from '../api';
 import { gql } from '@apollo/client';
 import styles from '../styles/Home.module.css';
 import Head from 'next/head';
+import { initializeApollo, addApolloState } from '../utils/apolloClient';
 
 import { ProductCategory, HomeProps } from '../types/home.types';
 import { CategoryCard } from '../components/CategoryCard';
@@ -15,26 +15,29 @@ import {
   WINDOW_SIZE_EXTRALARGE,
   INITIAL_CARDS_LARGE,
   INITIAL_CARDS_EXTRALARGE,
-  backendUrl,
 } from '../utils/constants';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 
 const Home: NextPage<HomeProps> = ({ productCategories }) => {
-  const [CardsQty, setCardsQty] = useState(INITIAL_CARDS_SMALL);
+  const [cardsQty, setCardsQty] = useState(INITIAL_CARDS_SMALL);
+  const [largeCardsQty, setLargeCardsQty] = useState(0);
 
   const handleResize = () => {
     if (window.innerWidth < WINDOW_SIZE_MEDIUM) {
       setCardsQty(INITIAL_CARDS_SMALL);
+      setLargeCardsQty(0);
     }
     if (window.innerWidth >= WINDOW_SIZE_MEDIUM && window.innerWidth < WINDOW_SIZE_LARGE) {
       setCardsQty(INITIAL_CARDS_MEDIUM);
+      setLargeCardsQty(1);
     }
     if (window.innerWidth >= WINDOW_SIZE_LARGE && window.innerWidth < WINDOW_SIZE_EXTRALARGE) {
       setCardsQty(INITIAL_CARDS_LARGE);
+      setLargeCardsQty(2);
     }
     if (window.innerWidth >= WINDOW_SIZE_EXTRALARGE) {
       setCardsQty(INITIAL_CARDS_EXTRALARGE);
+      setLargeCardsQty(2);
     }
   };
 
@@ -45,7 +48,20 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
   }, []);
 
   const categoryCards = productCategories.map((c, index) => {
-    if (index <= CardsQty - 1) return <CategoryCard productCategory={c} key={c.id} />;
+    if (index <= cardsQty - 1) {
+      if (index <= largeCardsQty - 1)
+        return (
+          <div className={styles.card__large} key={c.id}>
+            <CategoryCard productCategory={c} />
+          </div>
+        );
+      else
+        return (
+          <div className={styles.card__small} key={c.id}>
+            <CategoryCard productCategory={c} />
+          </div>
+        );
+    }
   });
 
   return (
@@ -57,6 +73,8 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
+  const apolloClient = initializeApollo();
+
   const CATEGORIES = gql`
     query getCategories {
       productCategories(where: { childless: true, orderby: TERM_ORDER, order: DESC }) {
@@ -75,13 +93,13 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   `;
 
-  const { data } = await client.query({
+  const { data } = await apolloClient.query({
     query: CATEGORIES,
   });
 
   const productCategories: ProductCategory[] = data.productCategories.nodes;
 
-  return { props: { productCategories }, revalidate: 30 };
+  return addApolloState(apolloClient, { props: { productCategories }, revalidate: 30 });
 };
 
 export default Home;

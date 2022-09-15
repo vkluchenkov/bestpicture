@@ -14,3 +14,42 @@
   margin: 0;
   padding: 0 0 20px;
 }
+
+@media screen and (min-width: 768px) {
+  .cardsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .card__large {
+    grid-column: 1/-1;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .cardsContainer {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .card__large {
+    grid-column: span 3;
+  }
+  .card__small {
+    grid-column: span 2;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .cardsContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .card__large {
+    grid-column: span 2;
+  }
+  .card__small {
+    grid-column: span 1;
+  }
+}

@@ -28,7 +28,7 @@ export const menu: Menu[] = [
 // screen sizes for # of cards calculation
 export const WINDOW_SIZE_MEDIUM = 768;
 export const WINDOW_SIZE_LARGE = 1024;
-export const WINDOW_SIZE_EXTRALARGE = 1028;
+export const WINDOW_SIZE_EXTRALARGE = 1280;
 
 // # of cards for different screen sizes
 export const INITIAL_CARDS_SMALL = 6;
