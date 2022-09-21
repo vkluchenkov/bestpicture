@@ -77,7 +77,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const CATEGORIES = gql`
     query getCategories {
-      productCategories(where: { childless: true, orderby: TERM_ORDER, order: DESC }) {
+      productCategories(where: { childless: true, orderby: TERM_ORDER, order: DESC }, first: 14) {
         nodes {
           count
           name

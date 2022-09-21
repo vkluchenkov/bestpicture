@@ -21,7 +21,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({ productCategory, isL
           }
         >
           <Image
-            src={productCategory.image.small}
+            src={isLarge ? productCategory.image.large : productCategory.image.small}
             alt={productCategory.name}
             layout='fill'
             objectFit='cover'

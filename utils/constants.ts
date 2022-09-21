@@ -34,4 +34,4 @@ export const WINDOW_SIZE_EXTRALARGE = 1280;
 export const INITIAL_CARDS_SMALL = 6;
 export const INITIAL_CARDS_MEDIUM = 7;
 export const INITIAL_CARDS_LARGE = 8;
-export const INITIAL_CARDS_EXTRALARGE = 10;
+export const INITIAL_CARDS_EXTRALARGE = 14;

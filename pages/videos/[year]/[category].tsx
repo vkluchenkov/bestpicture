@@ -3,24 +3,22 @@ import { useRouter } from 'next/router';
 import { gql } from '@apollo/client';
 import { initializeApollo, addApolloState } from '../../../utils/apolloClient';
 import { CategoryProps, Product, ListCategory } from '../../../types/categoryListing.types';
+import styles from '../../../styles/Category.module.css';
+import { ProductCard } from '../../../components/ProductCard';
 
-const Category: NextPage<CategoryProps> = ({ products }) => {
+const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
   const router = useRouter();
-  const { category } = router.query;
 
-  const productsMap = products.map((p) => (
-    <div key={p.id}>
-      <p>{p.name}</p>
-      <p>{p.id}</p>
-    </div>
-  ));
+  const productsMap = products.map((p) => <ProductCard product={p} key={p.id} />);
 
   if (router.isFallback) return <div>Is Loading</div>;
 
   return (
     <>
-      {category}
-      {productsMap}
+      <h1 className={styles.title}>{categoryName}</h1>
+      <section className={styles.products__section}>
+        <ul className={styles.products}>{productsMap}</ul>
+      </section>
     </>
   );
 };
@@ -80,6 +78,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             large: sourceUrl
             small: sourceUrl(size: WOOCOMMERCE_SINGLE)
           }
+          ... on SimpleProduct {
+            price(format: RAW)
+          }
         }
       }
     }
@@ -94,7 +95,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     .slice()
     .sort((a: Product, b: Product) => a.menuOrder - b.menuOrder);
 
-  return addApolloState(apolloClient, { props: { products }, revalidate: 30 });
+  return addApolloState(apolloClient, {
+    props: { products, categoryName: data.productCategory.name },
+    // revalidate: 30,
+  });
 };
 
 export default Category;

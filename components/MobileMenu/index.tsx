@@ -25,7 +25,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
         <Link href={item.link}>
           <a
             className={
-              router.pathname.startsWith(item.link)
+              router.asPath.startsWith(item.link)
                 ? `${styles.mobileMenu__item} ${styles.mobileMenu__item_active}`
                 : styles.mobileMenu__item
             }

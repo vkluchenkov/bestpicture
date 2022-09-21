@@ -1,7 +1,7 @@
 .categoryCard {
   display: flex;
   flex-direction: column;
-  border-radius: 10px 10px 0px 0px;
+  border-radius: 10px;
   background-color: #161616;
   overflow: hidden;
   padding: 0 0 11px;
@@ -32,6 +32,7 @@
   position: relative;
   width: 100%;
   aspect-ratio: 16/9;
+  object-fit: contain;
 }
 
 .image {
@@ -75,7 +76,8 @@
   font-size: 10px;
   line-height: 12px;
   color: white;
-  margin: 0;
+  margin: auto 0 0;
+  justify-self: flex-end;
   padding: 5px 20px 0;
 }
 
@@ -84,9 +86,11 @@
   grid-row: 1/2;
   z-index: 1;
   align-self: start;
+  justify-self: start;
   font-size: 12px;
   line-height: 15px;
   padding: 12px 20px;
+  margin: 0;
 }
 
 @media screen and (min-width: 768px) {
@@ -94,7 +98,15 @@
     padding: 0 0 20px;
   }
 
+  .categoryCard_large {
+    padding: 0;
+  }
+
   .title {
     padding: 20px 20px 0;
+  }
+
+  .title_large {
+    padding: 20px;
   }
 }

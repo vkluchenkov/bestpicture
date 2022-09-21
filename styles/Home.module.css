@@ -42,6 +42,9 @@
   .card__small {
     grid-column: span 2;
   }
+  .title {
+    padding: 0 0 25px;
+  }
 }
 
 @media screen and (min-width: 1280px) {

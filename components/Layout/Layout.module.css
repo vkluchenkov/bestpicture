@@ -1,3 +1,9 @@
 .main {
   padding: 20px 0;
 }
+
+@media screen and (min-width: 1024px) {
+  .main {
+    padding: 25px 0;
+  }
+}

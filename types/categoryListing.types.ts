@@ -7,10 +7,12 @@ export interface Product {
     large: string;
     small: string;
   };
+  price: string;
 }
 
 export interface CategoryProps {
   products: Product[];
+  categoryName: string;
 }
 
 export interface ListCategory {
