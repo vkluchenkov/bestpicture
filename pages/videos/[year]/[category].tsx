@@ -56,7 +56,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return addApolloState(apolloClient, {
     paths,
-    fallback: true,
+    fallback: 'blocking',
   });
 };
 
@@ -97,7 +97,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return addApolloState(apolloClient, {
     props: { products, categoryName: data.productCategory.name },
-    // revalidate: 30,
+    revalidate: 30,
   });
 };
 
