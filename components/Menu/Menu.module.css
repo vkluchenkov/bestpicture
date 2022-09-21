@@ -1,0 +1,39 @@
+.menu {
+  align-self: center;
+  padding: 0 20px 0 0;
+}
+
+.menu__items {
+  display: flex;
+  gap: 25px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.menu__item {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  text-transform: uppercase;
+  transition: opacity 0.3s;
+}
+
+.menu__item:hover {
+  opacity: 0.7;
+}
+
+.menu__item_active {
+  color: #e10000;
+}
+
+.menu__item_active:hover {
+  opacity: 1;
+}
+
+@media screen and (max-width: 1024px) {
+  .menu {
+    display: none;
+  }
+}

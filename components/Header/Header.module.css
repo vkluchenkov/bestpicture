@@ -40,3 +40,9 @@
   margin: 0 -8px 0 0;
   background: url('/images/icon_burger.svg') center no-repeat;
 }
+
+@media screen and (min-width: 1024px) {
+  .header__mobileMenu {
+    display: none;
+  }
+}

@@ -52,7 +52,7 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
       if (index <= largeCardsQty - 1)
         return (
           <div className={styles.card__large} key={c.id}>
-            <CategoryCard productCategory={c} />
+            <CategoryCard productCategory={c} isLarge />
           </div>
         );
       else

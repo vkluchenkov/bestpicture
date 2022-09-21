@@ -24,6 +24,10 @@
   .card__large {
     grid-column: 1/-1;
   }
+
+  .title {
+    text-align: left;
+  }
 }
 
 @media screen and (min-width: 1024px) {
@@ -51,5 +55,10 @@
   }
   .card__small {
     grid-column: span 1;
+  }
+
+  .title {
+    font-size: 26px;
+    line-height: 31px;
   }
 }

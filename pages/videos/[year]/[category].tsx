@@ -2,30 +2,7 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { gql } from '@apollo/client';
 import { initializeApollo, addApolloState } from '../../../utils/apolloClient';
-
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  menuOrder: number;
-  image: {
-    large: string;
-    small: string;
-  };
-}
-
-interface CategoryProps {
-  products: Product[];
-}
-
-interface ListCategory {
-  slug: string;
-  parent: {
-    node: {
-      slug: string;
-    };
-  };
-}
+import { CategoryProps, Product, ListCategory } from '../../../types/categoryListing.types';
 
 const Category: NextPage<CategoryProps> = ({ products }) => {
   const router = useRouter();
@@ -37,6 +14,8 @@ const Category: NextPage<CategoryProps> = ({ products }) => {
       <p>{p.id}</p>
     </div>
   ));
+
+  if (router.isFallback) return <div>Is Loading</div>;
 
   return (
     <>
@@ -79,7 +58,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return addApolloState(apolloClient, {
     paths,
-    fallback: 'blocking',
+    fallback: true,
   });
 };
 

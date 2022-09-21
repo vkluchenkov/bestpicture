@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
+import { Menu } from '../Menu';
 import { MobileMenu } from '../MobileMenu';
 import styles from './Header.module.css';
 
@@ -30,6 +31,7 @@ export const Header: React.FC = () => {
           </div>
         </Link>
         <button type='button' className={styles.header__mobileMenu} onClick={openMenu} />
+        <Menu />
       </header>
       <MobileMenu isOpen={isMenuOpen} onClose={closeMenu} />
     </>

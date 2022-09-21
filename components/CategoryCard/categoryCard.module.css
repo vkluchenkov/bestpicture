@@ -6,6 +6,26 @@
   overflow: hidden;
   padding: 0 0 11px;
   cursor: pointer;
+  height: 100%;
+}
+
+.categoryCard_large {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  overflow: hidden;
+  padding: 0px;
+}
+
+.categoryCard_large::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 1) 100%);
 }
 
 .imageWrapper {
@@ -14,14 +34,39 @@
   aspect-ratio: 16/9;
 }
 
+.image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.categoryCard:hover .image {
+  opacity: 0.7;
+}
+
+.imageWrapper_large {
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
+
 .title {
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 16px;
   line-height: 19px;
   color: white;
   margin: 0;
   padding: 8px 20px 0;
+}
+
+.title_large {
+  max-width: 75%;
+  grid-column: 1/2;
+  grid-row: 1/2;
+  z-index: 1;
+  align-self: end;
+  font-weight: 300;
+  font-size: 26px;
+  line-height: 31px;
+  padding: 20px;
 }
 
 .count {
@@ -32,4 +77,24 @@
   color: white;
   margin: 0;
   padding: 5px 20px 0;
+}
+
+.count_large {
+  grid-column: 1/2;
+  grid-row: 1/2;
+  z-index: 1;
+  align-self: start;
+  font-size: 12px;
+  line-height: 15px;
+  padding: 12px 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .categoryCard {
+    padding: 0 0 20px;
+  }
+
+  .title {
+    padding: 20px 20px 0;
+  }
 }
