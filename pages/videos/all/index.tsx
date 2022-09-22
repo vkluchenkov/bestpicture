@@ -4,6 +4,7 @@ import { CategoryCard } from '../../../components/CategoryCard';
 import { ProductCategory } from '../../../types/home.types';
 import { addApolloState, initializeApollo } from '../../../utils/apolloClient';
 import styles from '../../../styles/Videos.module.css';
+import Head from 'next/head';
 
 interface VideosProps {
   categories: Record<string, ProductCategory[]>;
@@ -19,6 +20,9 @@ const Videos: NextPage<VideosProps> = ({ categories, parents }) => {
 
     return (
       <>
+        <Head>
+          <title>All events | bestpicture.pro</title>
+        </Head>
         <h2 key={index} className={styles.title}>
           Events {parent}
         </h2>

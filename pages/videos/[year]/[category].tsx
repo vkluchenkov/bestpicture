@@ -5,6 +5,7 @@ import { initializeApollo, addApolloState } from '../../../utils/apolloClient';
 import { CategoryProps, Product, ListCategory } from '../../../types/categoryListing.types';
 import styles from '../../../styles/Category.module.css';
 import { ProductCard } from '../../../components/ProductCard';
+import Head from 'next/head';
 
 const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
   const router = useRouter();
@@ -15,6 +16,9 @@ const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
 
   return (
     <>
+      <Head>
+        <title>{categoryName} | bestpicture.pro</title>
+      </Head>
       <h1 className={styles.title}>{categoryName}</h1>
       <section className={styles.products__section}>
         <ul className={styles.products}>{productsMap}</ul>
