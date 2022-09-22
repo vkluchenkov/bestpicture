@@ -15,6 +15,31 @@
   padding: 0 0 20px;
 }
 
+.button {
+  display: block;
+  border: none;
+  outline: 1px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  background: none;
+  margin: 35px auto 15px;
+  max-width: 75%;
+  padding: 10px 25px;
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 18px;
+  transition: all 0.3s;
+}
+
+.button:hover {
+  background-color: white;
+  color: black;
+}
+
 @media screen and (min-width: 768px) {
   .cardsContainer {
     display: grid;

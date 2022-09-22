@@ -68,6 +68,9 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
     <>
       <h1 className={styles.title}>Latest events</h1>
       <div className={styles.cardsContainer}>{categoryCards}</div>
+      <button type='button' className={styles.button}>
+        View all events
+      </button>
     </>
   );
 };
