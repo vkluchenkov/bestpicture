@@ -1,5 +1,6 @@
 .mobileMenu {
   display: flex;
+  visibility: hidden;
   justify-content: flex-end;
 
   position: fixed;
@@ -17,6 +18,7 @@
 }
 
 .mobileMenu_open {
+  visibility: visible;
   bottom: 0;
 }
 

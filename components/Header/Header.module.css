@@ -1,5 +1,8 @@
 .header {
   width: 100%;
+  max-width: 1340px;
+  padding: 12px 20px 0;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
 }
@@ -39,6 +42,12 @@
   height: 44px;
   margin: 0 -8px 0 0;
   background: url('/images/icon_burger.svg') center no-repeat;
+}
+
+@media screen and (min-width: 768px) {
+  .header {
+    padding: 12px 40px 0;
+  }
 }
 
 @media screen and (min-width: 1024px) {

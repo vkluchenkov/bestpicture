@@ -1,9 +1,17 @@
 .main {
-  padding: 20px 0;
+  padding: 20px;
+  max-width: 1340px;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 768px) {
+  .main {
+    padding: 25px 40px;
+  }
 }
 
 @media screen and (min-width: 1024px) {
   .main {
-    padding: 25px 0;
+    padding: 25px 60;
   }
 }

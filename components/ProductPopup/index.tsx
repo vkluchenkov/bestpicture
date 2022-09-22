@@ -19,10 +19,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({ product, isOpen, onC
   }, [isOpen]);
 
   return (
-    <div
-      className={isOpen ? `${styles.popup} ${styles.popup_open}` : styles.popup}
-      onClick={onClose}
-    >
+    <div className={isOpen ? `${styles.popup} ${styles.popup_open}` : styles.popup}>
       <div className={styles.imageWrapper}>
         <Image
           src={image.large}

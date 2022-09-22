@@ -20,8 +20,23 @@ export const menu: Menu[] = [
     link: '/videos/2020',
   },
   {
-    name: 'Older events',
-    link: '/videos/older',
+    name: 'All events',
+    link: '/videos/all',
+  },
+];
+
+export const footerMenu: Menu[] = [
+  {
+    name: 'About the author',
+    link: '/about',
+  },
+  {
+    name: 'faq',
+    link: '/faq',
+  },
+  {
+    name: 'contact',
+    link: '/contact',
   },
 ];
 
@@ -31,7 +46,7 @@ export const WINDOW_SIZE_LARGE = 1024;
 export const WINDOW_SIZE_EXTRALARGE = 1280;
 
 // # of cards for different screen sizes
-export const INITIAL_CARDS_SMALL = 6;
+export const INITIAL_CARDS_SMALL = 7;
 export const INITIAL_CARDS_MEDIUM = 7;
-export const INITIAL_CARDS_LARGE = 8;
+export const INITIAL_CARDS_LARGE = 11;
 export const INITIAL_CARDS_EXTRALARGE = 14;
