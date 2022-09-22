@@ -8,6 +8,11 @@ export interface ProductCategory {
   };
   link: string;
   id: string;
+  parent: {
+    node: {
+      name: string;
+    };
+  };
 }
 
 export interface HomeProps {

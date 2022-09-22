@@ -17,8 +17,11 @@ import {
   INITIAL_CARDS_EXTRALARGE,
 } from '../utils/constants';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 const Home: NextPage<HomeProps> = ({ productCategories }) => {
+  const router = useRouter();
+
   const [cardsQty, setCardsQty] = useState(INITIAL_CARDS_SMALL);
   const [largeCardsQty, setLargeCardsQty] = useState(0);
 
@@ -68,7 +71,7 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
     <>
       <h1 className={styles.title}>Latest events</h1>
       <div className={styles.cardsContainer}>{categoryCards}</div>
-      <button type='button' className={styles.button}>
+      <button type='button' className={styles.button} onClick={() => router.push('/videos/all')}>
         View all events
       </button>
     </>
@@ -91,6 +94,11 @@ export const getStaticProps: GetStaticProps = async () => {
           }
           link
           id
+          parent {
+            node {
+              name
+            }
+          }
         }
       }
     }
