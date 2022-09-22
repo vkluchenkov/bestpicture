@@ -18,7 +18,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({ product, isOpen, onC
     return () => document.body.classList.remove('no-scroll');
   }, [isOpen]);
 
-  //Handling close on ESC / mouse click on backdrop or image
+  //Handling close on ESC
   useEffect(() => {
     const handleEscClose = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
 

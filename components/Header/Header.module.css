@@ -54,4 +54,8 @@
   .header__mobileMenu {
     display: none;
   }
+
+  .header {
+    padding: 12px 60px 0;
+  }
 }
