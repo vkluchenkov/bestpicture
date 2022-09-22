@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { MouseEventHandler, useEffect } from 'react';
 import { Product } from '../../types/categoryListing.types';
 import styles from './ProductPopup.module.css';
 
@@ -18,8 +18,28 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({ product, isOpen, onC
     return () => document.body.classList.remove('no-scroll');
   }, [isOpen]);
 
+  //Handling close on ESC / mouse click on backdrop or image
+  useEffect(() => {
+    const handleEscClose = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+
+    if (product) {
+      document.addEventListener('keydown', handleEscClose);
+    }
+    return () => {
+      document.removeEventListener('keydown', handleEscClose);
+    };
+  }, [product, onClose]);
+
+  const handleClickClose = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    (target.classList.contains(styles.popup) || target.id == 'image') && onClose();
+  };
+
   return (
-    <div className={isOpen ? `${styles.popup} ${styles.popup_open}` : styles.popup}>
+    <div
+      className={isOpen ? `${styles.popup} ${styles.popup_open}` : styles.popup}
+      onClick={handleClickClose}
+    >
       <div className={styles.imageWrapper}>
         <Image
           src={image.large}
@@ -28,6 +48,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({ product, isOpen, onC
           objectFit='contain'
           objectPosition='center'
           className={styles.image}
+          id='image'
         />
       </div>
       <p className={styles.name}>{name}</p>

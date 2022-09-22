@@ -25,6 +25,10 @@
   background: url('/images/loader.svg') center no-repeat;
 }
 
+.image {
+  display: block;
+}
+
 .name {
   font-style: normal;
   font-weight: 400;
