@@ -7,9 +7,15 @@ interface ProductPopupProps {
   product: Product;
   isOpen: boolean;
   onClose: () => void;
+  onClick: (id: number) => Promise<void>;
 }
 
-export const ProductPopup: React.FC<ProductPopupProps> = ({ product, isOpen, onClose }) => {
+export const ProductPopup: React.FC<ProductPopupProps> = ({
+  product,
+  isOpen,
+  onClose,
+  onClick,
+}) => {
   const { id, name, slug, menuOrder, image, price } = product;
 
   // Blocking body scroll when popup visible
@@ -53,7 +59,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({ product, isOpen, onC
       </div>
       <p className={styles.name}>{name}</p>
       <p className={styles.price}>{price ? `€${price}` : 'Free'}</p>
-      <button type='button' className={styles.button}>
+      <button type='button' className={styles.button} onClick={async () => await onClick(id)}>
         Add to cart
       </button>
       <button type='button' className={styles.buttonBack} onClick={onClose}>

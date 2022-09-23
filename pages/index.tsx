@@ -96,7 +96,7 @@ export const getStaticProps: GetStaticProps = async () => {
             small: sourceUrl(size: WOOCOMMERCE_SINGLE)
           }
           link
-          id
+          id: databaseId
           parent {
             node {
               name

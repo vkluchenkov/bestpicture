@@ -74,7 +74,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       name
       products(first: 1000) {
         nodes {
-          id
+          id: databaseId
           name
           slug
           menuOrder

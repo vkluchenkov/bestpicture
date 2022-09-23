@@ -7,7 +7,7 @@ export interface ProductCategory {
     small: string;
   };
   link: string;
-  id: string;
+  id: number;
   parent: {
     node: {
       name: string;

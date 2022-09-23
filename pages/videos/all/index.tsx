@@ -19,18 +19,20 @@ const Videos: NextPage<VideosProps> = ({ categories, parents }) => {
     });
 
     return (
-      <>
-        <Head>
-          <title>All events | bestpicture.pro</title>
-        </Head>
-        <h2 key={index} className={styles.title}>
-          Events {parent}
-        </h2>
+      <div key={index}>
+        <h2 className={styles.title}>Events {parent}</h2>
         <div className={styles.cardsContainer}>{cards}</div>
-      </>
+      </div>
     );
   });
-  return <>{mapped}</>;
+  return (
+    <>
+      <Head>
+        <title>All events | bestpicture.pro</title>
+      </Head>
+      {mapped}
+    </>
+  );
 };
 
 export const getStaticProps: GetStaticProps = async () => {
