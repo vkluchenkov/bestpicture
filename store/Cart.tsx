@@ -17,6 +17,8 @@ interface CartStore {
   removeError: ApolloError | undefined;
   couponLoading: boolean;
   couponError: ApolloError | undefined;
+  removeCouponsLoading: boolean;
+  removeCouponsError: ApolloError | undefined;
 }
 
 interface CartStoreActions {
@@ -134,6 +136,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
           removeLoading,
           couponError,
           couponLoading,
+          removeCouponsError,
+          removeCouponsLoading,
         },
         {
           addProduct,

@@ -6,7 +6,15 @@ import { useCart } from '../../store/Cart';
 
 const CartPage: NextPage = () => {
   const [
-    { cart, removeLoading, removeError, couponLoading, couponError },
+    {
+      cart,
+      removeLoading,
+      removeError,
+      couponLoading,
+      couponError,
+      removeCouponsError,
+      removeCouponsLoading,
+    },
     { removeProduct, applyCoupon, removeCoupons },
   ] = useCart();
 
@@ -24,6 +32,7 @@ const CartPage: NextPage = () => {
         <button type='button' onClick={() => handleRemoveCoupons(c.code)}>
           remove coupon
         </button>
+        {removeCouponsError ? <p>{removeCouponsError.message}</p> : ''}
       </div>
     );
   });
@@ -80,7 +89,7 @@ const CartPage: NextPage = () => {
       {couponList}
       <p>Total: €{cart.total}</p>
       {removeError ? <p>removeError.message</p> : <></>}
-      {removeLoading || couponLoading ? <Loader /> : <></>}
+      {removeLoading || couponLoading || removeCouponsLoading ? <Loader /> : <></>}
       <form onSubmit={handleCouponSubmit}>
         <input type='text' value={coupon} onChange={handleInputChange} />
         <button type='submit'>Apply coupon</button>
