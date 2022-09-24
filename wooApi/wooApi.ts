@@ -21,6 +21,7 @@ const cartData = `cart {
     }
     itemCount
   }
+  subtotal(format: RAW)
   total(format: RAW)
 }`;
 
@@ -41,6 +42,22 @@ export const REMOVE_FROM_CART = gql`
 export const ADD_TO_CART = gql`
   mutation AddToCart($productId: Int!) {
     addToCart(input: { productId: $productId }) {
+      ${cartData}
+    }
+  }
+`;
+
+export const APPLY_COUPON = gql`
+  mutation ApplyCoupon($code: String!) {
+    applyCoupon(input: { code: $code }) {
+      ${cartData}
+    }
+  }
+`;
+
+export const REMOVE_COUPONS = gql`
+  mutation RemoveCoupons($codes: [String]!) {
+    removeCoupons(input: { codes: $codes }) {
       ${cartData}
     }
   }

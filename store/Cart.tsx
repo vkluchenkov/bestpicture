@@ -1,7 +1,13 @@
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { CartContents, CartItems } from '../types/cart.types';
-import { ADD_TO_CART, GET_CART, REMOVE_FROM_CART } from '../wooApi/wooApi';
+import {
+  ADD_TO_CART,
+  APPLY_COUPON,
+  GET_CART,
+  REMOVE_COUPONS,
+  REMOVE_FROM_CART,
+} from '../wooApi/wooApi';
 
 interface CartStore {
   cart: CartContents;
@@ -9,11 +15,15 @@ interface CartStore {
   addError: ApolloError | undefined;
   removeLoading: boolean;
   removeError: ApolloError | undefined;
+  couponLoading: boolean;
+  couponError: ApolloError | undefined;
 }
 
 interface CartStoreActions {
   addProduct: (productId: number) => void;
   removeProduct: (cartKey: string) => void;
+  applyCoupon: (code: string) => void;
+  removeCoupons: (codes: string[]) => void;
 }
 
 interface CartProviderProps {
@@ -28,6 +38,14 @@ interface RemoveFromCartMutation {
   removeItemsFromCart: CartItems;
 }
 
+interface ApplyCouponMutation {
+  applyCoupon: CartItems;
+}
+
+interface RemoveCouponsMutation {
+  removeCoupons: CartItems;
+}
+
 export const Cart = createContext<[CartStore, CartStoreActions] | null>(null);
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
@@ -39,6 +57,14 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [removeMutation, { data: removeData, error: removeError, loading: removeLoading }] =
     useMutation<RemoveFromCartMutation>(REMOVE_FROM_CART);
 
+  const [couponMutation, { data: couponData, error: couponError, loading: couponLoading }] =
+    useMutation<ApplyCouponMutation>(APPLY_COUPON);
+
+  const [
+    removeCouponsMutation,
+    { data: removeCouponsData, error: removeCouponsError, loading: removeCouponsLoading },
+  ] = useMutation<RemoveCouponsMutation>(REMOVE_COUPONS);
+
   const { data: cartData } = useQuery<CartItems>(GET_CART, { skip: skip });
 
   const [state, setState] = useState<CartItems>({
@@ -49,6 +75,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         itemCount: 0,
       },
       total: '',
+      subtotal: '',
     },
   });
 
@@ -70,12 +97,30 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     if (removeData) setState(removeData.removeItemsFromCart);
   }, [removeData]);
 
+  // Set cart after coupon mutation complete
+  useEffect(() => {
+    if (couponData) setState(couponData.applyCoupon);
+  }, [couponData]);
+
+  // Set cart after remove coupons mutation complete
+  useEffect(() => {
+    if (removeCouponsData) setState(removeCouponsData.removeCoupons);
+  }, [removeCouponsData]);
+
   const addProduct: CartStoreActions['addProduct'] = (productId) => {
     addMutation({ variables: { productId: productId } });
   };
 
   const removeProduct: CartStoreActions['removeProduct'] = (cartKey) => {
     removeMutation({ variables: { keys: [cartKey] } });
+  };
+
+  const applyCoupon: CartStoreActions['applyCoupon'] = (code) => {
+    couponMutation({ variables: { code: code } });
+  };
+
+  const removeCoupons: CartStoreActions['removeCoupons'] = (codes) => {
+    removeCouponsMutation({ variables: { codes: codes } });
   };
 
   return (
@@ -87,10 +132,14 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
           addLoading,
           removeError,
           removeLoading,
+          couponError,
+          couponLoading,
         },
         {
           addProduct,
           removeProduct,
+          applyCoupon,
+          removeCoupons,
         },
       ]}
     >

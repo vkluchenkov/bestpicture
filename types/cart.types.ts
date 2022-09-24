@@ -21,6 +21,7 @@ export interface CartContents {
     nodes: CartProduct[];
     itemCount: number;
   };
+  subtotal: string;
   total: string;
 }
 

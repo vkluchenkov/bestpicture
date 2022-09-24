@@ -1,13 +1,34 @@
 import { NextPage } from 'next';
 import Head from 'next/head';
+import { FormEvent, useState } from 'react';
 import { Loader } from '../../components/Loader';
 import { useCart } from '../../store/Cart';
 
 const CartPage: NextPage = () => {
-  const [{ cart, removeLoading, removeError }, { removeProduct }] = useCart();
-  const cartProducts = cart.contents.nodes;
+  const [
+    { cart, removeLoading, removeError, couponLoading, couponError },
+    { removeProduct, applyCoupon, removeCoupons },
+  ] = useCart();
 
-  const ProductList = !cartProducts
+  const [coupon, setCoupon] = useState('');
+
+  const cartProducts = cart.contents.nodes;
+  const cartCoupons = cart.appliedCoupons;
+
+  const couponList = cartCoupons?.map((c) => {
+    return (
+      <div key={c.code}>
+        <p>
+          Code: {c.code}, amount {c.discountAmount}
+        </p>
+        <button type='button' onClick={() => handleRemoveCoupons(c.code)}>
+          remove coupon
+        </button>
+      </div>
+    );
+  });
+
+  const productList = !cartProducts
     ? []
     : cartProducts.map((p) => {
         const { id, name, price } = p.product.node;
@@ -22,6 +43,31 @@ const CartPage: NextPage = () => {
         );
       });
 
+  const handleInputChange = (e: FormEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    setCoupon(target.value);
+  };
+
+  if (!productList.length)
+    return (
+      <>
+        <Head>
+          <title>Cart | bestpicture.pro</title>
+        </Head>
+        <h1>Cart</h1>
+        <p>Nothing here.. yet</p>
+      </>
+    );
+
+  const handleCouponSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    applyCoupon(coupon);
+  };
+
+  const handleRemoveCoupons = (code: string) => {
+    removeCoupons([code]);
+  };
+
   return (
     <>
       <Head>
@@ -29,10 +75,17 @@ const CartPage: NextPage = () => {
       </Head>
       <h1>Cart</h1>
       <p>Items: {cart.contents.itemCount}</p>
-      {ProductList.length ? ProductList : <p>Nothing here.. yet</p>}
+      {productList}
+      <p>Subtotal: €{cart.subtotal}</p>
+      {couponList}
       <p>Total: €{cart.total}</p>
       {removeError ? <p>removeError.message</p> : <></>}
-      {removeLoading ? <Loader /> : <></>}
+      {removeLoading || couponLoading ? <Loader /> : <></>}
+      <form onSubmit={handleCouponSubmit}>
+        <input type='text' value={coupon} onChange={handleInputChange} />
+        <button type='submit'>Apply coupon</button>
+        {couponError ? <p>{couponError.message}</p> : <></>}
+      </form>
     </>
   );
 };
