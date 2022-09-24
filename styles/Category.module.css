@@ -1,8 +1,8 @@
 .title {
   font-style: normal;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 24px;
+  font-weight: 300;
+  font-size: 26px;
+  line-height: 32px;
   text-align: center;
   color: white;
   margin: 0;
@@ -19,10 +19,6 @@
 }
 
 @media screen and (min-width: 768px) {
-  .title {
-    text-align: left;
-  }
-
   .products {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -32,6 +28,7 @@
 @media screen and (min-width: 1024px) {
   .title {
     padding: 0 0 25px;
+    text-align: left;
   }
 }
 
