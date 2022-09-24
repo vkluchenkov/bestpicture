@@ -19,7 +19,9 @@ export interface CartStoreItems {
   appliedCoupons: null | Coupon[];
   contents: {
     nodes: CartProduct[];
+    itemCount: number;
   };
+  total: string;
 }
 
 export interface CartItems {

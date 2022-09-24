@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { menu } from '../../utils/constants';
 import { useEffect } from 'react';
+import { useCart } from '../../store/Cart';
 
 export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
+  const [{ cart }, {}] = useCart();
 
   const handleClose = async () => {
     await setTimeout(() => {}, 1000);
@@ -56,6 +58,20 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
           </Link>
         </li>
         {renderMenu}
+        <li>
+          <Link href='/cart'>
+            <a
+              className={
+                router.pathname == '/cart'
+                  ? `${styles.mobileMenu__item} ${styles.mobileMenu__item_active}`
+                  : styles.mobileMenu__item
+              }
+              onClick={handleClose}
+            >
+              Cart{cart.contents.itemCount > 0 ? ' (' + cart.contents.itemCount + ')' : ''}
+            </a>
+          </Link>
+        </li>
       </ul>
       <button type='button' className={styles.mobileMenu__close} onClick={handleClose}></button>
     </nav>

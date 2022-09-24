@@ -16,7 +16,7 @@ const CartPage: NextPage = () => {
         return (
           <div key={id}>
             <h3>{name}</h3>
-            <p>{price}</p>
+            <p>€{price}</p>
             <button type='button' onClick={() => removeProduct(p.key!)}>
               remove
             </button>
@@ -30,7 +30,9 @@ const CartPage: NextPage = () => {
         <title>Cart | bestpicture.pro</title>
       </Head>
       <h1>Cart</h1>
+      <p>Items: {cart.contents.itemCount}</p>
       {ProductList.length ? ProductList : <p>Nothing here.. yet</p>}
+      <p>Total: €{cart.total}</p>
       {/* {removeError ? <p>removeError.message</p> : <></>} */}
       {/* {removeLoading ? <Loader /> : <></>} */}
     </>

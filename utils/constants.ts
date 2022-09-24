@@ -23,10 +23,6 @@ export const menu: Menu[] = [
     name: 'All events',
     link: '/videos/all',
   },
-  {
-    name: 'Cart',
-    link: '/cart',
-  },
 ];
 
 export const footerMenu: Menu[] = [

@@ -23,19 +23,23 @@ interface RemoveFromCartMutation {
 export const Cart = createContext<[CartItems, CartStoreActions] | null>(null);
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+  const [skip, setSkip] = useState(false);
+
   const [addMutation, { data: addData }] = useMutation<AddToCartMutation>(ADD_TO_CART);
 
   const [removeMutation, { data: removeData, error: removeError, loading: removeLoading }] =
     useMutation<RemoveFromCartMutation>(REMOVE_FROM_CART);
 
-  const { data: cartData } = useQuery<CartItems>(GET_CART);
+  const { data: cartData } = useQuery<CartItems>(GET_CART, { skip: skip });
 
   const [state, setState] = useState<CartItems>({
     cart: {
       appliedCoupons: null,
       contents: {
         nodes: [],
+        itemCount: 0,
       },
+      total: '',
     },
   });
 
@@ -43,6 +47,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   useEffect(() => {
     if (cartData) {
       setState(cartData);
+      setSkip(true);
     }
   }, [cartData]);
 
