@@ -1,12 +1,10 @@
-import { useMutation, useQuery } from '@apollo/client';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
 import { Loader } from '../../components/Loader';
 import { useCart } from '../../store/Cart';
 
 const CartPage: NextPage = () => {
-  const [{ cart }, { removeProduct }] = useCart();
+  const [{ cart, removeLoading, removeError }, { removeProduct }] = useCart();
   const cartProducts = cart.contents.nodes;
 
   const ProductList = !cartProducts
@@ -33,8 +31,8 @@ const CartPage: NextPage = () => {
       <p>Items: {cart.contents.itemCount}</p>
       {ProductList.length ? ProductList : <p>Nothing here.. yet</p>}
       <p>Total: €{cart.total}</p>
-      {/* {removeError ? <p>removeError.message</p> : <></>} */}
-      {/* {removeLoading ? <Loader /> : <></>} */}
+      {removeError ? <p>removeError.message</p> : <></>}
+      {removeLoading ? <Loader /> : <></>}
     </>
   );
 };
