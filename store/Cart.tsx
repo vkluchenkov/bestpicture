@@ -1,7 +1,15 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { CartItems } from '../types/cart.types';
+import { CartContents, CartItems } from '../types/cart.types';
 import { ADD_TO_CART, GET_CART, REMOVE_FROM_CART } from '../wooApi/wooApi';
+
+interface CartStore {
+  cart: CartContents;
+  addLoading: boolean;
+  addError: ApolloError | undefined;
+  removeLoading: boolean;
+  removeError: ApolloError | undefined;
+}
 
 interface CartStoreActions {
   addProduct: (productId: number) => void;
@@ -20,12 +28,13 @@ interface RemoveFromCartMutation {
   removeItemsFromCart: CartItems;
 }
 
-export const Cart = createContext<[CartItems, CartStoreActions] | null>(null);
+export const Cart = createContext<[CartStore, CartStoreActions] | null>(null);
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [skip, setSkip] = useState(false);
 
-  const [addMutation, { data: addData }] = useMutation<AddToCartMutation>(ADD_TO_CART);
+  const [addMutation, { data: addData, error: addError, loading: addLoading }] =
+    useMutation<AddToCartMutation>(ADD_TO_CART);
 
   const [removeMutation, { data: removeData, error: removeError, loading: removeLoading }] =
     useMutation<RemoveFromCartMutation>(REMOVE_FROM_CART);
@@ -72,7 +81,13 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   return (
     <Cart.Provider
       value={[
-        state,
+        {
+          ...state,
+          addError,
+          addLoading,
+          removeError,
+          removeLoading,
+        },
         {
           addProduct,
           removeProduct,

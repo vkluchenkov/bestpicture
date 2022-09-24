@@ -74,6 +74,21 @@
   color: black;
 }
 
+.button_added {
+  outline: 1px solid rgb(0, 255, 128);
+  color: rgb(0, 255, 128);
+  border-radius: 5px;
+  margin: 15px auto 0;
+  max-width: 75%;
+  padding: 10px 25px;
+  text-transform: uppercase;
+  text-align: center;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 18px;
+}
+
 .buttonBack {
   display: block;
   border: none;

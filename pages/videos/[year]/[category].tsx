@@ -1,18 +1,23 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import { useRouter } from 'next/router';
 import { gql } from '@apollo/client';
 import { initializeApollo, addApolloState } from '../../../utils/apolloClient';
 import { CategoryProps, Product, ListCategory } from '../../../types/categoryListing.types';
 import styles from '../../../styles/Category.module.css';
 import { ProductCard } from '../../../components/ProductCard';
 import Head from 'next/head';
+import { useCart } from '../../../store/Cart';
+import { Loader } from '../../../components/Loader';
 
 const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
-  const router = useRouter();
+  const [{ cart, addLoading }, {}] = useCart();
 
-  const productsMap = products.map((p) => <ProductCard product={p} key={p.id} />);
+  const productsMap = products.map((p) => {
+    const isInCart = cart.contents.nodes.some(
+      (cartProduct) => cartProduct.product.node.id === p.id
+    );
 
-  if (router.isFallback) return <div>Is Loading</div>;
+    return <ProductCard product={p} isInCart={isInCart} key={p.id} />;
+  });
 
   return (
     <>
@@ -23,6 +28,7 @@ const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
       <section className={styles.products__section}>
         <ul className={styles.products}>{productsMap}</ul>
       </section>
+      {addLoading ? <Loader /> : <></>}
     </>
   );
 };

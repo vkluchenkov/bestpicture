@@ -15,7 +15,7 @@ export interface CartProduct {
   key?: string;
 }
 
-export interface CartStoreItems {
+export interface CartContents {
   appliedCoupons: null | Coupon[];
   contents: {
     nodes: CartProduct[];
@@ -25,5 +25,5 @@ export interface CartStoreItems {
 }
 
 export interface CartItems {
-  cart: CartStoreItems;
+  cart: CartContents;
 }

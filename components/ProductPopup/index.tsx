@@ -8,6 +8,7 @@ interface ProductPopupProps {
   isOpen: boolean;
   onClose: () => void;
   onClick: (id: number) => void;
+  isInCart: boolean;
 }
 
 export const ProductPopup: React.FC<ProductPopupProps> = ({
@@ -15,6 +16,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
   isOpen,
   onClose,
   onClick,
+  isInCart,
 }) => {
   const { id, name, slug, menuOrder, image, price } = product;
 
@@ -41,6 +43,14 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
     (target.classList.contains(styles.popup) || target.id == 'image') && onClose();
   };
 
+  const productButton = isInCart ? (
+    <div className={styles.button_added}>✔ Added to cart</div>
+  ) : (
+    <button type='button' className={styles.button} onClick={() => onClick(id)}>
+      Add to cart
+    </button>
+  );
+
   return (
     <div
       className={isOpen ? `${styles.popup} ${styles.popup_open}` : styles.popup}
@@ -59,9 +69,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
       </div>
       <p className={styles.name}>{name}</p>
       <p className={styles.price}>{price ? `€${price}` : 'Free'}</p>
-      <button type='button' className={styles.button} onClick={async () => await onClick(id)}>
-        Add to cart
-      </button>
+      {productButton}
       <button type='button' className={styles.buttonBack} onClick={onClose}>
         Go back to category
       </button>
