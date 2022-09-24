@@ -14,6 +14,7 @@ import {
 
 import { backendUrl } from '../utils/constants';
 import { setContext } from '@apollo/client/link/context';
+import { CartProvider } from '../store/Cart';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const url = `${backendUrl}graphql`;
@@ -47,17 +48,19 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ApolloProvider client={client}>
-      <Layout>
-        <Head>
-          <meta charSet='utf-8' />
-          <meta name='viewport' content='width=device-width, initial-scale=1' />
-          <meta
-            name='description'
-            content='Dance events videos from videographer Vladimir Kluchenkov'
-          />
-        </Head>
-        <Component {...pageProps} />
-      </Layout>
+      <CartProvider>
+        <Layout>
+          <Head>
+            <meta charSet='utf-8' />
+            <meta name='viewport' content='width=device-width, initial-scale=1' />
+            <meta
+              name='description'
+              content='Dance events videos from videographer Vladimir Kluchenkov'
+            />
+          </Head>
+          <Component {...pageProps} />
+        </Layout>
+      </CartProvider>
     </ApolloProvider>
   );
 }

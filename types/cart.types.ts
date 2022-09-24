@@ -12,14 +12,16 @@ export interface CartProduct {
       price: string;
     };
   };
-  key: string;
+  key?: string;
 }
 
-export interface CartProducts {
-  cart: {
-    appliedCoupons: null | Coupon[];
-    contents: {
-      nodes: CartProduct[];
-    };
+export interface CartStoreItems {
+  appliedCoupons: null | Coupon[];
+  contents: {
+    nodes: CartProduct[];
   };
+}
+
+export interface CartItems {
+  cart: CartStoreItems;
 }

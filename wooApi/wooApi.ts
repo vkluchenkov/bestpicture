@@ -53,3 +53,31 @@ export const REMOVE_FROM_CART = gql`
     }
   }
 `;
+
+export const ADD_TO_CART = gql`
+  mutation AddToCart($productId: Int!) {
+    addToCart(input: { productId: $productId }) {
+      cart {
+        appliedCoupons {
+          code
+          description
+          discountAmount(format: RAW)
+        }
+        contents {
+          nodes {
+            product {
+              node {
+                ... on SimpleProduct {
+                  name
+                  id: databaseId
+                  price(format: RAW)
+                }
+              }
+            }
+            key
+          }
+        }
+      }
+    }
+  }
+`;

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { MouseEventHandler, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Product } from '../../types/categoryListing.types';
 import styles from './ProductPopup.module.css';
 
@@ -7,7 +7,7 @@ interface ProductPopupProps {
   product: Product;
   isOpen: boolean;
   onClose: () => void;
-  onClick: (id: number) => Promise<void>;
+  onClick: (id: number) => void;
 }
 
 export const ProductPopup: React.FC<ProductPopupProps> = ({
