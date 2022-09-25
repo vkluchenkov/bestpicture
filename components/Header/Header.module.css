@@ -1,10 +1,14 @@
 .header {
   width: 100%;
   max-width: 1340px;
-  padding: 12px 20px 0;
+  padding: 12px 20px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
+  position: fixed;
+  top: 0;
+  background-color: #1c1c1c;
+  z-index: 1;
 }
 
 .header__logoContainer {
@@ -83,7 +87,7 @@
 
 @media screen and (min-width: 768px) {
   .header {
-    padding: 12px 40px 0;
+    padding: 12px 40px;
   }
 }
 
@@ -93,6 +97,6 @@
   }
 
   .header {
-    padding: 12px 60px 0;
+    padding: 12px 60px;
   }
 }

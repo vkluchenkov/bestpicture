@@ -6,7 +6,6 @@ import { CategoryCard } from '../../components/CategoryCard';
 import { ProductCategory } from '../../types/home.types';
 import { addApolloState, initializeApollo } from '../../utils/apolloClient';
 import styles from '../../styles/Videos.module.css';
-import { ListCategory } from '../../types/categoryListing.types';
 
 interface YearProps {
   categories: Record<string, ProductCategory[]>;

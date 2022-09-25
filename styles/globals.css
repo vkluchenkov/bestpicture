@@ -17,9 +17,12 @@ body {
   background: #1c1c1c;
 }
 
-/* #__next {
+#__next {
+  min-height: 100vh;
   height: 100%;
-} */
+  display: flex;
+  flex-direction: column;
+}
 
 .no-scroll {
   max-height: 100vh;
