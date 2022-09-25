@@ -160,9 +160,9 @@
 .error {
   margin: 0;
   padding: 10px 0 0;
-  color: rgb(255, 0, 0);
+  color: #e10000;
   font-style: normal;
-  font-weight: 300;
+  font-weight: 600;
   font-size: 14px;
   line-height: 16px;
 }

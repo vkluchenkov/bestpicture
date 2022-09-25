@@ -7,7 +7,6 @@ import { ProductCard } from '../../../components/ProductCard';
 import Head from 'next/head';
 import { useCart } from '../../../store/Cart';
 import { Loader } from '../../../components/Loader';
-import { FlyCart } from '../../../components/flyCart';
 
 const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
   const [{ cart, addLoading }, {}] = useCart();
