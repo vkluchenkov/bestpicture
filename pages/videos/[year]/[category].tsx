@@ -7,8 +7,12 @@ import { ProductCard } from '../../../components/ProductCard';
 import Head from 'next/head';
 import { useCart } from '../../../store/Cart';
 import { Loader } from '../../../components/Loader';
+import { useRouter } from 'next/router';
 
 const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
+  const router = useRouter();
+  const { year, category } = router.query;
+
   const [{ cart, addLoading }, {}] = useCart();
 
   const productsMap = products.map((p) => {
@@ -22,9 +26,11 @@ const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
   return (
     <>
       <Head>
-        <title>{categoryName} | bestpicture.pro</title>
+        <title>
+          {(year as string) + ' > '} {categoryName} | bestpicture.pro
+        </title>
       </Head>
-      <h1 className={styles.title}>{categoryName}</h1>
+      <h1 className={styles.title}>{(year as string) + ' > ' + categoryName}</h1>
       <section className={styles.products__section}>
         <ul className={styles.products}>{productsMap}</ul>
       </section>

@@ -13,13 +13,10 @@ interface CartStore {
   cart: CartContents;
   isOpen: boolean;
   addLoading: boolean;
-  addError: ApolloError | undefined;
   removeLoading: boolean;
-  removeError: ApolloError | undefined;
   couponLoading: boolean;
-  couponError: ApolloError | undefined;
   removeCouponsLoading: boolean;
-  removeCouponsError: ApolloError | undefined;
+  cartErrors: Record<string, ApolloError | undefined>;
 }
 
 interface CartStoreActions {
@@ -29,7 +26,10 @@ interface CartStoreActions {
   removeCoupons: (codes: string[]) => void;
   showCart: () => void;
   hideCart: () => void;
+  eraseError: (eName: CartErrorName) => void;
 }
+
+type CartErrorName = 'addError' | 'removeError' | 'couponError' | 'removeCouponsError';
 
 interface CartProviderProps {
   children: React.ReactNode;
@@ -54,19 +54,43 @@ interface RemoveCouponsMutation {
 export const Cart = createContext<[CartStore, CartStoreActions] | null>(null);
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+  const [cartErrors, setCartErrors] = useState<Record<CartErrorName, ApolloError | undefined>>({
+    addError: undefined,
+    removeError: undefined,
+    couponError: undefined,
+    removeCouponsError: undefined,
+  });
+
+  const handleError = (e: ApolloError, eName: string) => {
+    setCartErrors((prev) => {
+      return {
+        ...prev,
+        [eName]: e,
+      };
+    });
+  };
+
   const [addMutation, { data: addData, error: addError, loading: addLoading }] =
-    useMutation<AddToCartMutation>(ADD_TO_CART);
+    useMutation<AddToCartMutation>(ADD_TO_CART, {
+      onError: (e) => handleError(e, 'addError'),
+    });
 
   const [removeMutation, { data: removeData, error: removeError, loading: removeLoading }] =
-    useMutation<RemoveFromCartMutation>(REMOVE_FROM_CART);
+    useMutation<RemoveFromCartMutation>(REMOVE_FROM_CART, {
+      onError: (e) => handleError(e, 'removeError'),
+    });
 
   const [couponMutation, { data: couponData, error: couponError, loading: couponLoading }] =
-    useMutation<ApplyCouponMutation>(APPLY_COUPON);
+    useMutation<ApplyCouponMutation>(APPLY_COUPON, {
+      onError: (e) => handleError(e, 'couponError'),
+    });
 
   const [
     removeCouponsMutation,
     { data: removeCouponsData, error: removeCouponsError, loading: removeCouponsLoading },
-  ] = useMutation<RemoveCouponsMutation>(REMOVE_COUPONS);
+  ] = useMutation<RemoveCouponsMutation>(REMOVE_COUPONS, {
+    onError: (e) => handleError(e, 'removeCouponsError'),
+  });
 
   const [skip, setSkip] = useState(false);
   const { data: cartData } = useQuery<CartItems>(GET_CART, { skip: skip });
@@ -140,20 +164,22 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const showCart: CartStoreActions['showCart'] = () => setIsOpen(true);
   const hideCart: CartStoreActions['hideCart'] = () => setIsOpen(false);
 
+  const eraseError: CartStoreActions['eraseError'] = (eName) =>
+    setCartErrors((prev) => {
+      return { ...prev, [eName]: undefined };
+    });
+
   return (
     <Cart.Provider
       value={[
         {
           ...state,
           isOpen,
-          addError,
           addLoading,
-          removeError,
           removeLoading,
-          couponError,
           couponLoading,
-          removeCouponsError,
           removeCouponsLoading,
+          cartErrors,
         },
         {
           addProduct,
@@ -162,6 +188,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
           removeCoupons,
           showCart,
           hideCart,
+          eraseError,
         },
       ]}
     >

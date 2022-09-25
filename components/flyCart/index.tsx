@@ -4,21 +4,15 @@ import { Loader } from '../Loader';
 import styles from './flyCart.module.css';
 
 export const FlyCart: React.FC = () => {
+  // Hooks
   const [
-    {
-      cart,
-      isOpen,
-      removeLoading,
-      removeError,
-      couponLoading,
-      couponError,
-      removeCouponsError,
-      removeCouponsLoading,
-    },
-    { removeProduct, applyCoupon, removeCoupons, hideCart },
+    { cart, isOpen, removeLoading, couponLoading, removeCouponsLoading, cartErrors },
+    { removeProduct, applyCoupon, removeCoupons, hideCart, eraseError },
   ] = useCart();
 
   const [coupon, setCoupon] = useState('');
+
+  // Effects
 
   // Body scroll blocking
   useEffect(() => {
@@ -35,11 +29,27 @@ export const FlyCart: React.FC = () => {
     };
   }, [hideCart]);
 
+  // Handlers
   const handleClickClose = (e: React.MouseEvent<HTMLElement>) => {
     const target = e.target as HTMLElement;
     target.id == 'cart' && hideCart();
   };
 
+  const handleInputChange = (e: FormEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    setCoupon(target.value);
+  };
+
+  const handleCouponSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    applyCoupon(coupon);
+    setCoupon('');
+    setTimeout(() => {
+      eraseError('couponError');
+    }, 5000);
+  };
+
+  // Data
   const cartProducts = cart.contents.nodes;
   const cartCoupons = cart.appliedCoupons;
 
@@ -56,7 +66,7 @@ export const FlyCart: React.FC = () => {
         >
           remove coupon
         </button>
-        {removeCouponsError ? <p>{removeCouponsError.message}</p> : ''}
+        {cartErrors.removeCouponsError ? <p>{cartErrors.removeCouponsError.message}</p> : ''}
       </li>
     );
   });
@@ -79,17 +89,6 @@ export const FlyCart: React.FC = () => {
           </li>
         );
       });
-
-  const handleInputChange = (e: FormEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement;
-    setCoupon(target.value);
-  };
-
-  const handleCouponSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    applyCoupon(coupon);
-    setCoupon('');
-  };
 
   if (!productList.length)
     return (
@@ -134,7 +133,7 @@ export const FlyCart: React.FC = () => {
             <></>
           )}
 
-          {removeError ? <p>{removeError.message}</p> : <></>}
+          {cartErrors.removeError ? <p>{cartErrors.removeError.message}</p> : <></>}
 
           <form onSubmit={handleCouponSubmit} className={styles.couponForm}>
             <input
@@ -148,7 +147,11 @@ export const FlyCart: React.FC = () => {
               Apply coupon
             </button>
           </form>
-          {couponError ? <p className={styles.error}>{couponError.message}</p> : <></>}
+          <p
+            className={cartErrors.couponError ? styles.error + ' ' + styles.visible : styles.error}
+          >
+            {cartErrors.couponError ? cartErrors.couponError.message : ''}
+          </p>
 
           <p className={styles.subtotal}>Subtotal: €{cart.subtotal}</p>
           <p className={styles.total}>Total: €{cart.total}</p>

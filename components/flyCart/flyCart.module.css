@@ -158,6 +158,8 @@
 }
 
 .error {
+  display: block;
+  min-height: 26px;
   margin: 0;
   padding: 10px 0 0;
   color: #e10000;
@@ -165,6 +167,8 @@
   font-weight: 600;
   font-size: 14px;
   line-height: 16px;
+  opacity: 1;
+  transition: all 0.3s;
 }
 
 .subtotal {
@@ -183,7 +187,7 @@
   background-color: white;
   width: 100%;
   height: 2px;
-  margin: 10px 0 20px;
+  margin: 5px 0 20px;
 }
 
 .total {
