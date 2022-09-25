@@ -34,6 +34,11 @@
   padding: 0;
 }
 
+.header__actions {
+  display: flex;
+  gap: 10px;
+}
+
 .header__mobileMenu {
   border: none;
   outline: none;
@@ -44,6 +49,38 @@
   background: url('/images/icon_burger.svg') center no-repeat;
 }
 
+.header__cartWrapper {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.header__cartWrapper:hover {
+  opacity: 0.7;
+}
+
+.header__cart {
+  display: block;
+  background: url('/images/cart-shopping-solid.svg') center no-repeat;
+  background-size: contain;
+  border: none;
+  outline: none;
+  height: 25px;
+  width: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.header__cartCount {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  text-transform: uppercase;
+}
+
 @media screen and (min-width: 768px) {
   .header {
     padding: 12px 40px 0;
@@ -51,7 +88,7 @@
 }
 
 @media screen and (min-width: 1024px) {
-  .header__mobileMenu {
+  .header__actions {
     display: none;
   }
 

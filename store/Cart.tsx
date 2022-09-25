@@ -11,6 +11,7 @@ import {
 
 interface CartStore {
   cart: CartContents;
+  isOpen: boolean;
   addLoading: boolean;
   addError: ApolloError | undefined;
   removeLoading: boolean;
@@ -26,6 +27,8 @@ interface CartStoreActions {
   removeProduct: (cartKey: string) => void;
   applyCoupon: (code: string) => void;
   removeCoupons: (codes: string[]) => void;
+  showCart: () => void;
+  hideCart: () => void;
 }
 
 interface CartProviderProps {
@@ -51,8 +54,6 @@ interface RemoveCouponsMutation {
 export const Cart = createContext<[CartStore, CartStoreActions] | null>(null);
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
-  const [skip, setSkip] = useState(false);
-
   const [addMutation, { data: addData, error: addError, loading: addLoading }] =
     useMutation<AddToCartMutation>(ADD_TO_CART);
 
@@ -67,6 +68,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     { data: removeCouponsData, error: removeCouponsError, loading: removeCouponsLoading },
   ] = useMutation<RemoveCouponsMutation>(REMOVE_COUPONS);
 
+  const [skip, setSkip] = useState(false);
   const { data: cartData } = useQuery<CartItems>(GET_CART, { skip: skip });
 
   const [state, setState] = useState<CartItems>({
@@ -80,6 +82,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       subtotal: '',
     },
   });
+
+  const [isOpen, setIsOpen] = useState(false);
 
   // Populate cart on initial loading
   useEffect(() => {
@@ -109,27 +113,39 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     if (removeCouponsData) setState(removeCouponsData.removeCoupons);
   }, [removeCouponsData]);
 
-  const addProduct: CartStoreActions['addProduct'] = (productId) => {
-    addMutation({ variables: { productId: productId } });
+  const addProduct: CartStoreActions['addProduct'] = async (productId) => {
+    try {
+      await addMutation({ variables: { productId: productId } });
+    } catch (error) {}
   };
 
-  const removeProduct: CartStoreActions['removeProduct'] = (cartKey) => {
-    removeMutation({ variables: { keys: [cartKey] } });
+  const removeProduct: CartStoreActions['removeProduct'] = async (cartKey) => {
+    try {
+      await removeMutation({ variables: { keys: [cartKey] } });
+    } catch (error) {}
   };
 
-  const applyCoupon: CartStoreActions['applyCoupon'] = (code) => {
-    couponMutation({ variables: { code: code } });
+  const applyCoupon: CartStoreActions['applyCoupon'] = async (code) => {
+    try {
+      await couponMutation({ variables: { code: code } });
+    } catch (error) {}
   };
 
-  const removeCoupons: CartStoreActions['removeCoupons'] = (codes) => {
-    removeCouponsMutation({ variables: { codes: codes } });
+  const removeCoupons: CartStoreActions['removeCoupons'] = async (codes) => {
+    try {
+      await removeCouponsMutation({ variables: { codes: codes } });
+    } catch (error) {}
   };
+
+  const showCart: CartStoreActions['showCart'] = () => setIsOpen(true);
+  const hideCart: CartStoreActions['hideCart'] = () => setIsOpen(false);
 
   return (
     <Cart.Provider
       value={[
         {
           ...state,
+          isOpen,
           addError,
           addLoading,
           removeError,
@@ -144,6 +160,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
           removeProduct,
           applyCoupon,
           removeCoupons,
+          showCart,
+          hideCart,
         },
       ]}
     >

@@ -15,6 +15,7 @@ import {
 import { backendUrl } from '../utils/constants';
 import { setContext } from '@apollo/client/link/context';
 import { CartProvider } from '../store/Cart';
+import { FlyCart } from '../components/flyCart';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const url = `${backendUrl}graphql`;
@@ -60,6 +61,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </Head>
           <Component {...pageProps} />
         </Layout>
+        <FlyCart />
       </CartProvider>
     </ApolloProvider>
   );

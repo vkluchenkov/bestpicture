@@ -1,8 +1,5 @@
-import { gql, useMutation } from '@apollo/client';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useCart } from '../../store/Cart';
 import { Product } from '../../types/categoryListing.types';
 import { ProductPopup } from '../ProductPopup';
@@ -16,18 +13,22 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart }) => {
   const { id, name, slug, menuOrder, image, price } = product;
 
-  const router = useRouter();
-  const [{}, { addProduct }] = useCart();
+  const [{}, { addProduct, showCart }] = useCart();
 
   const [isPopupOpen, setIsPopapOpen] = useState(false);
 
   const clickHandler = () => setIsPopapOpen(true);
   const closeHandler = () => setIsPopapOpen(false);
 
+  const addToCartHandler = useCallback(() => {
+    addProduct(id);
+    showCart();
+  }, [addProduct, showCart, id]);
+
   const productButton = isInCart ? (
     <div className={styles.button_added}>✔ Added to cart</div>
   ) : (
-    <button type='button' className={styles.button} onClick={() => addProduct(id)}>
+    <button type='button' className={styles.button} onClick={addToCartHandler}>
       Add to cart
     </button>
   );

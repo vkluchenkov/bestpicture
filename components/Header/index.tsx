@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
+import { useCart } from '../../store/Cart';
 import { Menu } from '../Menu';
 import { MobileMenu } from '../MobileMenu';
 import styles from './Header.module.css';
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [{ cart }, { showCart }] = useCart();
 
   const openMenu = () => setIsMenuOpen(true);
   const closeMenu = useCallback(() => setIsMenuOpen(false), []);
@@ -30,7 +32,18 @@ export const Header: React.FC = () => {
             <p className={styles.header__subline}>event videos from Vladimir Kluchenkov</p>
           </div>
         </Link>
-        <button type='button' className={styles.header__mobileMenu} onClick={openMenu} />
+
+        <div className={styles.header__actions}>
+          {cart.contents.itemCount > 0 ? (
+            <div className={styles.header__cartWrapper} onClick={showCart}>
+              <div className={styles.header__cart} />
+              <span className={styles.header__cartCount}>{cart.contents.itemCount}</span>
+            </div>
+          ) : (
+            <></>
+          )}
+          <button type='button' className={styles.header__mobileMenu} onClick={openMenu} />
+        </div>
         <Menu />
       </header>
       <MobileMenu isOpen={isMenuOpen} onClose={closeMenu} />

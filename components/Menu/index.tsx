@@ -6,7 +6,7 @@ import { useCart } from '../../store/Cart';
 
 export const Menu: React.FC = () => {
   const router = useRouter();
-  const [{ cart }, {}] = useCart();
+  const [{ cart }, { showCart }] = useCart();
 
   const renderMenu = menu.map((item, index) => {
     return (
@@ -43,19 +43,14 @@ export const Menu: React.FC = () => {
           </Link>
         </li>
         {renderMenu}
-        <li>
-          <Link href='/cart'>
-            <a
-              className={
-                router.pathname == '/cart'
-                  ? `${styles.menu__item} ${styles.menu__item_active}`
-                  : styles.menu__item
-              }
-            >
-              Cart{cart.contents.itemCount > 0 ? ' (' + cart.contents.itemCount + ')' : ''}
-            </a>
-          </Link>
-        </li>
+        {cart.contents.itemCount > 0 ? (
+          <li className={styles.menu__cartWrapper} onClick={showCart}>
+            <div className={styles.menu__cart} />
+            <span className={styles.menu__cartCount}>{cart.contents.itemCount}</span>
+          </li>
+        ) : (
+          <></>
+        )}
       </ul>
     </nav>
   );
