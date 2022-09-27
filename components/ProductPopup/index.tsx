@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { Product } from '../../types/categoryListing.types';
+import { Button } from '../../ui-kit/Button';
 import styles from './ProductPopup.module.css';
 
 interface ProductPopupProps {
@@ -18,7 +19,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
   onClick,
   isInCart,
 }) => {
-  const { id, name, slug, menuOrder, image, price } = product;
+  const { id, name, image, price } = product;
 
   // Blocking body scroll when popup visible
   useEffect(() => {
@@ -44,11 +45,13 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
   };
 
   const productButton = isInCart ? (
-    <div className={styles.button_added}>✔ Added to cart</div>
+    <Button className={styles.button} isConfirm isLarge isDisabled>
+      &#10003; Added to cart
+    </Button>
   ) : (
-    <button type='button' className={styles.button} onClick={() => onClick(id)}>
+    <Button type='button' isLarge className={styles.button} onClick={() => onClick(id)}>
       Add to cart
-    </button>
+    </Button>
   );
 
   return (

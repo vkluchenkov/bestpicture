@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  display: block;
+  border: none;
+  outline: 1px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  background: none;
+  padding: 10px 25px;
+  color: white;
+  text-transform: uppercase;
+  padding: 7px 20px;
+  color: white;
+  font-size: 12px;
+  line-height: 15px;
+  transition: all 0.3s;
+}
+
+.button_large {
+  padding: 10px 25px;
+  color: white;
+  font-size: 16px;
+  line-height: 18px;
+}
+
+.button_fullWidth {
+  width: 100%;
+}
+
+.button:hover {
+  background-color: white;
+  color: black;
+}
+
+.button:disabled {
+  cursor: default;
+  background: none;
+  color: #999;
+}
+
+.button_confirm {
+  outline: 1px solid rgb(0, 255, 128);
+  color: rgb(0, 255, 128);
+}
+
+.button_confirm:hover {
+  color: rgb(0, 255, 128);
+}
+
+.button_confirm:disabled {
+  color: rgb(0, 255, 128);
+}

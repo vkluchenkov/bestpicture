@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { useCallback, useState } from 'react';
 import { useCart } from '../../store/Cart';
 import { Product } from '../../types/categoryListing.types';
+import { Button } from '../../ui-kit/Button';
 import { ProductPopup } from '../ProductPopup';
 import styles from './ProductCard.module.css';
 
@@ -26,11 +27,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart }) =
   }, [addProduct, showCart, id]);
 
   const productButton = isInCart ? (
-    <div className={styles.button_added}>✔ Added to cart</div>
+    <Button className={styles.button} isDisabled isConfirm>
+      &#10003; Added to cart
+    </Button>
   ) : (
-    <button type='button' className={styles.button} onClick={addToCartHandler}>
+    <Button type='button' className={styles.button} onClick={addToCartHandler}>
       Add to cart
-    </button>
+    </Button>
   );
 
   return (

@@ -49,42 +49,5 @@
 }
 
 .button {
-  display: block;
-  border: none;
-  outline: 1px solid white;
-  border-radius: 5px;
-  cursor: pointer;
-  background: none;
   margin: 10px auto 0;
-  max-width: 75%;
-  padding: 7px 20px;
-  color: white;
-  text-transform: uppercase;
-  text-align: center;
-  font-style: normal;
-  font-weight: 300;
-  font-size: 12px;
-  line-height: 15px;
-  transition: all 0.3s;
-}
-
-.button_added {
-  border-radius: 5px;
-  outline: 1px solid rgb(0, 255, 128);
-  color: rgb(0, 255, 128);
-  margin: 10px auto 0;
-  max-width: 75%;
-  padding: 7px 20px;
-  cursor: default;
-  text-transform: uppercase;
-  text-align: center;
-  font-style: normal;
-  font-weight: 300;
-  font-size: 12px;
-  line-height: 15px;
-}
-
-.button:hover {
-  background-color: white;
-  color: black;
 }
