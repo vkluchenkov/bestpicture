@@ -32,6 +32,7 @@ const Checkout: NextPage = () => {
     name: '',
     email: '',
     payment: undefined,
+    note: '',
   });
   const [formFieldsErrors, setFormFieldsErrors] = useState<Partial<FormFields>>({});
   const [isBtnDisabled, setIsBtnDisabled] = useState(true);
@@ -69,6 +70,7 @@ const Checkout: NextPage = () => {
       billing: {
         email: formFields.email,
         firstName: formFields.name,
+        customerNote: formFields.note,
       },
     };
 

@@ -36,6 +36,7 @@ export interface CheckoutPayload {
   billing: {
     email: string;
     firstName: string;
+    customerNote: string;
   };
   paymentMethod?: PaymentMethod;
   isPaid?: boolean;
@@ -44,6 +45,7 @@ export interface CheckoutPayload {
 export interface FormFields {
   name: string;
   email: string;
+  note: string;
   payment: PaymentMethod;
 }
 
