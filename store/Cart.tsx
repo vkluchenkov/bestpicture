@@ -3,7 +3,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import {
   CartContents,
   CartItems,
-  CheckoutPayload,
   CartErrorName,
   CartProviderProps,
   AddToCartMutation,
@@ -11,7 +10,6 @@ import {
   ApplyCouponMutation,
   RemoveCouponsMutation,
   CheckoutMutation,
-  CheckoutResult,
 } from '../types/cart.types';
 import {
   ADD_TO_CART,
@@ -19,15 +17,14 @@ import {
   GET_CART,
   REMOVE_COUPONS,
   REMOVE_FROM_CART,
-  CHECKOUT_MUTATION,
-} from '../wooApi/wooApi';
+  CLEAR_CART_MUTATION,
+} from '../wooApi/wooApiGQL';
 
 interface CartStore {
   cart: CartContents;
   isOpen: boolean;
   isLoading: boolean;
   cartErrors: Record<string, ApolloError | undefined>;
-  checkoutResult: CheckoutMutation | null;
 }
 
 interface CartStoreActions {
@@ -39,7 +36,6 @@ interface CartStoreActions {
   hideCart: () => void;
   clearCart: () => void;
   eraseError: (eName: CartErrorName) => void;
-  checkout: (payload: CheckoutPayload) => void;
 }
 
 export const Cart = createContext<[CartStore, CartStoreActions] | null>(null);
@@ -57,6 +53,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       },
       total: '',
       subtotal: '',
+      fees: null,
     },
   });
 
@@ -65,7 +62,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     removeError: undefined,
     couponError: undefined,
     removeCouponsError: undefined,
-    checkoutError: undefined,
   });
 
   const [checkoutResult, setCheckoutResult] = useState<CheckoutMutation | null>(null);
@@ -106,12 +102,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     onError: (e) => handleError(e, 'removeCouponsError'),
   });
 
-  const [checkoutMutation, { data: checkoutData, error: checkoutError, loading: checkoutLoading }] =
-    useMutation<CheckoutMutation>(CHECKOUT_MUTATION, {
-      onError: (e) => handleError(e, 'checkoutError'),
-    });
+  const [clearCartMutation, { loading: clearCartLoading }] = useMutation(CLEAR_CART_MUTATION, {
+    onError: (e) => handleError(e, 'clearCartError'),
+  });
 
-  const { data: cartData } = useQuery<CartItems>(GET_CART, { skip: skip });
+  const { data: cartData, refetch: refetchCart } = useQuery<CartItems>(GET_CART, { skip: skip });
 
   // Effects
   // Populate cart on initial loading
@@ -142,17 +137,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     if (removeCouponsData) setCartContent(removeCouponsData.removeCoupons);
   }, [removeCouponsData]);
 
-  // Set cart after checkout mutation complete
-  useEffect(() => {
-    if (checkoutData) setCheckoutResult(checkoutData);
-  }, [checkoutData]);
-
   // Set loading state for all requests
   useEffect(() => {
-    if (addLoading || removeLoading || couponLoading || removeCouponsLoading || checkoutLoading)
+    if (addLoading || removeLoading || couponLoading || removeCouponsLoading || clearCartLoading)
       setIsloading(true);
     else setIsloading(false);
-  }, [addLoading, removeLoading, couponLoading, removeCouponsLoading, checkoutLoading]);
+  }, [addLoading, removeLoading, couponLoading, removeCouponsLoading, clearCartLoading]);
 
   // Handlers
   const addProduct: CartStoreActions['addProduct'] = async (productId) => {
@@ -182,33 +172,25 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const showCart: CartStoreActions['showCart'] = () => setIsOpen(true);
   const hideCart: CartStoreActions['hideCart'] = () => setIsOpen(false);
   const clearCart: CartStoreActions['clearCart'] = async () => {
-    setTimeout(() => {
-      setCartContent({
-        cart: {
-          appliedCoupons: null,
-          contents: {
-            nodes: [],
-            itemCount: 0,
-          },
-          total: '',
-          subtotal: '',
+    await clearCartMutation();
+    setCartContent({
+      cart: {
+        appliedCoupons: null,
+        contents: {
+          nodes: [],
+          itemCount: 0,
         },
-      });
-      setCheckoutResult(null);
-    }, 500);
+        total: '',
+        subtotal: '',
+        fees: null,
+      },
+    });
   };
 
   const eraseError: CartStoreActions['eraseError'] = (eName) =>
     setCartErrors((prev) => {
       return { ...prev, [eName]: undefined };
     });
-
-  const checkout: CartStoreActions['checkout'] = async (payload) => {
-    try {
-      await checkoutMutation({ variables: { input: payload } });
-      clearCart();
-    } catch (error) {}
-  };
 
   return (
     <Cart.Provider
@@ -218,7 +200,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
           isOpen,
           isLoading,
           cartErrors,
-          checkoutResult,
         },
         {
           addProduct,
@@ -229,7 +210,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
           hideCart,
           clearCart,
           eraseError,
-          checkout,
         },
       ]}
     >

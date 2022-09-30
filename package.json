@@ -11,6 +11,8 @@
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@stripe/stripe-js": "^1.38.1",
+    "@woocommerce/woocommerce-rest-api": "^1.0.1",
+    "axios": "^0.27.2",
     "deepmerge": "^4.2.2",
     "framer-motion": "^7.3.5",
     "graphql": "^16.6.0",
@@ -24,6 +26,7 @@
     "@types/node": "18.7.18",
     "@types/react": "18.0.20",
     "@types/react-dom": "18.0.6",
+    "@types/woocommerce__woocommerce-rest-api": "^1.0.2",
     "eslint": "8.23.1",
     "eslint-config-next": "12.3.0",
     "typescript": "4.8.3"

@@ -5,6 +5,8 @@ export const CartProducts: React.FC = () => {
   const [{ cart }, { removeProduct }] = useCart();
 
   const cartProducts = cart.contents.nodes;
+  const cartFees = cart.fees;
+  console.log(cartFees);
   const productList = !cartProducts
     ? []
     : cartProducts.map((p) => {

@@ -17,6 +17,10 @@ export interface CartProduct {
 
 export interface CartContents {
   appliedCoupons: null | Coupon[];
+  fees: null | {
+    amount: string;
+    name: string;
+  };
   contents: {
     nodes: CartProduct[];
     itemCount: number;
@@ -32,15 +36,15 @@ export interface CartItems {
 export type StripeStatus = 'success' | 'cancelled' | undefined;
 type PaymentMethod = 'bacs' | 'paypal' | 'stripe' | 'cod' | undefined;
 
-export interface CheckoutPayload {
-  billing: {
-    email: string;
-    firstName: string;
-    customerNote: string;
-  };
-  paymentMethod?: PaymentMethod;
-  isPaid?: boolean;
-}
+// export interface CheckoutPayload {
+//   billing: {
+//     email: string;
+//     firstName: string;
+//   };
+//   customerNote: string;
+//   paymentMethod?: PaymentMethod;
+//   isPaid?: boolean;
+// }
 
 export interface FormFields {
   name: string;
@@ -49,12 +53,7 @@ export interface FormFields {
   payment: PaymentMethod;
 }
 
-export type CartErrorName =
-  | 'addError'
-  | 'removeError'
-  | 'couponError'
-  | 'removeCouponsError'
-  | 'checkoutError';
+export type CartErrorName = 'addError' | 'removeError' | 'couponError' | 'removeCouponsError';
 
 export interface CartProviderProps {
   children: React.ReactNode;

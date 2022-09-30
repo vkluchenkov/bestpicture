@@ -6,6 +6,10 @@ const cartData = `cart {
     description
     discountAmount(format: RAW)
   }
+  fees {
+    amount
+    name
+  }
   contents {
     nodes {
       product {
@@ -63,23 +67,10 @@ export const REMOVE_COUPONS = gql`
   }
 `;
 
-export const CHECKOUT_MUTATION = gql`
-  mutation CheckoutMutation($input: CheckoutInput!) {
-    checkout(input: $input) {
-      ...CheckoutPayloadFragment
-    }
-  }
-
-  fragment CheckoutPayloadFragment on CheckoutPayload {
-    redirect
-    result
-    customer {
-      id
-      sessionToken
-    }
-    order {
-      databaseId
-      orderKey
+export const CLEAR_CART_MUTATION = gql`
+  mutation ClearCartMutation {
+    emptyCart(input: { clearPersistentCart: true }) {
+      clientMutationId
     }
   }
 `;
