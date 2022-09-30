@@ -13,6 +13,7 @@ import { RadioInput } from '../ui-kit/RadioInput';
 import { StripeStatus, FormFields } from '../types/cart.types';
 import { CreateOrderPayload, OrderData } from '../types/order.types';
 import { TextArea } from '../ui-kit/TextArea';
+import axios from 'axios';
 
 const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
   ? process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -84,6 +85,7 @@ const Checkout: NextPage = () => {
     }
 
     if (formFields.payment == 'stripe') {
+      createOrderPayload.payment_method = 'stripe';
       // Send API fetch here to '/api/stripe-session'
     }
 
@@ -99,8 +101,26 @@ const Checkout: NextPage = () => {
         body: JSON.stringify(createOrderPayload),
       });
       const data: OrderData = await res.json();
-      if (data) setOrderRes({ ...data });
-      clearCart();
+      if (createOrderPayload.payment_method == 'stripe' && data) {
+        const stripePayload = {
+          name: `Order ${data.id} on Vladimir Kluchenkov's website`,
+          price: data.total,
+          orderId: data.id,
+          orderKey: data.order_key,
+          email: data.billing.email,
+        };
+        axios.post('/api/stripe-session', stripePayload).then((data: any) => {
+          console.log(data);
+          setTimeout(() => {
+            window.open(data.data.url as string, '_self');
+          }, 300);
+          clearCart();
+        });
+      }
+      if (createOrderPayload.payment_method == 'bacs' && data) {
+        setOrderRes({ ...data });
+        clearCart();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -122,12 +142,12 @@ const Checkout: NextPage = () => {
         <title>Checkout | bestpicture.pro</title>
       </Head>
       <h1 className={styles.title}>Checkout</h1>
-      {status ? <p>Payment status: {status} </p> : <></>}
+      {/* {status ? <p>Payment status: {status} </p> : <></>} */}
       <div className={styles.sections}>
         <section className={styles.productsSection}>
           <h2 className={styles.subtitle}>Videos</h2>
           <CartProducts />
-          {cart.total != '0' ? <Coupons /> : <></>}
+          <Coupons />
           <p className={styles.subtotal}>Subtotal: €{cart.subtotal}</p>
           <p className={styles.total}>Total: €{cart.total}</p>
         </section>
@@ -213,7 +233,7 @@ const Checkout: NextPage = () => {
                   checked={formFields.payment == 'paypal'}
                   onChange={handleInputChange}
                 />
-                {/*<RadioInput
+                <RadioInput
                   label='Stripe (cards, Apply Pay, Google Pay and more)'
                   id='stripe'
                   name='payment'
@@ -221,7 +241,7 @@ const Checkout: NextPage = () => {
                   value='stripe'
                   checked={formFields.payment == 'stripe'}
                   onChange={handleInputChange}
-                /> */}
+                />
                 {/* <RadioInput
                   label='Already paid (specify in notes please)'
                   id='cod'

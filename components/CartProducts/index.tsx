@@ -6,7 +6,6 @@ export const CartProducts: React.FC = () => {
 
   const cartProducts = cart.contents.nodes;
   const cartFees = cart.fees;
-  console.log(cartFees);
   const productList = !cartProducts
     ? []
     : cartProducts.map((p) => {

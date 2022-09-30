@@ -1,12 +1,21 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import Stripe from 'stripe';
+import { api } from '../../wooApi/wooApiREST';
+//@ts-ignore
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: null });
+
+interface UpdateOrder {
+  orderId: number;
+  data: any;
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // const { price, name, description } = req.body as CheckoutPayload;
-  const price = '20.00';
-  const name = "Vladimir Kluchenkov's website order";
-  const description = 'Some description here';
+  const { price, name, email, orderId, orderKey } = req.body;
+
+  const updateOrder = async (payload: UpdateOrder) => {
+    await api.put(`orders/${payload.orderId}`, payload.data).catch((e) => console.log(e));
+  };
 
   const itemPrice = () => {
     const parsed = Number.parseFloat(price);
@@ -22,25 +31,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
       unit_amount: itemPrice(),
     },
-    description,
     quantity: 1,
   };
 
   if (req.method === 'POST') {
     try {
-      // Create Checkout Sessions from body params.
       const session = await stripe.checkout.sessions.create({
+        // customer: customer.id,
+        customer_email: email,
         line_items: [item],
         mode: 'payment',
-        success_url: `${req.headers.origin}/checkout/?success=true`,
+        success_url: `${req.headers.origin}/checkout/order-received/${orderId}?key=${orderKey}`,
         cancel_url: `${req.headers.origin}/checkout/?canceled=true`,
+        metadata: { orderId: orderId },
       });
-      console.log({
-        _stripe_customer_id: session.customer,
-        _stripe_source_id: '',
-        _stripe_intent_id: session.payment_intent,
+      await updateOrder({
+        orderId,
+        data: {
+          meta_data: [
+            {
+              key: '_stripe_intent_id',
+              value: session.payment_intent,
+            },
+          ],
+        },
       });
-      res.redirect(303, session.url);
+      res.status(200).send({ url: session.url });
     } catch (err: any) {
       res.status(err.statusCode || 500).json(err.message);
     }

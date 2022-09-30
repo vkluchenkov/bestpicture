@@ -7,8 +7,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const { data } = await api.get('orders/' + orderId);
-    const { data: payment } = await api.get(`payment_gateways/${data.payment_method}`);
-    data.payment = payment;
     const { order_key, ...rest } = data;
     if (!key || key != order_key)
       res.status(400).send({ message: 'Order key is missing or incorrect' });
