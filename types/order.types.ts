@@ -37,6 +37,11 @@ export interface CreateOrderPayload {
   line_items?: LineItem[];
   coupon_lines?: CouponItem[];
   fee_lines?: FeeItem[];
+  meta_data?: {
+    key: string;
+    value: string;
+  }[];
+  transaction_id?: string;
 }
 
 export interface OrderData {
@@ -52,4 +57,5 @@ export interface OrderData {
   total: string;
   payment_method: PaymentMethod;
   order_key?: string;
+  transaction_id: string;
 }

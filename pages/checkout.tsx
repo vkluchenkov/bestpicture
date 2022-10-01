@@ -30,6 +30,9 @@ const Checkout: NextPage = () => {
     } else return cart.total;
   };
 
+  // PayPal transaction id
+  const [paypalTransactionId, setPayPalTransactionId] = useState('');
+
   // Form fields
   const [formFields, setFormFields] = useState<FormFields>({
     name: '',
@@ -96,7 +99,7 @@ const Checkout: NextPage = () => {
         createOrderPayload.fee_lines = [
           { name: 'PayPal processing fee 5% (min €1)', total: String(fee) },
         ];
-        // createOrderPayload.set_paid = false;
+        createOrderPayload.transaction_id = paypalTransactionId;
       }
 
       // Create order and process payment
@@ -125,12 +128,7 @@ const Checkout: NextPage = () => {
               clearCart();
             })
             .catch((error) => console.log(error));
-        }
-
-        if (
-          (createOrderPayload.payment_method == 'bacs' || !createOrderPayload.payment_method) &&
-          data
-        ) {
+        } else if (data) {
           router.push(`/checkout/order-received/${data.id}?key=${data.order_key}`);
           clearCart();
         }
@@ -138,7 +136,7 @@ const Checkout: NextPage = () => {
         console.log(error);
       }
     },
-    [cart, clearCart, formFields, fee, router]
+    [cart, clearCart, formFields, fee, router, paypalTransactionId]
   );
 
   if (!cart.contents.nodes.length)
@@ -174,6 +172,7 @@ const Checkout: NextPage = () => {
             formFieldsErrors={formFieldsErrors}
             isBtnDisabled={isBtnDisabled}
             total={total()}
+            setTransactionId={setPayPalTransactionId}
           />
         </section>
       </div>

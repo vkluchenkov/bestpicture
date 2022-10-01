@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Loader } from '../../../components/Loader';
 import axios from 'axios';
 import styles from '../../../styles/Order.module.css';
@@ -15,16 +15,26 @@ const Order: NextPage = () => {
   const [error, setError] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
 
+  const getOrder = useCallback(() => {
+    setIsLoading(true);
+    axios
+      .post('/api/get-order', { orderId: orderId, key: key })
+      .then((res) => setOrderData(res.data))
+      .catch((e) => setError(e))
+      .finally(() => setIsLoading(false));
+  }, [key, orderId]);
+
   useEffect(() => {
-    if (orderId && key) {
-      setIsLoading(true);
-      axios
-        .post('/api/get-order', { orderId: orderId, key: key })
-        .then((res) => setOrderData(res.data))
-        .catch((e) => setError(e))
-        .finally(() => setIsLoading(false));
+    if (orderId && key) getOrder();
+  }, []);
+
+  useEffect(() => {
+    if (orderData && orderData.status == 'pending') {
+      setTimeout(() => {
+        getOrder();
+      }, 5000);
     }
-  }, [orderId, key]);
+  }, [getOrder, orderData]);
 
   // useEffect(() => {
   //   if (orderData) console.log(orderData);
