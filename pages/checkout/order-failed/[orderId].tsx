@@ -7,7 +7,7 @@ import styles from '../../../styles/Order.module.css';
 import { OrderData } from '../../../types/order.types';
 import Head from 'next/head';
 
-const Order: NextPage = () => {
+const OrderFailed: NextPage = () => {
   const router = useRouter();
   const { orderId, key } = router.query;
 
@@ -39,7 +39,7 @@ const Order: NextPage = () => {
           <title>Your order | bestpicture.pro</title>
         </Head>
         <h1>Oops.. something went wrong</h1>
-        <p>Order key for order #{orderId} was not provided. Please check your link.</p>
+        <p>Order key for order #{orderId} was not provided.</p>
       </>
     );
 
@@ -83,4 +83,4 @@ const Order: NextPage = () => {
   return <></>;
 };
 
-export default Order;
+export default OrderFailed;

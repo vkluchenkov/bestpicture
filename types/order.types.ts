@@ -8,9 +8,9 @@ interface LineItem {
 interface CouponItem {}
 
 interface FeeItem {
-  id: number;
+  id?: number;
   name: string;
-  amount: string;
+  total: string;
 }
 
 type OrderStatus =
@@ -20,7 +20,7 @@ type OrderStatus =
   | 'completed'
   | 'cancelled'
   | 'refunded'
-  | 'failed '
+  | 'failed'
   | 'trash';
 
 type PaymentMethod = 'bacs' | 'stripe' | 'paypal' | 'cod' | '';
@@ -35,6 +35,8 @@ export interface CreateOrderPayload {
   set_paid?: boolean;
   payment_method?: PaymentMethod;
   line_items?: LineItem[];
+  coupon_lines?: CouponItem[];
+  fee_lines?: FeeItem[];
 }
 
 export interface OrderData {

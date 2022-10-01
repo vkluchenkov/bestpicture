@@ -49,53 +49,6 @@
   margin: 0;
 }
 
-.checkoutForm {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.inputWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.label {
-  font-style: normal;
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 16px;
-  color: white;
-  margin: 0;
-}
-
-.error {
-  display: block;
-  margin: 0;
-  padding: 0;
-  color: #e10000;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 16px;
-  opacity: 1;
-  transition: all 0.3s;
-}
-
-.payment {
-  border: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.button {
-  width: 100%;
-  margin: 20px 0 0;
-}
-
 @media screen and (min-width: 768px) {
 }
 @media screen and (min-width: 1024px) {

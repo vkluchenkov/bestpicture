@@ -42,8 +42,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         line_items: [item],
         mode: 'payment',
         success_url: `${req.headers.origin}/checkout/order-received/${orderId}?key=${orderKey}`,
-        cancel_url: `${req.headers.origin}/checkout/?canceled=true`,
+        cancel_url: `${req.headers.origin}/checkout/order-failed/${orderId}?key=${orderKey}`,
         metadata: { orderId: orderId },
+        payment_method_types: [],
       });
       await updateOrder({
         orderId,
