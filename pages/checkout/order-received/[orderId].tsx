@@ -6,6 +6,7 @@ import axios from 'axios';
 import styles from '../../../styles/Order.module.css';
 import { OrderData } from '../../../types/order.types';
 import Head from 'next/head';
+import { OrderVeiw } from '../../../components/OrderView';
 
 const Order: NextPage = () => {
   const router = useRouter();
@@ -16,7 +17,6 @@ const Order: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const getOrder = useCallback(() => {
-    setIsLoading(true);
     axios
       .post('/api/get-order', { orderId: orderId, key: key })
       .then((res) => setOrderData(res.data))
@@ -25,9 +25,11 @@ const Order: NextPage = () => {
   }, [key, orderId]);
 
   useEffect(() => {
+    setIsLoading(true);
     if (orderId && key) getOrder();
   }, []);
 
+  // Refetch data while waiting for order status change (webhook processing)
   useEffect(() => {
     if (orderData && orderData.status == 'pending') {
       setTimeout(() => {
@@ -36,57 +38,37 @@ const Order: NextPage = () => {
     }
   }, [getOrder, orderData]);
 
-  // useEffect(() => {
-  //   if (orderData) console.log(orderData);
-  // }, [orderData]);
-
   if (isLoading) return <Loader />;
+
+  const head = (
+    <Head>
+      <title>Your order | bestpicture.pro</title>
+    </Head>
+  );
 
   if (!key)
     return (
       <>
-        <Head>
-          <title>Your order | bestpicture.pro</title>
-        </Head>
+        {head}
         <h1>Oops.. something went wrong</h1>
-        <p>Order key for order #{orderId} was not provided. Please check your link.</p>
+        <p>Order key for order #{orderId} was not provided.</p>
       </>
     );
 
   if (error)
     return (
       <>
-        <Head>
-          <title>Your order | bestpicture.pro</title>
-        </Head>
+        {head}
         <h1>Oops.. something went wrong</h1>
-        <p>
-          Please check your link. It seems that the order does not exist or you do not have rights
-          to view it.
-        </p>
+        <p>It seems this order does not exist.</p>
       </>
     );
 
   if (orderData) {
-    const lineItems = orderData.line_items.map((i) => (
-      <li key={'video' + i.product_id}>{i.name}</li>
-    ));
-    const feeItems = orderData.fee_lines.map((i) => <li key={'fee' + i.id}>{i.name}</li>);
     return (
       <>
-        <Head>
-          <title>Your order | bestpicture.pro</title>
-        </Head>
-        <h1 className={styles.title}>Order {orderData.id}</h1>
-        <p className={styles.status}>Status: {orderData.status}</p>
-        <h2>Billing</h2>
-        <p>{orderData.billing.first_name}</p>
-        <p>{orderData.billing.email}</p>
-        <h2>Videos</h2>
-        <ul>
-          {lineItems}
-          {feeItems}
-        </ul>
+        {head}
+        <OrderVeiw orderData={orderData} />
       </>
     );
   }
