@@ -52,9 +52,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       } else res.status(403).send('Verification failed');
     } catch (error) {
-      res.status(500).send('Something went wrong');
+      res.status(501).send('Something went wrong');
     }
-  } else res.status(200).send('Webhook received');
+  } else res.status(202).send('Webhook received');
 };
 
 export default handler;
