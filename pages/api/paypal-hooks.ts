@@ -31,32 +31,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
 
       if (data.verification_status == 'SUCCESS') {
-        const PaypalOrderId = req.body.resource.supplementary_data.related_ids.order_id;
-
-        const { data: pendingOrders } = await api
-          .get('orders?status=pending')
-          .catch((error) => res.status(404).send('Can not fetch orders'));
-
-        if (!pendingOrders.length) {
-          res.status(404).send('No pending orders found');
-        } else {
-          try {
-            const isOrder = pendingOrders.find(
-              (order: OrderData) => order.transaction_id == PaypalOrderId
-            );
-
-            if (!isOrder) res.status(404).send('No such order in pending orders');
-
-            await api
-              .put(`orders/${isOrder.id}`, { set_paid: true })
-              .then((data) => {
-                res.status(200).send('Order updated');
-              })
-              .catch((e) => res.status(500).send('Error updating order'));
-          } catch (error) {
-            res.status(502).send('');
-          }
-        }
+        // const PaypalOrderId = req.body.resource.supplementary_data.related_ids.order_id;
+        // const { data: pendingOrders } = await api
+        //   .get('orders?status=pending')
+        //   .catch((error) => res.status(404).send('Can not fetch orders'));
+        // if (!pendingOrders.length) {
+        //   res.status(404).send('No pending orders found');
+        // } else {
+        //     const isOrder = pendingOrders.find(
+        //       (order: OrderData) => order.transaction_id == PaypalOrderId
+        //     );
+        //     if (!isOrder) res.status(404).send('No such order in pending orders');
+        //     await api
+        //       .put(`orders/${isOrder.id}`, { set_paid: true })
+        //       .then((data) => {
+        //         res.status(200).send('Order updated');
+        //       })
+        //       .catch((e) => res.status(500).send('Error updating order'));
+        //     res.status(502).send('');
+        // }
       } else res.status(403).send('Verification failed');
     } catch (error) {
       res.status(501).send('Something went wrong');
