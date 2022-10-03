@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useState } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -20,16 +20,6 @@ const Checkout: NextPage = () => {
 
   const [{ cart }, { clearCart }] = useCart();
 
-  // Add processing fee to total
-  const fee = Number.parseFloat(cart.total) <= 20 ? 1 : Number.parseFloat(cart.total) * 0.05;
-
-  const total = () => {
-    if (formFields.payment == 'stripe' || formFields.payment == 'paypal') {
-      const total = Number.parseFloat(cart.total);
-      return fee > 1 ? String(total + fee) : String(total + 1);
-    } else return cart.total;
-  };
-
   // PayPal transaction id
   const [paypalTransactionId, setPayPalTransactionId] = useState('');
 
@@ -42,6 +32,16 @@ const Checkout: NextPage = () => {
   });
   const [formFieldsErrors, setFormFieldsErrors] = useState<Partial<FormFields>>({});
   const [isBtnDisabled, setIsBtnDisabled] = useState(true);
+
+  // Add processing fee to total
+  const fee = Number.parseFloat(cart.total) <= 20 ? 1 : Number.parseFloat(cart.total) * 0.05;
+
+  const total = () => {
+    if (formFields.payment == 'stripe' || formFields.payment == 'paypal') {
+      const total = Number.parseFloat(cart.total);
+      return fee > 1 ? String(total + fee) : String(total + 1);
+    } else return cart.total;
+  };
 
   const handleInputChange = useCallback((e: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const form: HTMLFormElement | null = document.querySelector('#checkout_form');
@@ -83,12 +83,14 @@ const Checkout: NextPage = () => {
 
       if (formFields.payment == 'bacs') {
         createOrderPayload.payment_method = 'bacs';
+        createOrderPayload.payment_method_title = 'Bank transfer';
         createOrderPayload.set_paid = false;
         createOrderPayload.status = 'on-hold';
       }
 
       if (formFields.payment == 'stripe') {
         createOrderPayload.payment_method = 'stripe';
+        createOrderPayload.payment_method_title = 'Stripe (cards and wallets)';
         createOrderPayload.fee_lines = [
           { name: 'Stripe processing fee 5% (min €1)', total: String(fee) },
         ];
@@ -96,6 +98,7 @@ const Checkout: NextPage = () => {
 
       if (formFields.payment == 'paypal') {
         createOrderPayload.payment_method = 'paypal';
+        createOrderPayload.payment_method_title = 'PayPal';
         createOrderPayload.fee_lines = [
           { name: 'PayPal processing fee 5% (min €1)', total: String(fee) },
         ];
@@ -118,15 +121,10 @@ const Checkout: NextPage = () => {
             orderKey: data.order_key,
             email: data.billing.email,
           };
+
           axios
             .post('/api/stripe-session', stripePayload)
-            .then((data: any) => {
-              // console.log(data);
-              setTimeout(() => {
-                window.open(data.data.url as string, '_self');
-              }, 300);
-              clearCart();
-            })
+            .then((data: any) => window.open(data.data.url as string, '_self'))
             .catch((error) => console.log(error));
         } else if (data) {
           router.push(`/checkout/order-received/${data.id}?key=${data.order_key}`);

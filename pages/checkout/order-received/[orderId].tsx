@@ -7,27 +7,41 @@ import styles from '../../../styles/Order.module.css';
 import { OrderData } from '../../../types/order.types';
 import Head from 'next/head';
 import { OrderVeiw } from '../../../components/OrderView';
+import { useCart } from '../../../store/Cart';
 
 const Order: NextPage = () => {
   const router = useRouter();
-  const { orderId, key } = router.query;
+  const { orderId, key, stripeSuccess } = router.query;
 
+  const [fetched, setFetched] = useState(false);
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const [error, setError] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
+  const [{}, { clearCart }] = useCart();
 
-  const getOrder = useCallback(() => {
-    axios
+  const getOrder = useCallback(async () => {
+    await axios
       .post('/api/get-order', { orderId: orderId, key: key })
       .then((res) => setOrderData(res.data))
       .catch((e) => setError(e))
       .finally(() => setIsLoading(false));
   }, [key, orderId]);
 
+  // Clear cart on successful stripe return
   useEffect(() => {
-    setIsLoading(true);
-    if (orderId && key) getOrder();
-  }, []);
+    if (stripeSuccess) clearCart();
+  }, [stripeSuccess, clearCart]);
+
+  // Initial order data loading
+  useEffect(() => {
+    if (orderId && key && !fetched) {
+      setIsLoading(true);
+      getOrder().then((data) => {
+        setFetched(true);
+        setIsLoading(false);
+      });
+    }
+  }, [orderId, key, fetched, getOrder]);
 
   // Refetch data while waiting for order status change (webhook processing)
   useEffect(() => {
@@ -37,8 +51,6 @@ const Order: NextPage = () => {
       }, 5000);
     }
   }, [getOrder, orderData]);
-
-  if (isLoading) return <Loader />;
 
   const head = (
     <Head>
@@ -50,29 +62,33 @@ const Order: NextPage = () => {
     return (
       <>
         {head}
-        <h1>Oops.. something went wrong</h1>
+        <h1 className={styles.title}>Oops.. something went wrong</h1>
         <p>Order key for order #{orderId} was not provided.</p>
       </>
     );
 
-  if (error)
+  if (error) {
     return (
       <>
         {head}
-        <h1>Oops.. something went wrong</h1>
+        <h1 className={styles.title}>Oops.. something went wrong</h1>
         <p>It seems this order does not exist.</p>
       </>
     );
+  }
+
+  if (isLoading) return <Loader />;
 
   if (orderData) {
     return (
       <>
         {head}
-        <OrderVeiw orderData={orderData} />
+        <section className={styles.orderContainer}>
+          <OrderVeiw orderData={orderData} />
+        </section>
       </>
     );
-  }
-  return <></>;
+  } else return <></>;
 };
 
 export default Order;

@@ -2,6 +2,7 @@ interface LineItem {
   product_id: number;
   name?: string;
   price?: number;
+  subtotal?: number;
   quantity: number;
 }
 
@@ -24,6 +25,12 @@ type OrderStatus =
   | 'trash';
 
 type PaymentMethod = 'bacs' | 'stripe' | 'paypal' | 'cod' | '';
+type PaymentMethodTitle =
+  | 'PayPal'
+  | 'Stripe (cards and wallets)'
+  | 'Bank transfer'
+  | 'Paid in cash'
+  | '';
 
 export interface CreateOrderPayload {
   billing: {
@@ -34,6 +41,7 @@ export interface CreateOrderPayload {
   status: OrderStatus;
   set_paid?: boolean;
   payment_method?: PaymentMethod;
+  payment_method_title?: PaymentMethodTitle;
   line_items?: LineItem[];
   coupon_lines?: CouponItem[];
   fee_lines?: FeeItem[];
@@ -56,6 +64,7 @@ export interface OrderData {
   discount_total: string;
   total: string;
   payment_method: PaymentMethod;
+  payment_method_title: PaymentMethodTitle;
   order_key?: string;
   transaction_id: string;
 }
