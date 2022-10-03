@@ -50,7 +50,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             .catch((e) => res.status(500).send('Error updating order'));
           res.status(502).send('');
         }
-      } else res.status(403).send('Verification failed');
+      } else res.status(403).send('Verification failed!');
     } catch (error) {
       res.status(501).send('Something went wrong');
     }
