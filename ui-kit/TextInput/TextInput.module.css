@@ -1,0 +1,22 @@
+.textInput {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  outline: 1px solid white;
+  background: rgba(0, 0, 0, 0.3);
+  font-style: normal;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 16px;
+  color: white;
+}
+
+.textInput:-webkit-autofill,
+.textInput:-webkit-autofill:hover,
+.textInput:-webkit-autofill:focus,
+.textInput:-webkit-autofill:active {
+  -webkit-text-fill-color: white;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: background-color 1s ease-in-out 5000000s;
+}

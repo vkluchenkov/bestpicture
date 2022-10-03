@@ -6,14 +6,13 @@ import styles from '../../../styles/Category.module.css';
 import { ProductCard } from '../../../components/ProductCard';
 import Head from 'next/head';
 import { useCart } from '../../../store/Cart';
-import { Loader } from '../../../components/Loader';
 import { useRouter } from 'next/router';
 
 const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
   const router = useRouter();
   const { year, category } = router.query;
 
-  const [{ cart, addLoading }, {}] = useCart();
+  const [{ cart, isLoading }, {}] = useCart();
 
   const productsMap = products.map((p) => {
     const isInCart = cart.contents.nodes.some(
@@ -34,7 +33,6 @@ const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
       <section className={styles.products__section}>
         <ul className={styles.products}>{productsMap}</ul>
       </section>
-      {addLoading ? <Loader /> : <></>}
     </>
   );
 };

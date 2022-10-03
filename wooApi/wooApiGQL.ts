@@ -6,6 +6,10 @@ const cartData = `cart {
     description
     discountAmount(format: RAW)
   }
+  fees {
+    amount
+    name
+  }
   contents {
     nodes {
       product {
@@ -59,6 +63,14 @@ export const REMOVE_COUPONS = gql`
   mutation RemoveCoupons($codes: [String]!) {
     removeCoupons(input: { codes: $codes }) {
       ${cartData}
+    }
+  }
+`;
+
+export const CLEAR_CART_MUTATION = gql`
+  mutation ClearCartMutation {
+    emptyCart(input: { clearPersistentCart: true }) {
+      clientMutationId
     }
   }
 `;

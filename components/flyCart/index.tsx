@@ -1,16 +1,17 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { useCart } from '../../store/Cart';
+import { Button } from '../../ui-kit/Button';
+import { CartProducts } from '../CartProducts';
+import { Coupons } from '../Coupons';
 import { Loader } from '../Loader';
 import styles from './flyCart.module.css';
 
 export const FlyCart: React.FC = () => {
   // Hooks
-  const [
-    { cart, isOpen, removeLoading, couponLoading, removeCouponsLoading, cartErrors },
-    { removeProduct, applyCoupon, removeCoupons, hideCart, eraseError },
-  ] = useCart();
+  const [{ cart, isOpen, isLoading }, { removeProduct, hideCart }] = useCart();
 
-  const [coupon, setCoupon] = useState('');
+  const router = useRouter();
 
   // Effects
 
@@ -35,62 +36,13 @@ export const FlyCart: React.FC = () => {
     target.id == 'cart' && hideCart();
   };
 
-  const handleInputChange = (e: FormEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement;
-    setCoupon(target.value);
-  };
-
-  const handleCouponSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    applyCoupon(coupon);
-    setCoupon('');
-    setTimeout(() => {
-      eraseError('couponError');
-    }, 5000);
+  const handleCheckout = () => {
+    router.push('/checkout');
+    hideCart();
   };
 
   // Data
-  const cartProducts = cart.contents.nodes;
-  const cartCoupons = cart.appliedCoupons;
-
-  const couponList = cartCoupons?.map((c) => {
-    return (
-      <li className={styles.cartCoupon} key={c.code}>
-        <p className={styles.coupon}>
-          Coupon {c.code}: -€{c.discountAmount}
-        </p>
-        <button
-          className={styles.removeCoupon}
-          type='button'
-          onClick={() => removeCoupons([c.code])}
-        >
-          remove coupon
-        </button>
-        {cartErrors.removeCouponsError ? <p>{cartErrors.removeCouponsError.message}</p> : ''}
-      </li>
-    );
-  });
-
-  const productList = !cartProducts
-    ? []
-    : cartProducts.map((p) => {
-        const { id, name, price } = p.product.node;
-        return (
-          <li key={id} className={styles.cartItem}>
-            <button
-              className={styles.cartItem__remove}
-              type='button'
-              onClick={() => removeProduct(p.key!)}
-            />
-            <div className={styles.cartItem__info}>
-              <h3 className={styles.cartItem__title}>{name}</h3>
-              <p className={styles.cartItem__price}>€{price}</p>
-            </div>
-          </li>
-        );
-      });
-
-  if (!productList.length)
+  if (!cart.contents.nodes.length)
     return (
       <>
         <div
@@ -109,7 +61,7 @@ export const FlyCart: React.FC = () => {
             </div>
           </div>
         </div>
-        {removeLoading || couponLoading || removeCouponsLoading ? <Loader /> : <></>}
+        {isLoading ? <Loader /> : <></>}
       </>
     );
 
@@ -123,49 +75,30 @@ export const FlyCart: React.FC = () => {
         <div className={styles.contentContainer}>
           <h1 className={styles.title}>Cart</h1>
           <p className={styles.count}>Items: {cart.contents.itemCount}</p>
-          <ul className={styles.cartItems}>{productList}</ul>
-          {couponList?.length ? (
-            <>
-              <h3 className={styles.cart__subtitle}>Applied coupons:</h3>
-              <ul className={styles.cartCoupons}>{couponList}</ul>
-            </>
-          ) : (
-            <></>
-          )}
 
-          {cartErrors.removeError ? <p>{cartErrors.removeError.message}</p> : <></>}
-
-          <form onSubmit={handleCouponSubmit} className={styles.couponForm}>
-            <input
-              type='text'
-              placeholder='Coupon code'
-              value={coupon}
-              onChange={handleInputChange}
-              className={styles.couponForm__input}
-            />
-            <button type='submit' className={styles.couponForm__button}>
-              Apply coupon
-            </button>
-          </form>
-          <p
-            className={cartErrors.couponError ? styles.error + ' ' + styles.visible : styles.error}
-          >
-            {cartErrors.couponError ? cartErrors.couponError.message : ''}
-          </p>
+          <CartProducts />
+          {cart.total != '0' ? <Coupons /> : <></>}
 
           <p className={styles.subtotal}>Subtotal: €{cart.subtotal}</p>
           <p className={styles.total}>Total: €{cart.total}</p>
+
           <div className={styles.actions}>
-            <button className={styles.actions__btn_checkout} type='button'>
+            <Button
+              className={styles.actions__btn_checkout}
+              type='button'
+              onClick={handleCheckout}
+              isLarge
+              fullWidth
+            >
               Go to checkout
-            </button>
+            </Button>
             <button className={styles.actions__btn} type='button' onClick={hideCart}>
               Continue shopping
             </button>
           </div>
         </div>
       </div>
-      {removeLoading || couponLoading || removeCouponsLoading ? <Loader /> : <></>}
+      {isLoading ? <Loader /> : <></>}
     </>
   );
 };

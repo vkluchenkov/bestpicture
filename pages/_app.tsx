@@ -11,6 +11,7 @@ import {
   createHttpLink,
   InMemoryCache,
 } from '@apollo/client';
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 
 import { backendUrl } from '../utils/constants';
 import { setContext } from '@apollo/client/link/context';
@@ -47,23 +48,27 @@ function MyApp({ Component, pageProps }: AppProps) {
     cache: new InMemoryCache(),
   });
 
+  const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!;
+
   return (
-    <ApolloProvider client={client}>
-      <CartProvider>
-        <Layout>
-          <Head>
-            <meta charSet='utf-8' />
-            <meta name='viewport' content='width=device-width, initial-scale=1' />
-            <meta
-              name='description'
-              content='Dance events videos from videographer Vladimir Kluchenkov'
-            />
-          </Head>
-          <Component {...pageProps} />
-        </Layout>
-        <FlyCart />
-      </CartProvider>
-    </ApolloProvider>
+    <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'EUR' }}>
+      <ApolloProvider client={client}>
+        <CartProvider>
+          <Layout>
+            <Head>
+              <meta charSet='utf-8' />
+              <meta name='viewport' content='width=device-width, initial-scale=1' />
+              <meta
+                name='description'
+                content='Dance events videos from videographer Vladimir Kluchenkov'
+              />
+            </Head>
+            <Component {...pageProps} />
+          </Layout>
+          <FlyCart />
+        </CartProvider>
+      </ApolloProvider>
+    </PayPalScriptProvider>
   );
 }
 

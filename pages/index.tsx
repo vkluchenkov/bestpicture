@@ -18,6 +18,7 @@ import {
 } from '../utils/constants';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { Button } from '../ui-kit/Button';
 
 const Home: NextPage<HomeProps> = ({ productCategories }) => {
   const router = useRouter();
@@ -74,9 +75,14 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
       </Head>
       <h1 className={styles.title}>Latest events</h1>
       <div className={styles.cardsContainer}>{categoryCards}</div>
-      <button type='button' className={styles.button} onClick={() => router.push('/videos/all')}>
+      <Button
+        type='button'
+        isLarge
+        className={styles.button}
+        onClick={() => router.push('/videos/all')}
+      >
         View all events
-      </button>
+      </Button>
     </>
   );
 };

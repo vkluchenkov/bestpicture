@@ -14,8 +14,8 @@ interface VideosProps {
 const Videos: NextPage<VideosProps> = ({ categories, parents }) => {
   const mapped = parents.map((parent, index) => {
     const cards = categories[parent].map((category) => {
-      if (category.name == 'Uncategorized') return <></>;
-      return <CategoryCard productCategory={category} key={category.id} />;
+      if (category.name != 'Uncategorized')
+        return <CategoryCard productCategory={category} key={category.id} />;
     });
 
     return (
