@@ -18,39 +18,43 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     };
     const apiUrl = process.env.PAYPAL_API_URL;
 
-    let verification: string | undefined = undefined;
+    try {
+      const { data } = await axios.post(
+        apiUrl + '/v1/notifications/verify-webhook-signature',
+        verificationPayload,
+        {
+          auth: {
+            username: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
+            password: process.env.PAYPAL_SECRET!,
+          },
+        }
+      );
 
-    await axios
-      .post(apiUrl + '/v1/notifications/verify-webhook-signature', verificationPayload, {
-        auth: {
-          username: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
-          password: process.env.PAYPAL_SECRET!,
-        },
-      })
-      .then((res: any) => (verification = res.data.verification_status))
-      .catch((error: any) => {});
+      if (data.verification_status == 'SUCCESS') {
+        const PaypalOrderId = req.body.resource.supplementary_data.related_ids.order_id;
 
-    if (verification == 'SUCCESS') {
-      const PaypalOrderId = req.body.resource.supplementary_data.related_ids.order_id;
+        const { data: pendingOrders } = await api.get('orders?status=pending');
 
-      const pendingOrders = await api.get('orders?status=pending');
-      const data: OrderData[] = pendingOrders.data;
+        if (!pendingOrders.length) {
+          res.status(404).send('No pending orders found');
+        } else {
+          const isOrder = pendingOrders.find(
+            (order: OrderData) => order.transaction_id == PaypalOrderId
+          );
 
-      if (!data.length) res.status(404).send('');
-      else {
-        const isOrder = data.find((order) => order.transaction_id == PaypalOrderId);
-
-        if (!isOrder) res.status(404).send('');
-        else
-          api
+          if (!isOrder) res.status(404).send('No such order in pending orders');
+          await api
             .put(`orders/${isOrder.id}`, { set_paid: true })
             .then((data) => {
-              res.status(200).send('');
+              res.status(200).send('Order updated');
             })
-            .catch((e) => res.status(500).send(''));
-      }
+            .catch((e) => res.status(500).send('Error updating order'));
+        }
+      } else res.status(403).send('Verification failed');
+    } catch (error) {
+      res.status(500).send('Something went wrong');
     }
-  } else res.status(200).send('');
+  } else res.status(200).send('Webhook received');
 };
 
 export default handler;

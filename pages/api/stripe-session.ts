@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         customer_email: email,
         line_items: [item],
         mode: 'payment',
-        success_url: `${req.headers.origin}/checkout/order-received/${orderId}?key=${orderKey}?stripeSuccess=true`,
+        success_url: `${req.headers.origin}/checkout/order-received/${orderId}?key=${orderKey}&stripeSuccess=true`,
         cancel_url: `${req.headers.origin}/checkout/`,
         metadata: { orderId: orderId },
         payment_method_types: [],

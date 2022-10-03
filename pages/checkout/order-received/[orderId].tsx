@@ -13,7 +13,8 @@ const Order: NextPage = () => {
   const router = useRouter();
   const { orderId, key, stripeSuccess } = router.query;
 
-  const [fetched, setFetched] = useState(false);
+  const [isOrderfetched, setisOrderFetched] = useState(false);
+  const [cartCleared, setCartCleared] = useState(false);
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const [error, setError] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
@@ -29,19 +30,22 @@ const Order: NextPage = () => {
 
   // Clear cart on successful stripe return
   useEffect(() => {
-    if (stripeSuccess) clearCart();
-  }, [stripeSuccess, clearCart]);
+    if (stripeSuccess && !cartCleared) {
+      clearCart();
+      setCartCleared(true);
+    }
+  }, [stripeSuccess, clearCart, cartCleared]);
 
   // Initial order data loading
   useEffect(() => {
-    if (orderId && key && !fetched) {
+    if (orderId && key && !isOrderfetched) {
       setIsLoading(true);
       getOrder().then((data) => {
-        setFetched(true);
+        setisOrderFetched(true);
         setIsLoading(false);
       });
     }
-  }, [orderId, key, fetched, getOrder]);
+  }, [orderId, key, isOrderfetched, getOrder]);
 
   // Refetch data while waiting for order status change (webhook processing)
   useEffect(() => {
