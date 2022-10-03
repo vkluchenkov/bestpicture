@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       transmission_sig: req.headers['paypal-transmission-sig'],
       transmission_time: req.headers['paypal-transmission-time'],
       webhook_event: req.body,
-      webhook_id: process.env.WEBHOOK_ID,
+      webhook_id: process.env.PAYPAL_WEBHOOK_ID,
     };
     const apiUrl = process.env.PAYPAL_API_URL;
 
