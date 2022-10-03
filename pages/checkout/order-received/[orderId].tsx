@@ -1,76 +1,94 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Loader } from '../../../components/Loader';
 import axios from 'axios';
 import styles from '../../../styles/Order.module.css';
 import { OrderData } from '../../../types/order.types';
+import Head from 'next/head';
+import { OrderVeiw } from '../../../components/OrderView';
+import { useCart } from '../../../store/Cart';
 
-const ThankYou: NextPage = () => {
+const Order: NextPage = () => {
   const router = useRouter();
-  const { orderId, key } = router.query;
+  const { orderId, key, stripeSuccess } = router.query;
 
+  const [fetched, setFetched] = useState(false);
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const [error, setError] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
+  const [{}, { clearCart }] = useCart();
 
+  const getOrder = useCallback(async () => {
+    await axios
+      .post('/api/get-order', { orderId: orderId, key: key })
+      .then((res) => setOrderData(res.data))
+      .catch((e) => setError(e))
+      .finally(() => setIsLoading(false));
+  }, [key, orderId]);
+
+  // Clear cart on successful stripe return
   useEffect(() => {
-    if (orderId && key) {
+    if (stripeSuccess) clearCart();
+  }, [stripeSuccess, clearCart]);
+
+  // Initial order data loading
+  useEffect(() => {
+    if (orderId && key && !fetched) {
       setIsLoading(true);
-      axios
-        .post('/api/get-order', { orderId: orderId, key: key })
-        .then((res) => setOrderData(res.data))
-        .catch((e) => setError(e))
-        .finally(() => setIsLoading(false));
+      getOrder().then((data) => {
+        setFetched(true);
+        setIsLoading(false);
+      });
     }
-  }, [orderId, key]);
+  }, [orderId, key, fetched, getOrder]);
 
+  // Refetch data while waiting for order status change (webhook processing)
   useEffect(() => {
-    if (orderData) console.log(orderData);
-  }, [orderData]);
+    if (orderData && orderData.status == 'pending') {
+      setTimeout(() => {
+        getOrder();
+      }, 5000);
+    }
+  }, [getOrder, orderData]);
 
-  if (isLoading) return <Loader />;
+  const head = (
+    <Head>
+      <title>Your order | bestpicture.pro</title>
+    </Head>
+  );
 
   if (!key)
     return (
       <>
-        <h1>Oops.. something went wrong</h1>
-        <p>Order key for order #{orderId} was not provided. Please check your link.</p>
+        {head}
+        <h1 className={styles.title}>Oops.. something went wrong</h1>
+        <p>Order key for order #{orderId} was not provided.</p>
       </>
     );
 
-  if (error)
+  if (error) {
     return (
       <>
-        <h1>Oops.. something went wrong</h1>
-        <p>
-          Please check your link. It seems that the order does not exist or you do not have rights
-          to view it.
-        </p>
-      </>
-    );
-
-  if (orderData) {
-    const lineItems = orderData.line_items.map((i) => (
-      <li key={'video' + i.product_id}>{i.name}</li>
-    ));
-    const feeItems = orderData.fee_lines.map((i) => <li key={'fee' + i.id}>{i.name}</li>);
-    return (
-      <>
-        <h1 className={styles.title}>Order {orderData.id}</h1>
-        <p className={styles.status}>Status: {orderData.status}</p>
-        <h2>Billing</h2>
-        <p>{orderData.billing.first_name}</p>
-        <p>{orderData.billing.email}</p>
-        <h2>Videos</h2>
-        <ul>
-          {lineItems}
-          {feeItems}
-        </ul>
+        {head}
+        <h1 className={styles.title}>Oops.. something went wrong</h1>
+        <p>It seems this order does not exist.</p>
       </>
     );
   }
-  return <></>;
+
+  if (isLoading) return <Loader />;
+
+  if (orderData) {
+    return (
+      <>
+        {head}
+        <section className={styles.orderContainer}>
+          <OrderVeiw orderData={orderData} />
+        </section>
+      </>
+    );
+  } else return <></>;
 };
 
-export default ThankYou;
+export default Order;

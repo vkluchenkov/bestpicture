@@ -64,8 +64,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     removeCouponsError: undefined,
   });
 
-  const [checkoutResult, setCheckoutResult] = useState<CheckoutMutation | null>(null);
-
   const [skip, setSkip] = useState(false);
 
   const [isLoading, setIsloading] = useState(false);

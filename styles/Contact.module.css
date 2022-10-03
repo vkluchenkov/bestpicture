@@ -1,0 +1,60 @@
+.title {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 26px;
+  line-height: 32px;
+  text-align: center;
+  color: white;
+  margin: 0;
+  padding: 0 0 20px;
+}
+
+.description {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+  color: white;
+  margin: 0;
+  padding: 0 0 15px;
+  text-align: center;
+}
+
+.contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+}
+
+.contact {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+  text-decoration: underline;
+  color: white;
+  margin: 0;
+  transition: opacity 0.3s;
+}
+
+.contact:hover {
+  opacity: 0.7;
+}
+
+@media screen and (min-width: 768px) {
+  .description {
+    text-align: left;
+  }
+
+  .contacts {
+    flex-direction: row;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .title {
+    padding: 0 0 25px;
+    text-align: left;
+  }
+}

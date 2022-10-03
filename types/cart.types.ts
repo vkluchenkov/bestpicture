@@ -33,7 +33,6 @@ export interface CartItems {
   cart: CartContents;
 }
 
-export type StripeStatus = 'success' | 'cancelled' | undefined;
 type PaymentMethod = 'bacs' | 'paypal' | 'stripe' | 'cod' | undefined;
 
 // export interface CheckoutPayload {

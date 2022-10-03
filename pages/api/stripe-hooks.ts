@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const order = await api.get(`orders/${object.metadata.orderId}`);
 
         if (order) {
-          const updateData = { status: 'processing' };
+          const updateData = { set_paid: true };
           await api.put(`orders/${object.metadata.orderId}`, updateData);
         }
       }

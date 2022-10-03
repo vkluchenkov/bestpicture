@@ -26,10 +26,10 @@ export const menu: Menu[] = [
 ];
 
 export const footerMenu: Menu[] = [
-  {
-    name: 'About the author',
-    link: '/about',
-  },
+  // {
+  //   name: 'About the author',
+  //   link: '/about',
+  // },
   {
     name: 'faq',
     link: '/faq',
