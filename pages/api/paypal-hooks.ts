@@ -44,11 +44,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           if (!isOrder) res.status(404).send('No such order in pending orders');
           await api
             .put(`orders/${isOrder.id}`, { set_paid: true })
-            .then((data) => {
-              res.status(200).send('Order updated');
-            })
             .catch((e) => res.status(500).send('Error updating order'));
-          res.status(502).send('');
+          res.status(200).send('Success');
         }
       } else res.status(403).send('Verification failed!');
     } catch (error) {
