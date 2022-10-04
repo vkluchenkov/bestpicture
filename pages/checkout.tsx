@@ -71,7 +71,6 @@ const Checkout: NextPage = () => {
             return { code: c.code };
           })
         : [];
-      console.log(couponLines);
 
       const createOrderPayload: CreateOrderPayload = {
         billing: {
