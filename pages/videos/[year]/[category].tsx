@@ -7,6 +7,7 @@ import { ProductCard } from '../../../components/ProductCard';
 import Head from 'next/head';
 import { useCart } from '../../../store/Cart';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
   const router = useRouter();
@@ -14,12 +15,18 @@ const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
 
   const [{ cart, isLoading }, {}] = useCart();
 
+  const [categoryPath, setCategoryPath] = useState<string>('');
+
+  useEffect(() => {
+    setCategoryPath(window.location.href.split('#')[0]);
+  }, []);
+
   const productsMap = products.map((p) => {
     const isInCart = cart.contents.nodes.some(
       (cartProduct) => cartProduct.product.node.id === p.id
     );
 
-    return <ProductCard product={p} isInCart={isInCart} key={p.id} />;
+    return <ProductCard product={p} isInCart={isInCart} key={p.id} categoryPath={categoryPath} />;
   });
 
   return (
