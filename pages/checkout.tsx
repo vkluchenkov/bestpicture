@@ -108,7 +108,6 @@ const Checkout: NextPage = () => {
         ];
         createOrderPayload.transaction_id = paypalTransactionId;
       }
-
       // Create order and process payment
       try {
         const res = await fetch('/api/create-order', {
