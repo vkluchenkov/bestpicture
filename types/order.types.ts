@@ -67,4 +67,5 @@ export interface OrderData {
   payment_method_title: PaymentMethodTitle;
   order_key?: string;
   transaction_id: string;
+  customer_note: string;
 }

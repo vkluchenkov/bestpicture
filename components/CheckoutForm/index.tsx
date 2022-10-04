@@ -9,8 +9,8 @@ import { TextInput } from '../../ui-kit/TextInput';
 import styles from './CheckoutForm.module.css';
 
 interface CheckoutFormProps {
-  onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
-  // onSubmit: () => Promise<void>;
+  // onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
+  onSubmit: () => Promise<void>;
   onChange: (e: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   setTransactionId: (orderId: string) => void;
   formFields: FormFields;
@@ -31,7 +31,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
   const [{ cart }, {}] = useCart();
 
   return (
-    <form id='checkout_form' noValidate className={styles.checkoutForm} onSubmit={onSubmit}>
+    <form id='checkout_form' noValidate className={styles.checkoutForm}>
       <div className={styles.inputWrapper}>
         <label htmlFor='name' className={styles.label}>
           Name*
@@ -84,7 +84,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
         />
       </div>
 
-      {cart.total != '0' ? (
+      {cart.total != '0.00' ? (
         <fieldset className={styles.payment}>
           <h2 className={styles.subtitle}>Payment method</h2>
           <RadioInput
@@ -129,14 +129,15 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
       )}
       {formFields.payment != 'paypal' ? (
         <Button
-          type='submit'
+          type='button'
           role='link'
           className={styles.button}
           isLarge
           fullWidth
           isDisabled={isBtnDisabled}
+          onClick={onSubmit}
         >
-          {cart.total != '0' &&
+          {cart.total != '0.00' &&
           cart.total != '' &&
           formFields.payment != 'bacs' &&
           formFields.payment != 'cod'
@@ -164,11 +165,9 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
                 return orderId;
               });
           }}
-          onApprove={(data, actions) => {
-            return actions.order!.capture().then(() => {
-              const form: HTMLFormElement | null = document.querySelector('#checkout_form');
-              if (form) form.requestSubmit();
-            });
+          onApprove={async (data, actions) => {
+            await actions.order!.capture();
+            onSubmit();
           }}
         />
       )}

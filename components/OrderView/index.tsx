@@ -72,6 +72,13 @@ export const OrderVeiw: React.FC<OrderViewProps> = ({ orderData }) => {
         </>
       )}
 
+      {!!orderData.customer_note.length && (
+        <>
+          <h2 className={styles.subtitle}>Note</h2>
+          <p className={styles.text}>{orderData.customer_note}</p>
+        </>
+      )}
+
       <p className={styles.subtotal}>
         Discount: {orderData.discount_total != '0' ? '-€' + orderData.discount_total : '€0'}
       </p>

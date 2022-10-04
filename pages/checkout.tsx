@@ -20,9 +20,6 @@ const Checkout: NextPage = () => {
 
   const [{ cart }, { clearCart }] = useCart();
 
-  // PayPal transaction id
-  const [paypalTransactionId, setPayPalTransactionId] = useState('');
-
   // Form fields
   const [formFields, setFormFields] = useState<FormFields>({
     name: '',
@@ -33,8 +30,11 @@ const Checkout: NextPage = () => {
   const [formFieldsErrors, setFormFieldsErrors] = useState<Partial<FormFields>>({});
   const [isBtnDisabled, setIsBtnDisabled] = useState(true);
 
-  // Add processing fee to total
-  const fee = Number.parseFloat(cart.total) <= 20 ? 1 : Number.parseFloat(cart.total) * 0.05;
+  // Add processing fee 5% to total
+  const fee =
+    Number.parseFloat(cart.total) <= 20
+      ? 1
+      : Math.round((Number.parseFloat(cart.total) * 100 * 5) / 100) / 100;
 
   const total = () => {
     if (formFields.payment == 'stripe' || formFields.payment == 'paypal') {
@@ -55,9 +55,14 @@ const Checkout: NextPage = () => {
     setIsBtnDisabled(!form!.checkValidity());
   }, []);
 
+  // PayPal transaction id
+  let paypalTransactionId = '';
+  const setPayPalTransactionId = (orderId: string) => (paypalTransactionId = orderId);
+
   const submitHandler = useCallback(
-    async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+    // async (e: FormEvent<HTMLFormElement>) => {
+    async () => {
+      // e.preventDefault();
       // Create order payload
       const lineItems = cart.contents.nodes.map((cartItem) => {
         return {
@@ -77,7 +82,7 @@ const Checkout: NextPage = () => {
           email: formFields.email,
           first_name: formFields.name,
         },
-        customer_note: '',
+        customer_note: formFields.note,
         status: 'pending',
         line_items: lineItems,
         coupon_lines: couponLines,
@@ -124,7 +129,6 @@ const Checkout: NextPage = () => {
             orderKey: data.order_key,
             email: data.billing.email,
           };
-
           axios
             .post('/api/stripe-session', stripePayload)
             .then((data: any) => window.open(data.data.url as string, '_self'))

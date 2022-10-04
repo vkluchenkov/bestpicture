@@ -32,24 +32,39 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       if (data.verification_status == 'SUCCESS') {
         const PaypalOrderId = req.body.resource.supplementary_data.related_ids.order_id;
-        const { data: pendingOrders } = await api
-          .get('orders?status=pending')
-          .catch((error) => res.status(404).send('Can not fetch orders'));
+        const { data: pendingOrders } = await api.get('orders?status=pending').catch((error) => {
+          // console.log('Can not fetch orders');
+          res.status(404).send('Can not fetch orders');
+          return;
+        });
         if (!pendingOrders.length) {
+          // console.log('No pending orders found');
           res.status(404).send('No pending orders found');
+          return;
         } else {
           const isOrder = pendingOrders.find(
             (order: OrderData) => order.transaction_id == PaypalOrderId
           );
-          if (!isOrder) res.status(404).send('No such order in pending orders');
-          await api
-            .put(`orders/${isOrder.id}`, { set_paid: true })
-            .catch((e) => res.status(500).send('Error updating order'));
+          if (!isOrder) {
+            // console.log('No such order in pending orders');
+            res.status(404).send('No such order in pending orders');
+            return;
+          }
+          await api.put(`orders/${isOrder.id}`, { set_paid: true }).catch((e) => {
+            // console.log('Error updating order');
+            res.status(500).send('Error updating order');
+            return;
+          });
           res.status(200).send('Success');
+          return;
         }
-      } else res.status(403).send('Verification failed!');
+      } else {
+        res.status(403).send('Verification failed!');
+        return;
+      }
     } catch (error) {
       res.status(501).send('Something went wrong');
+      return;
     }
   } else res.status(202).send('Webhook received');
 };
