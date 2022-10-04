@@ -66,7 +66,12 @@ const Checkout: NextPage = () => {
         };
       });
 
-      const couponLines = cart.appliedCoupons?.length ? cart.appliedCoupons.map((c) => c.code) : [];
+      const couponLines = cart.appliedCoupons?.length
+        ? cart.appliedCoupons.map((c) => {
+            return { code: c.code };
+          })
+        : [];
+      console.log(couponLines);
 
       const createOrderPayload: CreateOrderPayload = {
         billing: {
