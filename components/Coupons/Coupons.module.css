@@ -52,7 +52,7 @@
 }
 
 .couponForm__input {
-  text-transform: uppercase;
+  text-transform: lowercase;
 }
 
 .couponForm__button {

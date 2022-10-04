@@ -11,7 +11,7 @@ export const Coupons: React.FC = () => {
 
   const handleInputChange = (e: FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
-    setCoupon(target.value);
+    setCoupon(target.value.toLowerCase());
   };
 
   const handleCouponSubmit = (e: FormEvent<HTMLFormElement>) => {
