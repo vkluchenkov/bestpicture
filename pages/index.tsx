@@ -15,6 +15,7 @@ import {
   WINDOW_SIZE_EXTRALARGE,
   INITIAL_CARDS_LARGE,
   INITIAL_CARDS_EXTRALARGE,
+  backendUrl,
 } from '../utils/constants';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -22,6 +23,8 @@ import { Button } from '../ui-kit/Button';
 
 const Home: NextPage<HomeProps> = ({ productCategories }) => {
   const router = useRouter();
+  const { asPath, isReady } = router;
+  const { download_file } = router.query;
 
   const [cardsQty, setCardsQty] = useState(INITIAL_CARDS_SMALL);
   const [largeCardsQty, setLargeCardsQty] = useState(0);
@@ -50,6 +53,10 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    if (download_file && asPath && isReady) window.open(backendUrl + asPath.slice(1), '_self');
+  }, [download_file, asPath, isReady]);
 
   const categoryCards = productCategories.map((c, index) => {
     if (index <= cardsQty - 1) {
