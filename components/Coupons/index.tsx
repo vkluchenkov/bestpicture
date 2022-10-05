@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useCallback, useState } from 'react';
 import { useCart } from '../../store/Cart';
 import { Button } from '../../ui-kit/Button';
 import { TextInput } from '../../ui-kit/TextInput';
@@ -9,19 +9,22 @@ export const Coupons: React.FC = () => {
 
   const [coupon, setCoupon] = useState('');
 
-  const handleInputChange = (e: FormEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
     setCoupon(target.value.toLowerCase());
-  };
+  }, []);
 
-  const handleCouponSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    applyCoupon(coupon);
-    setCoupon('');
-    setTimeout(() => {
-      eraseError('couponError');
-    }, 5000);
-  };
+  const handleCouponSubmit = useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      applyCoupon(coupon);
+      setCoupon('');
+      setTimeout(() => {
+        eraseError('couponError');
+      }, 5000);
+    },
+    [applyCoupon, coupon, eraseError]
+  );
 
   const cartCoupons = cart.appliedCoupons;
   const couponList = cartCoupons?.map((c) => {

@@ -59,90 +59,85 @@ const Checkout: NextPage = () => {
   let paypalTransactionId = '';
   const setPayPalTransactionId = (orderId: string) => (paypalTransactionId = orderId);
 
-  const submitHandler = useCallback(
-    // async (e: FormEvent<HTMLFormElement>) => {
-    async () => {
-      // e.preventDefault();
-      // Create order payload
-      const lineItems = cart.contents.nodes.map((cartItem) => {
-        return {
-          product_id: cartItem.product.node.id,
-          quantity: 1,
-        };
-      });
-
-      const couponLines = cart.appliedCoupons?.length
-        ? cart.appliedCoupons.map((c) => {
-            return { code: c.code };
-          })
-        : [];
-
-      const createOrderPayload: CreateOrderPayload = {
-        billing: {
-          email: formFields.email,
-          first_name: formFields.name,
-        },
-        customer_note: formFields.note,
-        status: 'pending',
-        line_items: lineItems,
-        coupon_lines: couponLines,
+  const submitHandler = useCallback(async () => {
+    // Create order payload
+    const lineItems = cart.contents.nodes.map((cartItem) => {
+      return {
+        product_id: cartItem.product.node.id,
+        quantity: 1,
       };
+    });
 
-      if (!formFields.payment) createOrderPayload.set_paid = true;
+    const couponLines = cart.appliedCoupons?.length
+      ? cart.appliedCoupons.map((c) => {
+          return { code: c.code };
+        })
+      : [];
 
-      if (formFields.payment == 'bacs') {
-        createOrderPayload.payment_method = 'bacs';
-        createOrderPayload.payment_method_title = 'Bank transfer';
-        createOrderPayload.set_paid = false;
-        createOrderPayload.status = 'on-hold';
+    const createOrderPayload: CreateOrderPayload = {
+      billing: {
+        email: formFields.email,
+        first_name: formFields.name,
+      },
+      customer_note: formFields.note,
+      status: 'pending',
+      line_items: lineItems,
+      coupon_lines: couponLines,
+    };
+
+    if (!formFields.payment) createOrderPayload.set_paid = true;
+
+    if (formFields.payment == 'bacs') {
+      createOrderPayload.payment_method = 'bacs';
+      createOrderPayload.payment_method_title = 'Bank transfer';
+      createOrderPayload.set_paid = false;
+      createOrderPayload.status = 'on-hold';
+    }
+
+    if (formFields.payment == 'stripe') {
+      createOrderPayload.payment_method = 'stripe';
+      createOrderPayload.payment_method_title = 'Stripe (cards and wallets)';
+      createOrderPayload.fee_lines = [
+        { name: 'Stripe processing fee 5% (min €1)', total: String(fee) },
+      ];
+    }
+
+    if (formFields.payment == 'paypal') {
+      createOrderPayload.payment_method = 'paypal';
+      createOrderPayload.payment_method_title = 'PayPal';
+      createOrderPayload.fee_lines = [
+        { name: 'PayPal processing fee 5% (min €1)', total: String(fee) },
+      ];
+      createOrderPayload.transaction_id = paypalTransactionId;
+    }
+    // Create order and process payment
+    try {
+      const res = await fetch('/api/create-order', {
+        method: 'POST',
+        body: JSON.stringify(createOrderPayload),
+      });
+      const data: OrderData = await res.json();
+
+      if (createOrderPayload.payment_method == 'stripe' && data) {
+        const stripePayload = {
+          name: `Order ${data.id} on Vladimir Kluchenkov's website`,
+          price: data.total,
+          orderId: data.id,
+          orderKey: data.order_key,
+          email: data.billing.email,
+        };
+        axios
+          .post('/api/stripe-session', stripePayload)
+          .then((data: any) => window.open(data.data.url as string, '_self'))
+          .catch((error) => console.log(error));
+      } else if (data) {
+        router.push(`/checkout/order-received/${data.id}?key=${data.order_key}`);
+        clearCart();
       }
-
-      if (formFields.payment == 'stripe') {
-        createOrderPayload.payment_method = 'stripe';
-        createOrderPayload.payment_method_title = 'Stripe (cards and wallets)';
-        createOrderPayload.fee_lines = [
-          { name: 'Stripe processing fee 5% (min €1)', total: String(fee) },
-        ];
-      }
-
-      if (formFields.payment == 'paypal') {
-        createOrderPayload.payment_method = 'paypal';
-        createOrderPayload.payment_method_title = 'PayPal';
-        createOrderPayload.fee_lines = [
-          { name: 'PayPal processing fee 5% (min €1)', total: String(fee) },
-        ];
-        createOrderPayload.transaction_id = paypalTransactionId;
-      }
-      // Create order and process payment
-      try {
-        const res = await fetch('/api/create-order', {
-          method: 'POST',
-          body: JSON.stringify(createOrderPayload),
-        });
-        const data: OrderData = await res.json();
-
-        if (createOrderPayload.payment_method == 'stripe' && data) {
-          const stripePayload = {
-            name: `Order ${data.id} on Vladimir Kluchenkov's website`,
-            price: data.total,
-            orderId: data.id,
-            orderKey: data.order_key,
-            email: data.billing.email,
-          };
-          axios
-            .post('/api/stripe-session', stripePayload)
-            .then((data: any) => window.open(data.data.url as string, '_self'))
-            .catch((error) => console.log(error));
-        } else if (data) {
-          router.push(`/checkout/order-received/${data.id}?key=${data.order_key}`);
-          clearCart();
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [cart, clearCart, formFields, fee, router, paypalTransactionId]
-  );
+    } catch (error) {
+      console.log(error);
+    }
+  }, [cart, clearCart, formFields, fee, router, paypalTransactionId]);
 
   if (!cart.contents.nodes.length)
     return (
