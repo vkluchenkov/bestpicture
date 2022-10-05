@@ -21,7 +21,7 @@ export const menu: Menu[] = [
   },
   {
     name: 'All events',
-    link: '/videos/all',
+    link: '/videos',
   },
 ];
 
