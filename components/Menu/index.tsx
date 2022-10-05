@@ -1,5 +1,5 @@
 import styles from './Menu.module.css';
-import { menu } from '../../utils/constants';
+import { menu, wooShopBase } from '../../utils/constants';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCart } from '../../store/Cart';
@@ -9,18 +9,20 @@ export const Menu: React.FC = () => {
   const [{ cart }, { showCart }] = useCart();
 
   const renderMenu = menu.map((item, index) => {
+    const className = () => {
+      if (item.link == wooShopBase) {
+        return router.asPath.endsWith(item.link)
+          ? `${styles.menu__item} ${styles.menu__item_active}`
+          : styles.menu__item;
+      } else
+        return router.asPath.startsWith(item.link)
+          ? `${styles.menu__item} ${styles.menu__item_active}`
+          : styles.menu__item;
+    };
     return (
       <li key={index}>
         <Link href={item.link}>
-          <a
-            className={
-              router.asPath.startsWith(item.link)
-                ? `${styles.menu__item} ${styles.menu__item_active}`
-                : styles.menu__item
-            }
-          >
-            {item.name}
-          </a>
+          <a className={className()}>{item.name}</a>
         </Link>
       </li>
     );

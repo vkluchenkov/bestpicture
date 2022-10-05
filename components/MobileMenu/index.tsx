@@ -2,7 +2,7 @@ import { MobileMenuProps } from './types';
 import styles from './MobileMenu.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { menu } from '../../utils/constants';
+import { menu, wooShopBase } from '../../utils/constants';
 import { useEffect } from 'react';
 import { useCart } from '../../store/Cart';
 
@@ -22,17 +22,21 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   }, [isOpen]);
 
   const renderMenu = menu.map((item, index) => {
+    const className = () => {
+      if (item.link == wooShopBase) {
+        return router.asPath.endsWith(item.link)
+          ? `${styles.mobileMenu__item} ${styles.mobileMenu__item_active}`
+          : styles.mobileMenu__item;
+      } else
+        return router.asPath.startsWith(item.link)
+          ? `${styles.mobileMenu__item} ${styles.mobileMenu__item_active}`
+          : styles.mobileMenu__item;
+    };
+
     return (
       <li key={index}>
         <Link href={item.link}>
-          <a
-            className={
-              router.asPath.startsWith(item.link)
-                ? `${styles.mobileMenu__item} ${styles.mobileMenu__item_active}`
-                : styles.mobileMenu__item
-            }
-            onClick={handleClose}
-          >
+          <a className={className()} onClick={handleClose}>
             {item.name}
           </a>
         </Link>

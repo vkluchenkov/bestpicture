@@ -44,12 +44,8 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
           value={formFields.name}
           placeholder='Jane Doe'
           onChange={onChange}
+          error={formFieldsErrors.name}
         />
-        {formFieldsErrors.name ? (
-          <span className={styles.error}>{formFieldsErrors.name}</span>
-        ) : (
-          <></>
-        )}
       </div>
 
       <div className={styles.inputWrapper}>
@@ -63,13 +59,10 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
           value={formFields.email}
           placeholder='email@example.com'
           onChange={onChange}
+          error={formFieldsErrors.email}
         />
-        {formFieldsErrors.email ? (
-          <span className={styles.error}>{formFieldsErrors.email}</span>
-        ) : (
-          <></>
-        )}
       </div>
+
       <div className={styles.inputWrapper}>
         <label htmlFor='note' className={styles.label}>
           Order note

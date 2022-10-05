@@ -12,6 +12,19 @@
   color: white;
 }
 
+.error {
+  display: block;
+  margin: 0;
+  padding: 0;
+  color: #e10000;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  opacity: 1;
+  transition: all 0.3s;
+}
+
 .textInput:-webkit-autofill,
 .textInput:-webkit-autofill:hover,
 .textInput:-webkit-autofill:focus,

@@ -5,6 +5,8 @@ interface Menu {
 // With trailng slash!
 export const backendUrl = 'https://www.bestpicture.pro/';
 
+export const wooShopBase = '/videos';
+
 // TMP menu
 export const menu: Menu[] = [
   {
