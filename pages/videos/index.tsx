@@ -1,9 +1,9 @@
 import { gql } from '@apollo/client';
 import { GetStaticProps, NextPage } from 'next';
-import { CategoryCard } from '../../../components/CategoryCard';
-import { ProductCategory } from '../../../types/home.types';
-import { addApolloState, initializeApollo } from '../../../utils/apolloClient';
-import styles from '../../../styles/Videos.module.css';
+import { CategoryCard } from '../../components/CategoryCard';
+import { ProductCategory } from '../../types/home.types';
+import { addApolloState, initializeApollo } from '../../utils/apolloClient';
+import styles from '../../styles/Videos.module.css';
 import Head from 'next/head';
 
 interface VideosProps {

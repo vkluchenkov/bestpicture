@@ -86,7 +86,7 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
         type='button'
         isLarge
         className={styles.button}
-        onClick={() => router.push('/videos/all')}
+        onClick={() => router.push('/videos')}
       >
         View all events
       </Button>
