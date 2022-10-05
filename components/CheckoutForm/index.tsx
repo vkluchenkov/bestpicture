@@ -30,6 +30,14 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
 }) => {
   const [{ cart }, {}] = useCart();
 
+  const buttonText = () =>
+    cart.total != '0.00' &&
+    cart.total != '' &&
+    formFields.payment != 'bacs' &&
+    formFields.payment != 'cod'
+      ? 'Pay €' + total
+      : 'Place order';
+
   return (
     <form id='checkout_form' noValidate className={styles.checkoutForm}>
       <div className={styles.inputWrapper}>
@@ -130,12 +138,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
           isDisabled={isBtnDisabled}
           onClick={onSubmit}
         >
-          {cart.total != '0.00' &&
-          cart.total != '' &&
-          formFields.payment != 'bacs' &&
-          formFields.payment != 'cod'
-            ? 'Pay €' + total
-            : 'Place order'}
+          {buttonText()}
         </Button>
       ) : (
         <PayPalButtons

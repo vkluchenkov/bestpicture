@@ -44,13 +44,11 @@ export const Coupons: React.FC = () => {
 
   return (
     <>
-      {couponList?.length ? (
+      {couponList?.length && (
         <>
           <h3 className={styles.title}>Applied coupons:</h3>
           <ul className={styles.cartCoupons}>{couponList}</ul>
         </>
-      ) : (
-        <></>
       )}
 
       {cartErrors.removeError ? <p>{cartErrors.removeError.message}</p> : <></>}
