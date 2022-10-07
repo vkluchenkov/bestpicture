@@ -5,6 +5,14 @@ const nextConfig = {
   images: {
     domains: ['www.bestpicture.pro'],
   },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/wp-admin',
+  //       destination: 'https://test.bestpicture.pro/wp-admin/',
+  //     },
+  //   ];
+  // },
 };
 
 module.exports = nextConfig;
