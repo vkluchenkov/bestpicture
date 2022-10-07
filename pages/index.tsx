@@ -23,8 +23,6 @@ import { Button } from '../ui-kit/Button';
 
 const Home: NextPage<HomeProps> = ({ productCategories }) => {
   const router = useRouter();
-  const { asPath, isReady } = router;
-  const { download_file } = router.query;
 
   const [cardsQty, setCardsQty] = useState(INITIAL_CARDS_SMALL);
   const [largeCardsQty, setLargeCardsQty] = useState(0);
@@ -49,14 +47,17 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
   };
 
   useEffect(() => {
+    const url = new URL(location.href);
+    const isDownload = url.searchParams.get('download_file');
+    const redirectUrl = location.href.replace(location.origin, backendUrl.slice(0, -1));
+    !!isDownload && window.open(redirectUrl, '_self');
+  }, []);
+
+  useEffect(() => {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  useEffect(() => {
-    if (download_file && asPath && isReady) window.open(backendUrl + asPath.slice(1), '_self');
-  }, [download_file, asPath, isReady]);
 
   const categoryCards = productCategories.map((c, index) => {
     if (index <= cardsQty - 1) {
