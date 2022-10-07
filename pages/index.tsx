@@ -20,12 +20,14 @@ import {
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from '../ui-kit/Button';
+import { Loader } from '../components/Loader';
 
 const Home: NextPage<HomeProps> = ({ productCategories }) => {
   const router = useRouter();
 
   const [cardsQty, setCardsQty] = useState(INITIAL_CARDS_SMALL);
   const [largeCardsQty, setLargeCardsQty] = useState(0);
+  const [isLoader, setIsLoader] = useState(false);
 
   const handleResize = () => {
     if (window.innerWidth < WINDOW_SIZE_MEDIUM) {
@@ -46,11 +48,14 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
     }
   };
 
+  // Forward email download links to wordpress to handle
   useEffect(() => {
+    setIsLoader(true);
     const url = new URL(location.href);
     const isDownload = url.searchParams.get('download_file');
     const redirectUrl = location.href.replace(location.origin, backendUrl.slice(0, -1));
-    !!isDownload && window.open(redirectUrl, '_self');
+    if (isDownload) window.open(redirectUrl, '_self');
+    else setIsLoader(false);
   }, []);
 
   useEffect(() => {
@@ -75,6 +80,8 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
         );
     }
   });
+
+  if (isLoader) return <Loader />;
 
   return (
     <>
