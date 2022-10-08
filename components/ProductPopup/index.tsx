@@ -71,7 +71,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
         />
       </div>
       <p className={styles.name}>{name}</p>
-      <p className={styles.price}>{price ? `€${price}` : 'Free'}</p>
+      <p className={styles.price}>{price ? `${price}` : 'Free'}</p>
       {productButton}
       <button type='button' className={styles.buttonBack} onClick={onClose}>
         Go back to category
