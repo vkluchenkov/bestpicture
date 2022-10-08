@@ -3,7 +3,6 @@
   font-weight: 300;
   font-size: 14px;
   line-height: 16px;
-  color: white;
   margin: 0;
 }
 
@@ -11,7 +10,7 @@
   display: block;
   margin: 0;
   padding: 0;
-  color: #e10000;
+  color: var(--accent-color1);
   font-style: normal;
   font-weight: 600;
   font-size: 14px;
@@ -51,7 +50,6 @@
   font-size: 20px;
   line-height: 22px;
   text-align: center;
-  color: white;
   margin: 0;
   padding: 20px 0 15px;
 }

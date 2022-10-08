@@ -25,7 +25,7 @@ const Year: NextPage<YearProps> = ({ categories }) => {
       <Head>
         <title>Events {year} | bestpicture.pro</title>
       </Head>
-      <h2 className={styles.title}>Events {year}</h2>
+      <h1 className={styles.title}>Events {year}</h1>
       <div className={styles.cardsContainer}>{cards}</div>
     </>
   );

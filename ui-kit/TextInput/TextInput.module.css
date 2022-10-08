@@ -16,7 +16,7 @@
   display: block;
   margin: 0;
   padding: 0;
-  color: #e10000;
+  color: var(--accent-color1);
   font-style: normal;
   font-weight: 600;
   font-size: 14px;

@@ -26,7 +26,7 @@
 }
 
 .logo__red {
-  color: #e10000;
+  color: var(--accent-color1);
 }
 
 .header__subline {

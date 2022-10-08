@@ -1,3 +1,5 @@
+@import url('./theme.css');
+
 html {
   padding: 0;
   margin: 0;
@@ -14,8 +16,8 @@ html {
 body {
   padding: 0;
   margin: 0;
-  color: white;
-  background: #1c1c1c;
+  color: var(--text-color);
+  background: var(--background-color1);
 }
 
 #__next {
@@ -40,10 +42,24 @@ a {
   box-sizing: border-box;
 }
 
+h1 {
+  font-style: var(--h1-font-style);
+  font-weight: var(--h1-font-weight);
+  font-size: var(--h1-font-size);
+  line-height: var(--h1-line-height);
+  text-align: center;
+  margin: 0;
+  padding: 0 0 20px;
+}
+
 @media screen and (min-width: 768px) {
 }
 
 @media screen and (min-width: 1024px) {
+  h1 {
+    padding: 0 0 25px;
+    text-align: left;
+  }
 }
 
 @media screen and (min-width: 1280px) {

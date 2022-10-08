@@ -40,7 +40,6 @@
   font-weight: 300;
   font-size: 26px;
   line-height: 31px;
-  color: white;
   text-decoration: none;
   transition: opacity 0.3s;
 }
@@ -50,7 +49,7 @@
 }
 
 .mobileMenu__item_active {
-  color: #e10000;
+  color: var(--accent-color1);
 }
 
 .mobileMenu__close {

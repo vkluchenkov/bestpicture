@@ -20,7 +20,7 @@ const Videos: NextPage<VideosProps> = ({ categories, parents }) => {
 
     return (
       <div key={index}>
-        <h2 className={styles.title}>Events {parent}</h2>
+        <h1 className={styles.title}>Events {parent}</h1>
         <div className={styles.cardsContainer}>{cards}</div>
       </div>
     );

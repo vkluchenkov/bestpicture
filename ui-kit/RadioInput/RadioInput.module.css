@@ -16,7 +16,7 @@
 
 .input:checked {
   border: 4px solid white;
-  background-color: #e10000;
+  background-color: var(--accent-color1);
 }
 
 .label {

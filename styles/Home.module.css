@@ -4,17 +4,6 @@
   gap: 20px;
 }
 
-.title {
-  font-style: normal;
-  font-weight: 300;
-  font-size: 26px;
-  line-height: 32px;
-  text-align: center;
-  color: white;
-  margin: 0;
-  padding: 0 0 20px;
-}
-
 .button {
   margin: 35px auto 0;
 }
@@ -42,10 +31,6 @@
   .card__small {
     grid-column: span 2;
   }
-  .title {
-    padding: 0 0 25px;
-    text-align: left;
-  }
 }
 
 @media screen and (min-width: 1280px) {
@@ -59,10 +44,5 @@
   }
   .card__small {
     grid-column: span 1;
-  }
-
-  .title {
-    font-size: 26px;
-    line-height: 31px;
   }
 }

@@ -1,0 +1,11 @@
+:root {
+  --accent-color1: #e10000;
+  --accent-color2: #00ff80;
+  --background-color1: #1c1c1c;
+  --background-color2: #161616;
+  --text-color: white;
+  --h1-font-size: 26px;
+  --h1-line-height: 32px;
+  --h1-font-style: normal;
+  --h1-font-weight: 300;
+}

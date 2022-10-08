@@ -4,7 +4,6 @@
   font-size: 26px;
   line-height: 32px;
   text-align: center;
-  color: white;
   margin: 0;
   padding: 0 0 20px;
 }
@@ -19,7 +18,7 @@
   .orderContainer {
     padding: 25px;
     border-radius: 10px;
-    background-color: #161616;
+    background-color: var(--background-color2);
   }
 }
 @media screen and (min-width: 1024px) {

@@ -44,14 +44,14 @@
 }
 
 .button_confirm {
-  outline: 1px solid rgb(0, 255, 128);
-  color: rgb(0, 255, 128);
+  outline: 1px solid var(--accent-color2);
+  color: var(--accent-color2);
 }
 
 .button_confirm:hover {
-  color: rgb(0, 255, 128);
+  color: var(--accent-color2);
 }
 
 .button_confirm:disabled {
-  color: rgb(0, 255, 128);
+  color: var(--accent-color2);
 }
