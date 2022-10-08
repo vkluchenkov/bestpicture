@@ -19,7 +19,7 @@ export const CartProducts: React.FC = () => {
             />
             <div className={styles.cartItem__info}>
               <h3 className={styles.cartItem__title}>{name}</h3>
-              <p className={styles.cartItem__price}>{price ? '€' + price : 'FREE'}</p>
+              <p className={styles.cartItem__price}>{price ? price : 'FREE'}</p>
             </div>
           </li>
         );

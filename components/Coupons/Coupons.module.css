@@ -26,6 +26,7 @@
   margin: 0;
   padding: 3px 0;
   text-decoration: underline;
+  color: var(--text-color);
   font-style: normal;
   font-weight: 300;
   font-size: 14px;

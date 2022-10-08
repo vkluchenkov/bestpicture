@@ -71,7 +71,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart, cat
         />
       </div>
       <p className={styles.name}>{name}</p>
-      <p className={styles.price}>{price ? `€${price}` : 'Free'}</p>
+      <p className={styles.price}>{price ? `${price}` : 'Free'}</p>
       {productButton}
       <ProductPopup
         isOpen={isPopupOpen}

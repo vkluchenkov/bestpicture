@@ -9,7 +9,6 @@ import { TextInput } from '../../ui-kit/TextInput';
 import styles from './CheckoutForm.module.css';
 
 interface CheckoutFormProps {
-  // onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   onSubmit: () => Promise<void>;
   onChange: (e: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   setTransactionId: (orderId: string) => void;
@@ -31,12 +30,12 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
   const [{ cart }, {}] = useCart();
 
   const buttonText = () =>
-    cart.total != '0.00' &&
+    cart.total != '€0.00' &&
     cart.total != '' &&
     formFields.payment != 'bacs' &&
     formFields.payment != 'cod'
-      ? 'Pay €' + total
-      : 'Place order';
+      ? 'Pay ' + total
+      : 'Place order for ' + total;
 
   return (
     <form id='checkout_form' noValidate className={styles.checkoutForm}>
@@ -151,7 +150,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
               .create({
                 purchase_units: [
                   {
-                    amount: { value: total },
+                    amount: { value: total.replace('€', '') },
                   },
                 ],
                 application_context: {},

@@ -100,7 +100,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             small: sourceUrl(size: WOOCOMMERCE_SINGLE)
           }
           ... on SimpleProduct {
-            price(format: RAW)
+            price
           }
         }
       }

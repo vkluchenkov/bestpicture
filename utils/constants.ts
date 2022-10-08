@@ -52,3 +52,7 @@ export const INITIAL_CARDS_SMALL = 7;
 export const INITIAL_CARDS_MEDIUM = 7;
 export const INITIAL_CARDS_LARGE = 11;
 export const INITIAL_CARDS_EXTRALARGE = 14;
+
+// Paypal and Stripe processing fee, %
+export const processingFee = 5;
+export const minProcessingFee = 1;

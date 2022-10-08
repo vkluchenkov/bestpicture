@@ -11,6 +11,7 @@ import { useCart } from '../store/Cart';
 import { Coupons } from '../components/Coupons';
 import { CartProducts } from '../components/CartProducts';
 import { CheckoutForm } from '../components/CheckoutForm';
+import { minProcessingFee, processingFee } from '../utils/constants';
 
 const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!;
 const stripePromise = loadStripe(key);
@@ -30,16 +31,17 @@ const Checkout: NextPage = () => {
   const [formFieldsErrors, setFormFieldsErrors] = useState<Partial<FormFields>>({});
   const [isBtnDisabled, setIsBtnDisabled] = useState(true);
 
-  // Add processing fee 5% to total
-  const fee =
-    Number.parseFloat(cart.total) <= 20
-      ? 1
-      : Math.round((Number.parseFloat(cart.total) * 100 * 5) / 100) / 100;
+  // Add processing fee amount to total
+  const cartTotalNormalized = Number.parseFloat(
+    Number.parseFloat(cart.total.replace('€', '')).toFixed(2)
+  );
+
+  const calculatedfee = Math.round((cartTotalNormalized * 100 * processingFee) / 100) / 100;
+  const actualFee = calculatedfee <= minProcessingFee ? minProcessingFee : calculatedfee;
 
   const total = () => {
     if (formFields.payment == 'stripe' || formFields.payment == 'paypal') {
-      const total = Number.parseFloat(cart.total);
-      return fee > 1 ? String(total + fee) : String(total + 1);
+      return '€' + (cartTotalNormalized + actualFee).toFixed(2);
     } else return cart.total;
   };
 
@@ -98,7 +100,7 @@ const Checkout: NextPage = () => {
       createOrderPayload.payment_method = 'stripe';
       createOrderPayload.payment_method_title = 'Stripe (cards and wallets)';
       createOrderPayload.fee_lines = [
-        { name: 'Stripe processing fee 5% (min €1)', total: String(fee) },
+        { name: 'Stripe processing fee 5% (min €1)', total: String(actualFee) },
       ];
     }
 
@@ -106,7 +108,7 @@ const Checkout: NextPage = () => {
       createOrderPayload.payment_method = 'paypal';
       createOrderPayload.payment_method_title = 'PayPal';
       createOrderPayload.fee_lines = [
-        { name: 'PayPal processing fee 5% (min €1)', total: String(fee) },
+        { name: 'PayPal processing fee 5% (min €1)', total: String(actualFee) },
       ];
       createOrderPayload.transaction_id = paypalTransactionId;
     }
@@ -131,13 +133,13 @@ const Checkout: NextPage = () => {
           .then((data: any) => window.open(data.data.url as string, '_self'))
           .catch((error) => console.log(error));
       } else if (data) {
-        router.push(`/checkout/order-received/${data.id}?key=${data.order_key}`);
         clearCart();
+        router.push(`/checkout/order-received/${data.id}?key=${data.order_key}`);
       }
     } catch (error) {
       console.log(error);
     }
-  }, [cart, clearCart, formFields, fee, router, paypalTransactionId]);
+  }, [cart, clearCart, formFields, actualFee, router, paypalTransactionId]);
 
   if (!cart.contents.nodes.length)
     return (
@@ -160,8 +162,8 @@ const Checkout: NextPage = () => {
           <h2 className={styles.subtitle}>Videos</h2>
           <CartProducts />
           <Coupons />
-          <p className={styles.subtotal}>Subtotal: €{cart.subtotal}</p>
-          <p className={styles.total}>Total: €{total()}</p>
+          <p className={styles.subtotal}>Subtotal: {cart.subtotal}</p>
+          <p className={styles.total}>Total: {total()}</p>
         </section>
         <section className={styles.checkoutSection}>
           <h2 className={styles.subtitle}>Billing</h2>

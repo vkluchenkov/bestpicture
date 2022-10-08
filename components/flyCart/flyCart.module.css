@@ -111,6 +111,7 @@
   padding: 7px 20px;
   text-transform: uppercase;
   text-decoration: underline;
+  color: var(--text-color);
   text-align: center;
   font-style: normal;
   font-weight: 300;

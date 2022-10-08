@@ -31,7 +31,7 @@ export const Coupons: React.FC = () => {
     return (
       <li className={styles.cartCoupon} key={c.code}>
         <p className={styles.coupon}>
-          Coupon {c.code}: -€{c.discountAmount}
+          Coupon {c.code}: -{c.discountAmount}
         </p>
         <button
           className={styles.removeCoupon}

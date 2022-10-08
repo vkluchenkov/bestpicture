@@ -4,7 +4,7 @@ const cartData = `cart {
   appliedCoupons {
     code
     description
-    discountAmount(format: RAW)
+    discountAmount
   }
   fees {
     amount
@@ -17,7 +17,7 @@ const cartData = `cart {
           ... on SimpleProduct {
             name
             id: databaseId
-            price(format: RAW)
+            price
           }
         }
       }
@@ -25,8 +25,8 @@ const cartData = `cart {
     }
     itemCount
   }
-  subtotal(format: RAW)
-  total(format: RAW)
+  subtotal
+  total
 }`;
 
 export const GET_CART = gql`

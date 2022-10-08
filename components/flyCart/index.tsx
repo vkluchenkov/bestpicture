@@ -79,8 +79,8 @@ export const FlyCart: React.FC = () => {
           <CartProducts />
           {cart.total != '0' ? <Coupons /> : <></>}
 
-          <p className={styles.subtotal}>Subtotal: €{cart.subtotal}</p>
-          <p className={styles.total}>Total: €{cart.total}</p>
+          <p className={styles.subtotal}>Subtotal: {cart.subtotal}</p>
+          <p className={styles.total}>Total: {cart.total}</p>
 
           <div className={styles.actions}>
             <Button
