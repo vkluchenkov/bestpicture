@@ -36,8 +36,8 @@ const Checkout: NextPage = () => {
     Number.parseFloat(cart.total.replace('€', '')).toFixed(2)
   );
 
-  const calculatedfee = Math.round((cartTotalNormalized * 100 * processingFee) / 100) / 100;
-  const actualFee = calculatedfee <= minProcessingFee ? minProcessingFee : calculatedfee;
+  const calculatedFee = Math.round((cartTotalNormalized * 100 * processingFee) / 100) / 100;
+  const actualFee = calculatedFee <= minProcessingFee ? minProcessingFee : calculatedFee;
 
   const total = () => {
     if (formFields.payment == 'stripe' || formFields.payment == 'paypal') {
