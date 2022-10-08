@@ -1,7 +1,8 @@
+import { withSentry } from '@sentry/nextjs';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { api } from '../../wooApi/wooApiREST';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const orderId = req.body.orderId;
   const key = req.body.key;
 
@@ -16,3 +17,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(error.response.status).send(error.response.statusText);
   }
 }
+
+export default withSentry(handler);

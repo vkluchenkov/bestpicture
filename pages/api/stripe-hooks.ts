@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { buffer } from 'micro';
 import { api } from '../../wooApi/wooApiREST';
+import { withSentry } from '@sentry/nextjs';
 //@ts-ignore
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: null });
 export const config = { api: { bodyParser: false } };
@@ -34,4 +35,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   res.send({ received: true });
 };
 
-export default handler;
+export default withSentry(handler);

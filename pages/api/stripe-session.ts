@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Stripe from 'stripe';
 import { api } from '../../wooApi/wooApiREST';
@@ -10,7 +11,7 @@ interface UpdateOrder {
   data: any;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { price, name, email, orderId, orderKey } = req.body;
 
   const updateOrder = async (payload: UpdateOrder) => {
@@ -66,3 +67,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).end('Method Not Allowed');
   }
 }
+
+export default withSentry(handler);

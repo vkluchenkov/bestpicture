@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { api } from '../../wooApi/wooApiREST';
 import { OrderData } from '../../types/order.types';
 import axios from 'axios';
+import { withSentry } from '@sentry/nextjs';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const eventType = req.body.event_type;
@@ -69,4 +70,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } else res.status(202).send('Webhook received');
 };
 
-export default handler;
+export default withSentry(handler);

@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { CreateOrderPayload } from '../../types/order.types';
 import { api } from '../../wooApi/wooApiREST';
+import { withSentry } from '@sentry/nextjs';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const orderPayload: CreateOrderPayload = JSON.parse(req.body);
 
   try {
@@ -12,3 +13,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).send(error);
   }
 }
+
+export default withSentry(handler);

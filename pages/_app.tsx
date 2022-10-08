@@ -11,7 +11,9 @@ import {
   createHttpLink,
   InMemoryCache,
 } from '@apollo/client';
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+
+import * as Sentry from '@sentry/nextjs';
 
 import { backendUrl } from '../utils/constants';
 import { setContext } from '@apollo/client/link/context';
@@ -49,6 +51,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   });
 
   const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!;
+
+  Sentry.init({
+    dsn: 'https://8320a69cec5d4dbfad19cb01a07c0989@o1123240.ingest.sentry.io/4503947518345216',
+
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+  });
 
   return (
     <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'EUR' }}>
