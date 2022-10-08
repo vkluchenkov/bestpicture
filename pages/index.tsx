@@ -20,8 +20,6 @@ import {
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from '../ui-kit/Button';
-import { Loader } from '../components/Loader';
-import { Download } from '../components/Download';
 
 const Home: NextPage<HomeProps> = ({ productCategories }) => {
   const router = useRouter();
