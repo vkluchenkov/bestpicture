@@ -113,32 +113,32 @@ const Checkout: NextPage = () => {
       createOrderPayload.transaction_id = paypalTransactionId;
     }
     // Create order and process payment
-    try {
-      const res = await fetch('/api/create-order', {
-        method: 'POST',
-        body: JSON.stringify(createOrderPayload),
-      });
-      const data: OrderData = await res.json();
+    // try {
+    const res = await fetch('/api/create-order', {
+      method: 'POST',
+      body: JSON.stringify(createOrderPayload),
+    });
+    const data: OrderData = await res.json();
 
-      if (createOrderPayload.payment_method == 'stripe' && data) {
-        const stripePayload = {
-          name: `Order ${data.id} on Vladimir Kluchenkov's website`,
-          price: data.total,
-          orderId: data.id,
-          orderKey: data.order_key,
-          email: data.billing.email,
-        };
-        axios
-          .post('/api/stripe-session', stripePayload)
-          .then((data: any) => window.open(data.data.url as string, '_self'))
-          .catch((error) => console.log(error));
-      } else if (data) {
-        clearCart();
-        router.push(`/checkout/order-received/${data.id}?key=${data.order_key}`);
-      }
-    } catch (error) {
-      console.log(error);
+    if (createOrderPayload.payment_method == 'stripe' && data) {
+      const stripePayload = {
+        name: `Order ${data.id} on Vladimir Kluchenkov's website`,
+        price: data.total,
+        orderId: data.id,
+        orderKey: data.order_key,
+        email: data.billing.email,
+      };
+      axios
+        .post('/api/stripe-session', stripePayload)
+        .then((data: any) => window.open(data.data.url as string, '_self'))
+        .catch((error) => console.log(error));
+    } else if (data) {
+      clearCart();
+      router.push(`/checkout/order-received/${data.id}?key=${data.order_key}`);
     }
+    // } catch (error) {
+    // console.log(error);
+    // }
   }, [cart, clearCart, formFields, actualFee, router, paypalTransactionId]);
 
   if (!cart.contents.nodes.length)

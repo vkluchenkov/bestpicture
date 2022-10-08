@@ -13,7 +13,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       res.status(400).send({ message: 'Order key is missing or incorrect' });
     else res.status(200).send({ ...rest });
   } catch (error: any) {
-    console.log(error);
     res.status(error.response.status).send(error.response.statusText);
   }
 }

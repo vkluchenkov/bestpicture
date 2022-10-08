@@ -9,7 +9,7 @@ export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [{ cart }, { showCart }] = useCart();
 
-  const openMenu = () => setIsMenuOpen(true);
+  const openMenu = useCallback(() => setIsMenuOpen(true), []);
   const closeMenu = useCallback(() => setIsMenuOpen(false), []);
 
   // close mobile menu on window width above 1024px

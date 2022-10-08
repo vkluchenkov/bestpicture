@@ -19,7 +19,6 @@ const Video: NextPage = () => {
         if (index != arr.length - 1) url = url + '/' + el;
       });
       window.open(url + '/#' + arr[arr.length - 1], '_self');
-      // console.log(url + '/#' + arr[arr.length - 1]);
     }
   }, [router, asPath, isReady]);
   return <Loader />;

@@ -13,15 +13,15 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart, categoryPath }) => {
-  const { id, name, slug, menuOrder, image, price } = product;
+  const { id, name, slug, image, price } = product;
 
   const [{}, { addProduct, showCart }] = useCart();
 
-  const [isPopupOpen, setIsPopapOpen] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isProductPopupOpen, setIsProductPopapOpen] = useState(false);
+  const [isCopyLinkSuccess, setIsCopyLinkSuccess] = useState(false);
 
-  const clickHandler = () => setIsPopapOpen(true);
-  const closeHandler = () => setIsPopapOpen(false);
+  const clickHandler = () => setIsProductPopapOpen(true);
+  const closeHandler = () => setIsProductPopapOpen(false);
 
   const addToCartHandler = useCallback(() => {
     addProduct(id);
@@ -30,12 +30,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart, cat
 
   const productLink: string = categoryPath + '#' + slug;
 
-  const handleCopy = async () => {
+  const handleCopyLink = async () => {
     if ('clipboard' in navigator) {
       await navigator.clipboard.writeText(productLink);
-      setIsSuccess(true);
+      setIsCopyLinkSuccess(true);
       setTimeout(() => {
-        setIsSuccess(false);
+        setIsCopyLinkSuccess(false);
       }, 2000);
     } else {
       document.execCommand('copy', true, productLink);
@@ -55,8 +55,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart, cat
 
   return (
     <li className={styles.card}>
-      <button type='button' className={styles.copyBtn} onClick={handleCopy} />
-      <span className={isSuccess ? styles.success + ' ' + styles.successVisible : styles.success}>
+      <button type='button' className={styles.copyBtn} onClick={handleCopyLink} />
+      <span
+        className={
+          isCopyLinkSuccess ? styles.success + ' ' + styles.successVisible : styles.success
+        }
+      >
         Link copied!
       </span>
       <a className={styles.anchor} id={slug}></a>
@@ -74,7 +78,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart, cat
       <p className={styles.price}>{price ? `${price}` : 'Free'}</p>
       {productButton}
       <ProductPopup
-        isOpen={isPopupOpen}
+        isOpen={isProductPopupOpen}
         product={product}
         onClose={closeHandler}
         onClick={addProduct}

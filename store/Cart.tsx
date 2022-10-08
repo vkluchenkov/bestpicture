@@ -142,38 +142,22 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   // Cart handlers
   const addProduct: CartStoreActions['addProduct'] = useCallback(
-    async (productId) => {
-      try {
-        await addMutation({ variables: { productId: productId } });
-      } catch (error) {}
-    },
+    async (productId) => await addMutation({ variables: { productId: productId } }),
     [addMutation]
   );
 
   const removeProduct: CartStoreActions['removeProduct'] = useCallback(
-    async (cartKey) => {
-      try {
-        await removeMutation({ variables: { keys: [cartKey] } });
-      } catch (error) {}
-    },
+    async (cartKey) => await removeMutation({ variables: { keys: [cartKey] } }),
     [removeMutation]
   );
 
   const applyCoupon: CartStoreActions['applyCoupon'] = useCallback(
-    async (code) => {
-      try {
-        await couponMutation({ variables: { code: code } });
-      } catch (error) {}
-    },
+    async (code) => await couponMutation({ variables: { code: code } }),
     [couponMutation]
   );
 
   const removeCoupons: CartStoreActions['removeCoupons'] = useCallback(
-    async (codes) => {
-      try {
-        await removeCouponsMutation({ variables: { codes: codes } });
-      } catch (error) {}
-    },
+    async (codes) => await removeCouponsMutation({ variables: { codes: codes } }),
     [removeCouponsMutation]
   );
 
