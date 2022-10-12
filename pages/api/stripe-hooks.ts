@@ -28,7 +28,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       }
     } catch (error: any) {
-      console.log(error);
       res.status(400).send(`Webhook error ${error.message}`);
     }
   }

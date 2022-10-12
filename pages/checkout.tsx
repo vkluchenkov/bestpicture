@@ -12,6 +12,7 @@ import { Coupons } from '../components/Coupons';
 import { CartProducts } from '../components/CartProducts';
 import { CheckoutForm } from '../components/CheckoutForm';
 import { minProcessingFee, processingFee } from '../utils/constants';
+import { Loader } from '../components/Loader';
 
 const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!;
 const stripePromise = loadStripe(key);
@@ -20,6 +21,8 @@ const Checkout: NextPage = () => {
   const router = useRouter();
 
   const [{ cart }, { clearCart }] = useCart();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // Form fields
   const [formFields, setFormFields] = useState<FormFields>({
@@ -62,6 +65,7 @@ const Checkout: NextPage = () => {
   const setPayPalTransactionId = (orderId: string) => (paypalTransactionId = orderId);
 
   const submitHandler = useCallback(async () => {
+    setIsLoading(true);
     // Create order payload
     const lineItems = cart.contents.nodes.map((cartItem) => {
       return {
@@ -136,10 +140,10 @@ const Checkout: NextPage = () => {
       clearCart();
       router.push(`/checkout/order-received/${data.id}?key=${data.order_key}`);
     }
-    // } catch (error) {
-    // console.log(error);
-    // }
+    setIsLoading(false);
   }, [cart, clearCart, formFields, actualFee, router, paypalTransactionId]);
+
+  if (isLoading) return <Loader />;
 
   if (!cart.contents.nodes.length)
     return (

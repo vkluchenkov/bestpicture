@@ -6,7 +6,7 @@ const Contact: NextPage = () => {
   const contacts = [
     {
       title: 'WhatSapp',
-      link: 'https://wa.me/4851654415',
+      link: 'https://wa.me/48516524415',
     },
     {
       title: 'Telegram',
