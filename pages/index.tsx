@@ -28,7 +28,6 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
   const [cardsQty, setCardsQty] = useState(INITIAL_CARDS_SMALL);
   const [largeCardsQty, setLargeCardsQty] = useState(0);
   const [isLoader, setIsLoader] = useState(false);
-  // const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
   const handleResize = () => {
     if (window.innerWidth < WINDOW_SIZE_MEDIUM) {
@@ -59,15 +58,6 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
     else setIsLoader(false);
   }, []);
 
-  // Forward email download links to wordpress to handle
-  // useEffect(() => {
-  //   // setIsLoader(true);
-  //   const url = new URL(location.href);
-  //   const isDownload = url.searchParams.get('download_file');
-  //   if (isDownload) setDownloadUrl(location.href.replace(location.origin, backendUrl.slice(0, -1)));
-  //   // else setIsLoader(false);
-  // }, []);
-
   useEffect(() => {
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -90,8 +80,6 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
         );
     }
   });
-
-  // if (downloadUrl) return <Download url={downloadUrl} />;
 
   return (
     <Layout>
