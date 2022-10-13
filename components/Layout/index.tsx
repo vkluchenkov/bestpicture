@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { useCart } from '../../store/Cart';
 import { FlyCart } from '../flyCart';
 
@@ -20,17 +20,6 @@ const variants = {
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [{ isOpen }, {}] = useCart();
 
-  useEffect(() => {
-    const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-    document.body.style.marginRight = `-${scrollbarWidth.toString()}px`;
-    if (isOpen) {
-      document.body.style.marginRight = '0';
-    }
-    return () => {
-      document.body.style.marginRight = '0';
-    };
-  }, [isOpen]);
-
   return (
     <>
       <Header />
@@ -41,6 +30,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         variants={variants}
         transition={{ type: 'linear', duration: 0.5 }}
         className={styles.main}
+        id='main'
       >
         {children}
       </motion.main>

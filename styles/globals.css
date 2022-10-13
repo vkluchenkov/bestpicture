@@ -11,6 +11,11 @@ html {
   -moz-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -18,7 +23,6 @@ body {
   margin: 0;
   color: var(--text-color);
   background: var(--background-color1);
-  overflow-x: hidden;
 }
 
 #__next {

@@ -18,13 +18,8 @@ export const FlyCart: React.FC = () => {
 
   // Body scroll blocking
   useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add('no-scroll');
-      document.body.style.marginRight = '0';
-    }
-    return () => {
-      document.body.classList.remove('no-scroll');
-    };
+    if (isOpen) document.body.classList.add('no-scroll');
+    return () => document.body.classList.remove('no-scroll');
   }, [isOpen]);
 
   //Handling close on ESC

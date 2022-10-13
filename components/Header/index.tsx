@@ -23,7 +23,7 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <header className={styles.header}>
+      <header className={styles.header} id='header'>
         <Link href={'/'}>
           <div className={styles.header__logoContainer}>
             <div className={styles.header__logo}>
