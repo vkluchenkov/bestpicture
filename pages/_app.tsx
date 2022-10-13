@@ -19,11 +19,10 @@ import * as Sentry from '@sentry/nextjs';
 import { backendUrl } from '../utils/constants';
 import { setContext } from '@apollo/client/link/context';
 import { CartProvider } from '../store/Cart';
-import { FlyCart } from '../components/flyCart';
 
 function MyApp({ Component, pageProps, router }: AppProps) {
+  // Apollo
   const gqlUrl = `${backendUrl}graphql`;
-
   const afterwareLink = new ApolloLink((operation, forward) => {
     return forward(operation).map((response) => {
       const context = operation.getContext();
@@ -32,7 +31,6 @@ function MyApp({ Component, pageProps, router }: AppProps) {
       return response;
     });
   });
-
   const authLink = setContext((_, { headers }) => {
     // return the headers to the context so httpLink can read them
     return {
@@ -43,16 +41,15 @@ function MyApp({ Component, pageProps, router }: AppProps) {
       },
     };
   });
-
   const httpLink = createHttpLink({ uri: gqlUrl });
-
   const client = new ApolloClient({
     link: ApolloLink.from([afterwareLink, authLink.concat(httpLink)]),
     cache: new InMemoryCache(),
   });
-
+  // Paupal
   const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!;
 
+  //Sentry
   Sentry.init({
     dsn: 'https://8320a69cec5d4dbfad19cb01a07c0989@o1123240.ingest.sentry.io/4503947518345216',
 
@@ -62,8 +59,6 @@ function MyApp({ Component, pageProps, router }: AppProps) {
     tracesSampleRate: 0.25,
   });
 
-  const pageUrl = backendUrl + router.route;
-
   return (
     <PayPalScriptProvider
       deferLoading={true}
@@ -71,7 +66,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
     >
       <ApolloProvider client={client}>
         <CartProvider>
-          <GoogleAnalytics trackPageViews />
+          <GoogleAnalytics trackPageViews strategy='lazyOnload' />
           <Head>
             <meta charSet='utf-8' />
             <meta
@@ -83,7 +78,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
               content='Dance events videos from videographer Vladimir Kluchenkov'
             />
           </Head>
-          <Component {...pageProps} key={pageUrl} />
+          <Component {...pageProps} />
         </CartProvider>
       </ApolloProvider>
     </PayPalScriptProvider>
