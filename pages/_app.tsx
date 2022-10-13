@@ -12,6 +12,7 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { GoogleAnalytics } from 'nextjs-google-analytics';
 
 import * as Sentry from '@sentry/nextjs';
 
@@ -65,6 +66,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'EUR' }}>
       <ApolloProvider client={client}>
         <CartProvider>
+          <GoogleAnalytics trackPageViews />
           <Layout>
             <Head>
               <meta charSet='utf-8' />
