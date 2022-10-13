@@ -8,6 +8,7 @@ import Head from 'next/head';
 import { useCart } from '../../../store/Cart';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { truncate } from 'fs';
 
 const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
   const router = useRouter();
@@ -111,6 +112,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { data } = await apolloClient.query({
     query: CATEGORY,
   });
+
+  if (!data.productCategory) {
+    return addApolloState(apolloClient, {
+      notFound: true,
+      revalidate: 30,
+    });
+  }
 
   const products = data.productCategory.products.nodes
     .slice()

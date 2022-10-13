@@ -15,6 +15,11 @@ const Year: NextPage<YearProps> = ({ categories }) => {
   const router = useRouter();
   const { year } = router.query;
 
+  // if (!categories[year as string]) {
+  //   router.push('/404');
+  //   return <></>;
+  // }
+
   const cards = categories[year as string].map((category) => {
     if (category.name == 'Uncategorized') return <></>;
     return <CategoryCard productCategory={category} key={category.id} />;
@@ -79,7 +84,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   });
 };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const apolloClient = initializeApollo();
 
   const CATEGORIES = gql`
@@ -117,13 +122,21 @@ export const getStaticProps: GetStaticProps = async () => {
 
   uniqueParents.forEach((parent) => {
     const filtered = productCategories.filter((category) => category.parent.node.name == parent);
-    sortedCategories[parent] = filtered;
+    sortedCategories![parent] = filtered;
   });
 
-  return addApolloState(apolloClient, {
-    props: { categories: sortedCategories },
-    revalidate: 30,
-  });
+  const year = params?.year;
+
+  if (!sortedCategories[year as string])
+    return addApolloState(apolloClient, {
+      notFound: true,
+      revalidate: 30,
+    });
+  else
+    return addApolloState(apolloClient, {
+      props: { categories: sortedCategories },
+      revalidate: 30,
+    });
 };
 
 export default Year;
