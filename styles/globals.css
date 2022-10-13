@@ -11,7 +11,6 @@ html {
   -moz-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
-  overflow-y: scroll;
 }
 
 ::-webkit-scrollbar {
@@ -34,7 +33,6 @@ body {
 }
 
 .no-scroll {
-  max-height: 100vh;
   overflow: hidden;
 }
 

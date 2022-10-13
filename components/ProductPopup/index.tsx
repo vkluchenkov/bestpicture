@@ -25,12 +25,9 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add('no-scroll');
-      // document.body.style.marginRight = '0';
     }
     return () => {
       document.body.classList.remove('no-scroll');
-      // const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-      // document.body.style.marginRight = `-${scrollbarWidth.toString()}px`;
     };
   }, [isOpen]);
 

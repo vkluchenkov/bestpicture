@@ -1,5 +1,4 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useLayoutEffect, useState } from 'react';
 import { useCart } from '../../store/Cart';
 import { FlyCart } from '../flyCart';
 
