@@ -65,7 +65,10 @@ function MyApp({ Component, pageProps, router }: AppProps) {
   const pageUrl = backendUrl + router.route;
 
   return (
-    <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'EUR' }}>
+    <PayPalScriptProvider
+      deferLoading={true}
+      options={{ 'client-id': paypalClientId, currency: 'EUR' }}
+    >
       <ApolloProvider client={client}>
         <CartProvider>
           <GoogleAnalytics trackPageViews />
