@@ -6,6 +6,7 @@ import { CategoryCard } from '../../components/CategoryCard';
 import { ProductCategory } from '../../types/home.types';
 import { addApolloState, initializeApollo } from '../../utils/apolloClient';
 import styles from '../../styles/Videos.module.css';
+import { Layout } from '../../components/Layout';
 
 interface YearProps {
   categories: Record<string, ProductCategory[]>;
@@ -15,24 +16,19 @@ const Year: NextPage<YearProps> = ({ categories }) => {
   const router = useRouter();
   const { year } = router.query;
 
-  // if (!categories[year as string]) {
-  //   router.push('/404');
-  //   return <></>;
-  // }
-
   const cards = categories[year as string].map((category) => {
     if (category.name == 'Uncategorized') return <></>;
     return <CategoryCard productCategory={category} key={category.id} />;
   });
 
   return (
-    <>
+    <Layout>
       <Head>
         <title>Events {year} | bestpicture.pro</title>
       </Head>
       <h1 className={styles.title}>Events {year}</h1>
       <div className={styles.cardsContainer}>{cards}</div>
-    </>
+    </Layout>
   );
 };
 

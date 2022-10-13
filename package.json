@@ -16,7 +16,7 @@
     "@woocommerce/woocommerce-rest-api": "^1.0.1",
     "axios": "^0.27.2",
     "deepmerge": "^4.2.2",
-    "framer-motion": "^7.3.5",
+    "framer-motion": "^7.5.3",
     "graphql": "^16.6.0",
     "lodash": "^4.17.21",
     "micro": "^9.4.1",

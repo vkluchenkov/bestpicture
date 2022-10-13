@@ -20,6 +20,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from '../ui-kit/Button';
+import { Layout } from '../components/Layout';
 
 const Home: NextPage<HomeProps> = ({ productCategories }) => {
   const router = useRouter();
@@ -93,7 +94,7 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
   // if (downloadUrl) return <Download url={downloadUrl} />;
 
   return (
-    <>
+    <Layout>
       <Head>
         <title>bestpicture.pro</title>
       </Head>
@@ -107,7 +108,7 @@ const Home: NextPage<HomeProps> = ({ productCategories }) => {
       >
         View all events
       </Button>
-    </>
+    </Layout>
   );
 };
 

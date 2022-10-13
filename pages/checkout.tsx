@@ -13,6 +13,7 @@ import { CartProducts } from '../components/CartProducts';
 import { CheckoutForm } from '../components/CheckoutForm';
 import { minProcessingFee, processingFee } from '../utils/constants';
 import { Loader } from '../components/Loader';
+import { Layout } from '../components/Layout';
 
 const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!;
 const stripePromise = loadStripe(key);
@@ -147,16 +148,16 @@ const Checkout: NextPage = () => {
 
   if (!cart.contents.nodes.length)
     return (
-      <>
+      <Layout>
         <Head>
           <title>Checkout | bestpicture.pro</title>
         </Head>
         <h2 className={styles.subtitle}>Your cart is empty. Please put some videos in it</h2>
-      </>
+      </Layout>
     );
 
   return (
-    <>
+    <Layout>
       <Head>
         <title>Checkout | bestpicture.pro</title>
       </Head>
@@ -182,7 +183,7 @@ const Checkout: NextPage = () => {
           />
         </section>
       </div>
-    </>
+    </Layout>
   );
 };
 

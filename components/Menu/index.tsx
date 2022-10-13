@@ -21,7 +21,7 @@ export const Menu: React.FC = () => {
     };
     return (
       <li key={index}>
-        <Link href={item.link}>
+        <Link href={item.link} scroll={false}>
           <a className={className()}>{item.name}</a>
         </Link>
       </li>

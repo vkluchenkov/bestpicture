@@ -8,6 +8,7 @@ import { OrderData } from '../../../types/order.types';
 import Head from 'next/head';
 import { OrderVeiw } from '../../../components/OrderView';
 import { useCart } from '../../../store/Cart';
+import { Layout } from '../../../components/Layout';
 
 const Order: NextPage = () => {
   const router = useRouter();
@@ -64,20 +65,20 @@ const Order: NextPage = () => {
 
   if (!key)
     return (
-      <>
+      <Layout>
         {head}
         <h1 className={styles.title}>Oops.. something went wrong</h1>
         <p>Order key for order #{orderId} was not provided.</p>
-      </>
+      </Layout>
     );
 
   if (error) {
     return (
-      <>
+      <Layout>
         {head}
         <h1 className={styles.title}>Oops.. something went wrong</h1>
         <p>It seems this order does not exist.</p>
-      </>
+      </Layout>
     );
   }
 
@@ -85,12 +86,12 @@ const Order: NextPage = () => {
 
   if (orderData) {
     return (
-      <>
+      <Layout>
         {head}
         <section className={styles.orderContainer}>
           <OrderVeiw orderData={orderData} />
         </section>
-      </>
+      </Layout>
     );
   } else return <></>;
 };

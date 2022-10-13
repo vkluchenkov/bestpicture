@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import Head from 'next/head';
+import { Layout } from '../../components/Layout';
 import styles from '../../styles/Contact.module.css';
 
 const Contact: NextPage = () => {
@@ -23,7 +24,7 @@ const Contact: NextPage = () => {
   ];
 
   return (
-    <>
+    <Layout>
       <Head>
         <title>Contact | bestpicture.pro</title>
       </Head>
@@ -44,7 +45,7 @@ const Contact: NextPage = () => {
           );
         })}
       </div>
-    </>
+    </Layout>
   );
 };
 export default Contact;

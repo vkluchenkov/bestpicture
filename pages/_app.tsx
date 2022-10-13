@@ -21,8 +21,8 @@ import { setContext } from '@apollo/client/link/context';
 import { CartProvider } from '../store/Cart';
 import { FlyCart } from '../components/flyCart';
 
-function MyApp({ Component, pageProps }: AppProps) {
-  const url = `${backendUrl}graphql`;
+function MyApp({ Component, pageProps, router }: AppProps) {
+  const gqlUrl = `${backendUrl}graphql`;
 
   const afterwareLink = new ApolloLink((operation, forward) => {
     return forward(operation).map((response) => {
@@ -44,7 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     };
   });
 
-  const httpLink = createHttpLink({ uri: url });
+  const httpLink = createHttpLink({ uri: gqlUrl });
 
   const client = new ApolloClient({
     link: ApolloLink.from([afterwareLink, authLink.concat(httpLink)]),
@@ -62,26 +62,22 @@ function MyApp({ Component, pageProps }: AppProps) {
     tracesSampleRate: 0.25,
   });
 
+  const pageUrl = backendUrl + router.route;
+
   return (
     <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'EUR' }}>
       <ApolloProvider client={client}>
         <CartProvider>
           <GoogleAnalytics trackPageViews />
-          <Layout>
-            <Head>
-              <meta charSet='utf-8' />
-              <meta
-                name='viewport'
-                content='width=device-width, initial-scale=1, maximum-scale=1'
-              />
-              <meta
-                name='description'
-                content='Dance events videos from videographer Vladimir Kluchenkov'
-              />
-            </Head>
-            <Component {...pageProps} />
-          </Layout>
-          <FlyCart />
+          <Head>
+            <meta charSet='utf-8' />
+            <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1' />
+            <meta
+              name='description'
+              content='Dance events videos from videographer Vladimir Kluchenkov'
+            />
+          </Head>
+          <Component {...pageProps} key={pageUrl} />
         </CartProvider>
       </ApolloProvider>
     </PayPalScriptProvider>

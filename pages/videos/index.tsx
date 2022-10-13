@@ -5,6 +5,7 @@ import { ProductCategory } from '../../types/home.types';
 import { addApolloState, initializeApollo } from '../../utils/apolloClient';
 import styles from '../../styles/Videos.module.css';
 import Head from 'next/head';
+import { Layout } from '../../components/Layout';
 
 interface VideosProps {
   categories: Record<string, ProductCategory[]>;
@@ -26,12 +27,12 @@ const Videos: NextPage<VideosProps> = ({ categories, parents }) => {
     );
   });
   return (
-    <>
+    <Layout>
       <Head>
         <title>All events | bestpicture.pro</title>
       </Head>
       {mapped}
-    </>
+    </Layout>
   );
 };
 

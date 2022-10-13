@@ -1,6 +1,7 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { Layout } from '../../../../components/Layout';
 import { Loader } from '../../../../components/Loader';
 
 const Video: NextPage = () => {
@@ -21,7 +22,11 @@ const Video: NextPage = () => {
       window.open(url + '/#' + arr[arr.length - 1], '_self');
     }
   }, [router, asPath, isReady]);
-  return <Loader />;
+  return (
+    <Layout>
+      <Loader />;
+    </Layout>
+  );
 };
 
 export default Video;

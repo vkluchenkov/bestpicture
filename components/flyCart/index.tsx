@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../store/Cart';
 import { Button } from '../../ui-kit/Button';
 import { CartProducts } from '../CartProducts';
@@ -17,8 +18,15 @@ export const FlyCart: React.FC = () => {
 
   // Body scroll blocking
   useEffect(() => {
-    if (isOpen) document.body.classList.add('no-scroll');
-    return () => document.body.classList.remove('no-scroll');
+    if (isOpen) {
+      const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+      document.body.classList.add('no-scroll');
+      document.body.style.marginRight = `${scrollbarWidth.toString()}px`;
+    }
+    return () => {
+      document.body.classList.remove('no-scroll');
+      // document.body.style.marginRight = '0';
+    };
   }, [isOpen]);
 
   //Handling close on ESC
@@ -46,7 +54,8 @@ export const FlyCart: React.FC = () => {
     return (
       <>
         <div
-          className={isOpen ? styles.flycart + ' ' + styles.flycart_open : styles.flycart}
+          // className={isOpen ? styles.flycart + ' ' + styles.flycart_open : styles.flycart}
+          className={styles.flycart + ' ' + styles.flycart_open}
           onClick={handleClickClose}
           id='cart'
         >
@@ -67,8 +76,10 @@ export const FlyCart: React.FC = () => {
 
   return (
     <>
+      {/* <AnimatePresence mode='wait' initial={false} onExitComplete={() => window.scrollTo(0, 0)} /> */}
       <div
-        className={isOpen ? styles.flycart + ' ' + styles.flycart_open : styles.flycart}
+        // className={isOpen ? styles.flycart + ' ' + styles.flycart_open : styles.flycart}
+        className={styles.flycart + ' ' + styles.flycart_open}
         onClick={handleClickClose}
         id='cart'
       >

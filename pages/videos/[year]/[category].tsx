@@ -9,6 +9,7 @@ import { useCart } from '../../../store/Cart';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { truncate } from 'fs';
+import { Layout } from '../../../components/Layout';
 
 const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
   const router = useRouter();
@@ -31,7 +32,7 @@ const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
   });
 
   return (
-    <>
+    <Layout>
       <Head>
         <title>
           {(year as string) + ' > '} {categoryName} | bestpicture.pro
@@ -41,7 +42,7 @@ const Category: NextPage<CategoryProps> = ({ products, categoryName }) => {
       <section className={styles.products__section}>
         <ul className={styles.products}>{productsMap}</ul>
       </section>
-    </>
+    </Layout>
   );
 };
 

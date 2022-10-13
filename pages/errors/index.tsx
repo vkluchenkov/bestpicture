@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
+import { Layout } from '../../components/Layout';
 
 const WPError: NextPage = () => {
   const router = useRouter();
@@ -10,10 +11,10 @@ const WPError: NextPage = () => {
   if (message && message.length) cleaned = message.replaceAll(regexForStripHTML, '');
 
   return (
-    <>
+    <Layout>
       <h1>Oops.. something went wrong</h1>
       <p>{cleaned}</p>
-    </>
+    </Layout>
   );
 };
 
