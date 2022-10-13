@@ -23,8 +23,15 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
 
   // Blocking body scroll when popup visible
   useEffect(() => {
-    if (isOpen) document.body.classList.add('no-scroll');
-    return () => document.body.classList.remove('no-scroll');
+    if (isOpen) {
+      document.body.classList.add('no-scroll');
+      document.body.style.marginRight = '0';
+    }
+    return () => {
+      document.body.classList.remove('no-scroll');
+      const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+      document.body.style.marginRight = `-${scrollbarWidth.toString()}px`;
+    };
   }, [isOpen]);
 
   //Handling close on ESC
@@ -55,10 +62,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
   );
 
   return (
-    <div
-      className={isOpen ? `${styles.popup} ${styles.popup_open}` : styles.popup}
-      onClick={handleClickClose}
-    >
+    <div className={`${styles.popup} ${styles.popup_open}`} onClick={handleClickClose}>
       <div className={styles.imageWrapper}>
         <Image
           src={image.large}

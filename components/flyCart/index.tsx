@@ -19,13 +19,11 @@ export const FlyCart: React.FC = () => {
   // Body scroll blocking
   useEffect(() => {
     if (isOpen) {
-      const scrollbarWidth = window.innerWidth - document.body.clientWidth;
       document.body.classList.add('no-scroll');
-      document.body.style.marginRight = `${scrollbarWidth.toString()}px`;
+      document.body.style.marginRight = '0';
     }
     return () => {
       document.body.classList.remove('no-scroll');
-      // document.body.style.marginRight = '0';
     };
   }, [isOpen]);
 

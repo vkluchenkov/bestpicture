@@ -21,9 +21,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [{ isOpen }, {}] = useCart();
 
   useEffect(() => {
-    const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-    document.body.style.marginRight = `-${scrollbarWidth.toString()}px`;
-    document.body.style.overflowX = 'hidden';
+    if (!isOpen) {
+      const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+      document.body.style.marginRight = `-${scrollbarWidth.toString()}px`;
+    }
     return () => {
       document.body.style.marginRight = '0';
     };

@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
 import { useCart } from '../../store/Cart';
@@ -53,6 +54,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart, cat
     </Button>
   );
 
+  const variants = {
+    hidden: { opacity: 0 },
+    enter: { opacity: 1 },
+    exit: { opacity: 0 },
+  };
+
   return (
     <li className={styles.card}>
       <button type='button' className={styles.copyBtn} onClick={handleCopyLink} />
@@ -77,13 +84,26 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart, cat
       <p className={styles.name}>{name}</p>
       <p className={styles.price}>{price ? `${price}` : 'Free'}</p>
       {productButton}
-      <ProductPopup
-        isOpen={isProductPopupOpen}
-        product={product}
-        onClose={closeHandler}
-        onClick={addProduct}
-        isInCart={isInCart}
-      />
+      <AnimatePresence mode='wait' initial={false}>
+        {isProductPopupOpen && (
+          <motion.div
+            initial='hidden'
+            animate='enter'
+            exit='exit'
+            variants={variants}
+            transition={{ type: 'linear', duration: 0.3 }}
+            style={{ zIndex: 99 }}
+          >
+            <ProductPopup
+              isOpen={isProductPopupOpen}
+              product={product}
+              onClose={closeHandler}
+              onClick={addProduct}
+              isInCart={isInCart}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </li>
   );
 };

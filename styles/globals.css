@@ -18,6 +18,7 @@ body {
   margin: 0;
   color: var(--text-color);
   background: var(--background-color1);
+  overflow-x: hidden;
 }
 
 #__next {
