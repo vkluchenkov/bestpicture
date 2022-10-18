@@ -60,10 +60,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
   });
 
   return (
-    <PayPalScriptProvider
-      deferLoading={true}
-      options={{ 'client-id': paypalClientId, currency: 'EUR' }}
-    >
+    <PayPalScriptProvider options={{ 'client-id': paypalClientId, currency: 'EUR' }}>
       <ApolloProvider client={client}>
         <CartProvider>
           <GoogleAnalytics trackPageViews strategy='lazyOnload' />

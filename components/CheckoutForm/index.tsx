@@ -114,15 +114,6 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
             checked={formFields.payment == 'stripe'}
             onChange={onChange}
           />
-          {/* <RadioInput
-                  label='Already paid (specify in notes please)'
-                  id='cod'
-                  name='payment'
-                  required
-                  value='cod'
-                  checked={formFields.payment == 'cod'}
-                  onChange={onChange}
-                /> */}
         </fieldset>
       ) : (
         <></>
