@@ -4,7 +4,7 @@ interface Menu {
 }
 // With trailng slash!
 export const backendUrl = 'https://wp.bestpicture.pro/';
-export const publicUrl = 'https://bestpicture.pro/';
+export const publicUrl = 'https://wp.bestpicture.pro/';
 
 export const wooShopBase = '/videos';
 
