@@ -16,3 +16,6 @@ The task was to create a Next.js fromntend application for existing e-commerce s
 - GraphQL
 - Wordpress as a headless CMS
 - Docker
+
+### Live deployment
+https://bestpicture.pro
