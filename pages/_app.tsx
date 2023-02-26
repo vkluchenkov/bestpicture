@@ -46,7 +46,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
     link: ApolloLink.from([afterwareLink, authLink.concat(httpLink)]),
     cache: new InMemoryCache(),
   });
-  // Paupal
+  // Paypal
   const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!;
 
   //Sentry
