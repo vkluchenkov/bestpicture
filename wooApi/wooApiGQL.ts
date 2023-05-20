@@ -10,7 +10,7 @@ const cartData = `cart {
     amount
     name
   }
-  contents {
+  contents(first: 100) {
     nodes {
       product {
         node {
