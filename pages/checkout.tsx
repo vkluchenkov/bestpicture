@@ -1,12 +1,12 @@
-import { FormEvent, useCallback, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import styles from '../styles/Checkout.module.css';
 import { FormFields } from '../types/cart.types';
 import { CreateOrderPayload, OrderData } from '../types/order.types';
-import axios from 'axios';
-import { loadStripe } from '@stripe/stripe-js';
+import axios, { AxiosResponse } from 'axios';
+import { Order, loadStripe } from '@stripe/stripe-js';
 import { useCart } from '../store/Cart';
 import { Coupons } from '../components/Coupons';
 import { CartProducts } from '../components/CartProducts';
@@ -24,6 +24,8 @@ const Checkout: NextPage = () => {
   const [{ cart }, { clearCart }] = useCart();
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [orderData, setOrderData] = useState<OrderData | null>(null);
 
   // Form fields
   const [formFields, setFormFields] = useState<FormFields>({
@@ -92,11 +94,20 @@ const Checkout: NextPage = () => {
       coupon_lines: couponLines,
     };
 
-    if (!formFields.payment) createOrderPayload.set_paid = true;
+    if (!formFields.payment && cart.total === '€0.00') {
+      createOrderPayload.set_paid = true;
+    }
 
     if (formFields.payment == 'bacs') {
       createOrderPayload.payment_method = 'bacs';
       createOrderPayload.payment_method_title = 'Bank transfer';
+      createOrderPayload.set_paid = false;
+      createOrderPayload.status = 'on-hold';
+    }
+
+    if (formFields.payment == 'cod') {
+      createOrderPayload.payment_method = 'cod';
+      createOrderPayload.payment_method_title = 'Paid in cash';
       createOrderPayload.set_paid = false;
       createOrderPayload.status = 'on-hold';
     }
@@ -118,31 +129,34 @@ const Checkout: NextPage = () => {
       createOrderPayload.transaction_id = paypalTransactionId;
     }
     // Create order and process payment
-    // try {
-    const res = await fetch('/api/create-order', {
-      method: 'POST',
-      body: JSON.stringify(createOrderPayload),
-    });
-    const data: OrderData = await res.json();
+    try {
+      axios.post('/api/create-order', createOrderPayload).then((response: any) => {
+        // console.log(response.data);
+        setOrderData(response.data);
+      });
 
-    if (createOrderPayload.payment_method == 'stripe' && data) {
-      const stripePayload = {
-        name: `Order ${data.id} on Vladimir Kluchenkov's website`,
-        price: data.total,
-        orderId: data.id,
-        orderKey: data.order_key,
-        email: data.billing.email,
-      };
-      axios
-        .post('/api/stripe-session', stripePayload)
-        .then((data: any) => window.open(data.data.url as string, '_self'))
-        .catch((error) => console.log(error));
-    } else if (data) {
-      clearCart();
-      router.push(`/checkout/order-received/${data.id}?key=${data.order_key}`);
+      if (createOrderPayload.payment_method == 'stripe' && orderData) {
+        const stripePayload = {
+          name: `Order ${orderData.id} on Vladimir Kluchenkov's website`,
+          price: orderData.total,
+          orderId: orderData.id,
+          orderKey: orderData.order_key,
+          email: orderData.billing.email,
+        };
+        axios
+          .post('/api/stripe-session', stripePayload)
+          .then((data: any) => window.open(data.data.url as string, '_self'));
+        // .catch((error) => console.log(error));
+      } else if (orderData) {
+        clearCart();
+        router.push(`/checkout/order-received/${orderData.id}?key=${orderData.order_key}`);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
-  }, [cart, clearCart, formFields, actualFee, router, paypalTransactionId]);
+  }, [cart, clearCart, formFields, actualFee, router, paypalTransactionId, orderData]);
 
   if (isLoading) return <Loader />;
 

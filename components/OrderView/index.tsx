@@ -25,16 +25,16 @@ export const OrderVeiw: React.FC<OrderViewProps> = ({ orderData }) => {
 
   const status = () => {
     if (orderData.status == 'on-hold')
-      return 'Awaiting payment to arrive into my bank account. Payment details sent by email, please check your mailbox.';
+      return 'Awaiting payment to arrive into my bank account or my manual confirmation if paid in cash. Payment details sent by email, please check your mailbox.';
     if (orderData.status == 'processing')
       return 'Payment received, processing videos. Download links will be sent by email.';
     if (orderData.status == 'pending')
-      return 'Awaiting confirmation from the payment provider. If you completed the payment, please wait a few minutes for order status to update. You will receive an email with confirmation.';
+      return 'Awaiting confirmation from the payment provider if paid electronically or my manual confirmation if paid in cash. You will receive an email with the payment confirmation.';
     if (orderData.status == 'failed') return 'Order failed, please place a new order.';
     if (orderData.status == 'completed')
       return 'Order completed. Download details sent by email, lease check your mailbox.';
     if (orderData.status == 'refunded')
-      return 'Order refunded. All relevant details sent by email, please check your mailbox.';
+      return 'Order refunded. All relevant details were sent by email, please check your mailbox.';
     if (orderData.status == 'trash' || orderData.status == 'cancelled')
       return 'Order cancelled. Please place a new order.';
     return 'Order status unknown. Please contact me for clarification.';
@@ -78,9 +78,8 @@ export const OrderVeiw: React.FC<OrderViewProps> = ({ orderData }) => {
           <p className={styles.text}>{orderData.customer_note}</p>
         </>
       )}
-
       <p className={styles.subtotal}>
-        Discount: {orderData.discount_total != '0' ? '-€' + orderData.discount_total : '€0'}
+        {orderData.discount_total != '0.00' ? 'Discount: -€' + orderData.discount_total : ''}
       </p>
       <p className={styles.total}>Total: €{orderData.total}</p>
     </>

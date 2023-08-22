@@ -6,7 +6,7 @@ import styles from '../../styles/Contact.module.css';
 const Contact: NextPage = () => {
   const contacts = [
     {
-      title: 'WhatSapp',
+      title: 'WhatsApp',
       link: 'https://wa.me/48516524415',
     },
     {

@@ -21,6 +21,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from '../ui-kit/Button';
 import { Layout } from '../components/Layout';
+import { api } from '../wooApi/wooApiREST';
+import axios from 'axios';
 
 const Home: NextPage<HomeProps> = ({ productCategories }) => {
   const router = useRouter();

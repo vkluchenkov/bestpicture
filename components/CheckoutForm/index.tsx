@@ -84,34 +84,43 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
         />
       </div>
 
-      {cart.total != '0.00' ? (
+      {cart.total != '€0.00' ? (
         <fieldset className={styles.payment}>
           <h2 className={styles.subtitle}>Payment method</h2>
+          <RadioInput
+            label='Cash (select only if pay in person)'
+            id='cod'
+            name='payment'
+            required
+            value='cod'
+            checked={formFields.payment === 'cod'}
+            onChange={onChange}
+          />
           <RadioInput
             label='Direct bank transfer'
             id='bacs'
             name='payment'
             required
             value='bacs'
-            checked={formFields.payment == 'bacs'}
+            checked={formFields.payment === 'bacs'}
             onChange={onChange}
           />
           <RadioInput
-            label='PayPal (processing fee 5%, min €1)'
+            label='PayPal (fee 5%, min €1)'
             id='paypal'
             name='payment'
             required
             value='paypal'
-            checked={formFields.payment == 'paypal'}
+            checked={formFields.payment === 'paypal'}
             onChange={onChange}
           />
           <RadioInput
-            label='Stripe (cards, Apply Pay, Google Pay and more. Processing fee 5%, min €1)'
+            label='Stripe (cards, Apply Pay, Google Pay and more. Fee 5%, min €1)'
             id='stripe'
             name='payment'
             required
             value='stripe'
-            checked={formFields.payment == 'stripe'}
+            checked={formFields.payment === 'stripe'}
             onChange={onChange}
           />
         </fieldset>
@@ -136,20 +145,17 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
           fundingSource='paypal'
           disabled={isBtnDisabled}
           className={styles.button}
-          createOrder={(data, actions) => {
-            return actions.order
-              .create({
-                purchase_units: [
-                  {
-                    amount: { value: total.replace('€', '') },
-                  },
-                ],
-                application_context: {},
-              })
-              .then((orderId) => {
-                setTransactionId(orderId);
-                return orderId;
-              });
+          createOrder={async (data, actions) => {
+            const orderId = await actions.order.create({
+              purchase_units: [
+                {
+                  amount: { value: total.replace('€', '') },
+                },
+              ],
+              application_context: {},
+            });
+            setTransactionId(orderId);
+            return orderId;
           }}
           onApprove={async (data, actions) => {
             await actions.order!.capture();
