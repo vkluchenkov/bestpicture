@@ -132,23 +132,25 @@ const Checkout: NextPage = () => {
       method: 'POST',
       body: JSON.stringify(createOrderPayload),
     });
-    const data: OrderData = await res.json();
+    const orderData: OrderData = await res.json();
 
-    if (createOrderPayload.payment_method == 'stripe' && data) {
+    // console.log(orderData);
+
+    if (createOrderPayload.payment_method == 'stripe' && orderData) {
       const stripePayload = {
-        name: `Order ${data.id} on Vladimir Kluchenkov's website`,
-        price: data.total,
-        orderId: data.id,
-        orderKey: data.order_key,
-        email: data.billing.email,
+        name: `Order ${orderData.id} on Vladimir Kluchenkov's website`,
+        price: orderData.total,
+        orderId: orderData.id,
+        orderKey: orderData.order_key,
+        email: orderData.billing.email,
       };
       axios
         .post('/api/stripe-session', stripePayload)
         .then((data: any) => window.open(data.data.url as string, '_self'))
         .catch((error) => console.log(error));
-    } else if (data) {
+    } else if (orderData) {
       clearCart();
-      router.push(`/checkout/order-received/${data.id}?key=${data.order_key}`);
+      router.push(`/checkout/order-received/${orderData.id}?key=${orderData.order_key}`);
     }
     setIsLoading(false);
   }, [cart, clearCart, formFields, actualFee, router, paypalTransactionId]);

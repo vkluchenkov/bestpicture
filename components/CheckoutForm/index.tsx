@@ -145,20 +145,17 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
           fundingSource='paypal'
           disabled={isBtnDisabled}
           className={styles.button}
-          createOrder={(data, actions) => {
-            return actions.order
-              .create({
-                purchase_units: [
-                  {
-                    amount: { value: total.replace('€', '') },
-                  },
-                ],
-                application_context: {},
-              })
-              .then((orderId) => {
-                setTransactionId(orderId);
-                return orderId;
-              });
+          createOrder={async (data, actions) => {
+            const orderId = await actions.order.create({
+              purchase_units: [
+                {
+                  amount: { value: total.replace('€', '') },
+                },
+              ],
+              application_context: {},
+            });
+            setTransactionId(orderId);
+            return orderId;
           }}
           onApprove={async (data, actions) => {
             await actions.order!.capture();
