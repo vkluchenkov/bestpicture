@@ -25,7 +25,7 @@ export const OrderVeiw: React.FC<OrderViewProps> = ({ orderData }) => {
 
   const status = () => {
     if (orderData.status == 'on-hold')
-      return 'Awaiting payment to arrive into my bank account. Payment details sent by email, please check your mailbox.';
+      return 'Awaiting payment to arrive into my bank account or my manual confirmation if paid in cash. Payment details sent by email, please check your mailbox.';
     if (orderData.status == 'processing')
       return 'Payment received, processing videos. Download links will be sent by email.';
     if (orderData.status == 'pending')
@@ -78,9 +78,8 @@ export const OrderVeiw: React.FC<OrderViewProps> = ({ orderData }) => {
           <p className={styles.text}>{orderData.customer_note}</p>
         </>
       )}
-
       <p className={styles.subtotal}>
-        Discount: {orderData.discount_total != '0.00' ? '-€' + orderData.discount_total : '€0'}
+        {orderData.discount_total != '0.00' ? 'Discount: -€' + orderData.discount_total : ''}
       </p>
       <p className={styles.total}>Total: €{orderData.total}</p>
     </>

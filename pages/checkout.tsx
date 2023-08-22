@@ -107,7 +107,7 @@ const Checkout: NextPage = () => {
       createOrderPayload.payment_method = 'cod';
       createOrderPayload.payment_method_title = 'Paid in cash';
       createOrderPayload.set_paid = false;
-      createOrderPayload.status = 'pending';
+      createOrderPayload.status = 'on-hold';
     }
 
     if (formFields.payment == 'stripe') {
