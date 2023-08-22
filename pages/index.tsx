@@ -23,6 +23,10 @@ import { Button } from '../ui-kit/Button';
 import { Layout } from '../components/Layout';
 
 const Home: NextPage<HomeProps> = ({ productCategories }) => {
+  // tmp
+  const wc = process.env.NEXT_PUBLIC_WORDPRESS_URL!;
+  console.log(wc);
+
   const router = useRouter();
 
   const [cardsQty, setCardsQty] = useState(INITIAL_CARDS_SMALL);
