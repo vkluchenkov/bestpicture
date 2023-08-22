@@ -84,7 +84,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
         />
       </div>
 
-      {cart.total != '0.00' ? (
+      {cart.total != '€0.00' ? (
         <fieldset className={styles.payment}>
           <h2 className={styles.subtitle}>Payment method</h2>
           <RadioInput

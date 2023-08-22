@@ -92,13 +92,22 @@ const Checkout: NextPage = () => {
       coupon_lines: couponLines,
     };
 
-    if (!formFields.payment) createOrderPayload.set_paid = true;
+    if (!formFields.payment && cart.total === '€0.00') {
+      createOrderPayload.set_paid = true;
+    }
 
     if (formFields.payment == 'bacs') {
       createOrderPayload.payment_method = 'bacs';
       createOrderPayload.payment_method_title = 'Bank transfer';
       createOrderPayload.set_paid = false;
       createOrderPayload.status = 'on-hold';
+    }
+
+    if (formFields.payment == 'cod') {
+      createOrderPayload.payment_method = 'cod';
+      createOrderPayload.payment_method_title = 'Paid in cash';
+      createOrderPayload.set_paid = false;
+      createOrderPayload.status = 'pending';
     }
 
     if (formFields.payment == 'stripe') {
