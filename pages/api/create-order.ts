@@ -4,7 +4,7 @@ import { api } from '../../wooApi/wooApiREST';
 import { withSentry } from '@sentry/nextjs';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const orderPayload: CreateOrderPayload = JSON.parse(req.body);
+  const orderPayload: CreateOrderPayload = req.body;
 
   try {
     const { data } = await api.post('orders', orderPayload);
