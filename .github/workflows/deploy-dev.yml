@@ -29,17 +29,17 @@ jobs:
           # envkey_NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
 
       - name: Build the Docker image
-        run: docker build -t ghcr.io/vkluchenkov/bestpicture:latest-dev .
+        run: docker build -t cloud.canister.io:5000/vkluchenkov/bestpicture:latest-dev .
 
       - name: Login to ghcr
         uses: docker/login-action@v2
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: cloud.canister.io:5000
+          username: ${{ secrets.CANISTERLOGIN }}
+          password: ${{ secrets.CANISTERPASS }}
 
       - name: Push the Docker image
-        run: docker push ghcr.io/vkluchenkov/bestpicture:latest-dev
+        run: docker push cloud.canister.io:5000/vkluchenkov/bestpicture:latest-dev
 
       - name: Deploy
         uses: appleboy/ssh-action@v0.1.8
@@ -49,9 +49,9 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           passphrase: ${{ secrets.SSHPASS }}
           script: |
-            docker login --username=${{ github.actor }} --password=${{ secrets.GITHUB_TOKEN }} ghcr.io
-            docker pull ghcr.io/vkluchenkov/bestpicture:latest-dev
+            docker login --username=${{ secrets.CANISTERLOGIN }} --password=${{ secrets.CANISTERPASS }} cloud.canister.io:5000
+            docker pull cloud.canister.io:5000/vkluchenkov/bestpicture:latest-dev
             docker stop bestpicture-dev
             docker rm bestpicture-dev
-            docker run -d -p 49166:3000 --name=bestpicture-dev --restart=always --pull=always ghcr.io/vkluchenkov/bestpicture:latest-dev
+            docker run -d -p 49166:3000 --name=bestpicture-dev --restart=always --pull=always cloud.canister.io:5000/vkluchenkov/bestpicture:latest-dev
             docker system prune -f
