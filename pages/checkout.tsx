@@ -25,8 +25,6 @@ const Checkout: NextPage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [orderData, setOrderData] = useState<OrderData | null>(null);
-
   // Form fields
   const [formFields, setFormFields] = useState<FormFields>({
     name: '',
@@ -130,10 +128,7 @@ const Checkout: NextPage = () => {
     }
     // Create order and process payment
     try {
-      axios.post('/api/create-order', createOrderPayload).then((response: any) => {
-        // console.log(response.data);
-        setOrderData(response.data);
-      });
+      const { data: orderData } = await axios.post('/api/create-order', createOrderPayload);
 
       if (createOrderPayload.payment_method == 'stripe' && orderData) {
         const stripePayload = {
@@ -156,7 +151,7 @@ const Checkout: NextPage = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [cart, clearCart, formFields, actualFee, router, paypalTransactionId, orderData]);
+  }, [cart, clearCart, formFields, actualFee, router, paypalTransactionId]);
 
   if (isLoading) return <Loader />;
 

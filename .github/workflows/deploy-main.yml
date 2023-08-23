@@ -23,7 +23,7 @@ jobs:
           envkey_PAYPAL_WEBHOOK_ID: ${{ secrets.PAYPAL_WEBHOOK_ID }}
           envkey_PAYPAL_API_URL: ${{ secrets.PAYPAL_WEBHOOK_ID }}
           envkey_WC_CONSUMER_KEY: ${{ secrets.WC_CONSUMER_KEY }}
-          envkey_WC_CONSUMER_SECRET: ${{ secrets.WC_CONSUMER_KEY }}
+          envkey_WC_CONSUMER_SECRET: ${{ secrets.WC_CONSUMER_SECRET }}
           envkey_NEXT_PUBLIC_WORDPRESS_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_URL }}
           envkey_NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
 
