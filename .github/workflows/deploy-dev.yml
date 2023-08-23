@@ -22,8 +22,9 @@ jobs:
           envkey_PAYPAL_SECRET: ${{ secrets.DEV_PAYPAL_SECRET }}
           envkey_PAYPAL_WEBHOOK_ID: ${{ secrets.DEV_PAYPAL_WEBHOOK_ID }}
           envkey_PAYPAL_API_URL: ${{ secrets.DEV_PAYPAL_WEBHOOK_ID }}
+          # Woocommerce
           envkey_WC_CONSUMER_KEY: ${{ secrets.DEV_WC_CONSUMER_KEY }}
-          envkey_WC_CONSUMER_SECRET: ${{ secrets.DEV_WC_CONSUMER_KEY }}
+          envkey_WC_CONSUMER_SECRET: ${{ secrets.DEV_WC_CONSUMER_SECRET }}
           envkey_NEXT_PUBLIC_WORDPRESS_URL: ${{ secrets.DEV_NEXT_PUBLIC_WORDPRESS_URL }}
           # envkey_NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
 
