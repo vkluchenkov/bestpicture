@@ -5,6 +5,7 @@ import axios from 'axios';
 import { withSentry } from '@sentry/nextjs';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  console.log('start');
   const eventType = req.body.event_type;
 
   if (eventType == 'PAYMENT.CAPTURE.COMPLETED') {
@@ -32,6 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
 
       console.log(data);
+      console.log(req.body);
 
       if (data.verification_status == 'SUCCESS') {
         const PaypalOrderId = req.body.resource.supplementary_data.related_ids.order_id;
