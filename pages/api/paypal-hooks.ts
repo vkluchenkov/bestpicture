@@ -30,29 +30,29 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           },
         }
       );
-
+      console.log(data);
       if (data.verification_status == 'SUCCESS') {
-        const PaypalOrderId = req.body.resource.supplementary_data.related_ids.order_id;
+        const paypalOrderId = req.body.resource.supplementary_data.related_ids.order_id;
         const { data: pendingOrders } = await api.get('orders?status=pending').catch((error) => {
-          // console.log('Can not fetch orders');
+          console.log('Can not fetch orders');
           res.status(404).send('Can not fetch orders');
           return;
         });
         if (!pendingOrders.length) {
-          // console.log('No pending orders found');
+          console.log('No pending orders found');
           res.status(404).send('No pending orders found');
           return;
         } else {
           const isOrder = pendingOrders.find(
-            (order: OrderData) => order.transaction_id == PaypalOrderId
+            (order: OrderData) => order.transaction_id == paypalOrderId
           );
           if (!isOrder) {
-            // console.log('No such order in pending orders');
+            console.log('No such order in pending orders');
             res.status(404).send('No such order in pending orders');
             return;
           }
           await api.put(`orders/${isOrder.id}`, { set_paid: true }).catch((e) => {
-            // console.log('Error updating order');
+            console.log('Error updating order');
             res.status(500).send('Error updating order');
             return;
           });
@@ -60,10 +60,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           return;
         }
       } else {
+        console.log('Verification failed!');
         res.status(403).send('Verification failed!');
         return;
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error.message);
       res.status(501).send('Something went wrong');
       return;
     }
