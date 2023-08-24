@@ -18,10 +18,12 @@ jobs:
           envkey_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
           envkey_STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           envkey_STRIPE_SIGNING_SECRET: ${{ secrets.STRIPE_SIGNING_SECRET }}
+          #PayPal
           envkey_NEXT_PUBLIC_PAYPAL_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PAYPAL_CLIENT_ID }}
           envkey_PAYPAL_SECRET: ${{ secrets.PAYPAL_SECRET }}
           envkey_PAYPAL_WEBHOOK_ID: ${{ secrets.PAYPAL_WEBHOOK_ID }}
-          envkey_PAYPAL_API_URL: ${{ secrets.PAYPAL_WEBHOOK_ID }}
+          envkey_PAYPAL_API_URL: ${{ secrets.PAYPAL_API_URL }}
+          #Woocommerce
           envkey_WC_CONSUMER_KEY: ${{ secrets.WC_CONSUMER_KEY }}
           envkey_WC_CONSUMER_SECRET: ${{ secrets.WC_CONSUMER_SECRET }}
           envkey_NEXT_PUBLIC_WORDPRESS_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_URL }}

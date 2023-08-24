@@ -31,6 +31,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       );
 
+      console.log(data);
+
       if (data.verification_status == 'SUCCESS') {
         const PaypalOrderId = req.body.resource.supplementary_data.related_ids.order_id;
         const { data: pendingOrders } = await api.get('orders?status=pending').catch((error) => {
