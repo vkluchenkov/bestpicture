@@ -33,7 +33,7 @@ export interface CartItems {
   cart: CartContents;
 }
 
-type PaymentMethod = 'bacs' | 'paypal' | 'stripe' | 'cod' | undefined;
+type PaymentMethod = 'bacs' | 'paypal' | 'stripe' | 'cod' | 'cheque' | undefined;
 
 // export interface CheckoutPayload {
 //   billing: {

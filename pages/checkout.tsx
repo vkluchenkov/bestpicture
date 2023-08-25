@@ -110,6 +110,13 @@ const Checkout: NextPage = () => {
       createOrderPayload.status = 'on-hold';
     }
 
+    if (formFields.payment == 'cheque') {
+      createOrderPayload.payment_method = 'cheque';
+      createOrderPayload.payment_method_title = 'Revolut';
+      createOrderPayload.set_paid = false;
+      createOrderPayload.status = 'on-hold';
+    }
+
     if (formFields.payment == 'stripe') {
       createOrderPayload.payment_method = 'stripe';
       createOrderPayload.payment_method_title = 'Stripe (cards and wallets)';
