@@ -33,7 +33,8 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
     cart.total != '€0.00' &&
     cart.total != '' &&
     formFields.payment != 'bacs' &&
-    formFields.payment != 'cod'
+    formFields.payment != 'cod' &&
+    formFields.payment != 'cheque'
       ? 'Pay ' + total
       : 'Place order for ' + total;
 
@@ -94,6 +95,15 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
             required
             value='cod'
             checked={formFields.payment === 'cod'}
+            onChange={onChange}
+          />
+          <RadioInput
+            label='Revolut'
+            id='cheque'
+            name='payment'
+            required
+            value='cheque'
+            checked={formFields.payment === 'cheque'}
             onChange={onChange}
           />
           <RadioInput

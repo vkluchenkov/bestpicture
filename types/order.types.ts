@@ -24,12 +24,13 @@ type OrderStatus =
   | 'failed'
   | 'trash';
 
-type PaymentMethod = 'bacs' | 'stripe' | 'paypal' | 'cod' | '';
+type PaymentMethod = 'bacs' | 'stripe' | 'paypal' | 'cod' | 'cheque' | '';
 type PaymentMethodTitle =
   | 'PayPal'
   | 'Stripe (cards and wallets)'
   | 'Bank transfer'
   | 'Paid in cash'
+  | 'Revolut'
   | '';
 
 export interface CreateOrderPayload {
