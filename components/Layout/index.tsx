@@ -33,7 +33,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       >
         {children}
       </motion.main>
-      <AnimatePresence mode='wait' initial={false}>
+      {/* <AnimatePresence mode='wait' initial={false}>
         {isOpen && (
           <motion.div
             initial='hidden'
@@ -41,12 +41,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             exit='exit'
             variants={variants}
             transition={{ type: 'linear', duration: 0.3 }}
-            style={{ zIndex: 99 }}
+            style={{ zIndex: 90 }}
           >
             <FlyCart />
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
+      {isOpen && <FlyCart />}
       <Footer />
     </>
   );
