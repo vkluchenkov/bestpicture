@@ -22,7 +22,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
       <Header />
-      <motion.main
+      {/* <motion.main
         initial='hidden'
         animate='enter'
         exit='exit'
@@ -30,9 +30,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         transition={{ type: 'linear', duration: 0.5 }}
         className={styles.main}
         id='main'
-      >
+      > */}
+      <main className={styles.main} id='main'>
         {children}
-      </motion.main>
+      </main>
+      {/* </motion.main> */}
       {/* <AnimatePresence mode='wait' initial={false}>
         {isOpen && (
           <motion.div
