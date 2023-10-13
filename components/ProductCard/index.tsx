@@ -85,22 +85,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart, cat
       <p className={styles.price}>{price ? `${price}` : 'Free'}</p>
       {productButton}
       {isProductPopupOpen && (
-        <motion.div
-          initial='hidden'
-          animate='enter'
-          exit='exit'
-          variants={variants}
-          transition={{ type: 'linear', duration: 0.3 }}
-          style={{ zIndex: 99 }}
-        >
-          <ProductPopup
-            isOpen={isProductPopupOpen}
-            product={product}
-            onClose={closeHandler}
-            onClick={addProduct}
-            isInCart={isInCart}
-          />
-        </motion.div>
+        // <motion.div
+        //   initial='hidden'
+        //   animate='enter'
+        //   exit='exit'
+        //   variants={variants}
+        //   transition={{ type: 'linear', duration: 0.3 }}
+        //   style={{ zIndex: 99 }}
+        // >
+        <ProductPopup
+          isOpen={isProductPopupOpen}
+          product={product}
+          onClose={closeHandler}
+          onClick={addProduct}
+          isInCart={isInCart}
+        />
+        // </motion.div>
       )}
     </li>
   );
