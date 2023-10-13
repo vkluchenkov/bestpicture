@@ -1,5 +1,5 @@
 import { PayPalButtons } from '@paypal/react-paypal-js';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import { useCart } from '../../store/Cart';
 import { FormFields } from '../../types/cart.types';
 import { Button } from '../../ui-kit/Button';
@@ -9,9 +9,10 @@ import { TextInput } from '../../ui-kit/TextInput';
 import styles from './CheckoutForm.module.css';
 
 interface CheckoutFormProps {
-  onSubmit: () => Promise<void>;
+  onSubmit: () => Promise<string>;
   onChange: (e: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  setTransactionId: (orderId: string) => void;
+  // setTransactionId: (orderId: string) => void;
+  payPalApproveHandler: (orderId: string | null) => Promise<void>;
   formFields: FormFields;
   formFieldsErrors: Partial<FormFields>;
   isBtnDisabled: boolean;
@@ -21,13 +22,16 @@ interface CheckoutFormProps {
 export const CheckoutForm: React.FC<CheckoutFormProps> = ({
   onSubmit,
   onChange,
-  setTransactionId,
+  // setTransactionId,
+  payPalApproveHandler,
   formFields,
   formFieldsErrors,
   isBtnDisabled,
   total,
 }) => {
   const [{ cart }, {}] = useCart();
+
+  let wcOrderId: null | string = null;
 
   const buttonText = () =>
     cart.total != '€0.00' &&
@@ -156,20 +160,23 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
           disabled={isBtnDisabled}
           className={styles.button}
           createOrder={async (data, actions) => {
-            const orderId = await actions.order.create({
+            const getWcOrderId = await onSubmit();
+            wcOrderId = getWcOrderId;
+            const paypalOrderId = await actions.order.create({
               purchase_units: [
                 {
                   amount: { value: total.replace('€', '') },
+                  description: `bestpicture.pro order #${getWcOrderId}`,
                 },
               ],
               application_context: {},
             });
-            setTransactionId(orderId);
-            return orderId;
+            // setTransactionId(paypalOrderId);
+            return paypalOrderId;
           }}
           onApprove={async (data, actions) => {
             await actions.order!.capture();
-            onSubmit();
+            await payPalApproveHandler(wcOrderId);
           }}
         />
       )}

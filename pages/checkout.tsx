@@ -61,12 +61,38 @@ const Checkout: NextPage = () => {
     setIsBtnDisabled(!form!.checkValidity());
   }, []);
 
-  // PayPal transaction id
-  let paypalTransactionId = '';
-  const setPayPalTransactionId = (orderId: string) => (paypalTransactionId = orderId);
+  // PayPal transaction id (used for webhook, now not needed)
+  // let paypalTransactionId = '';
+  // const setPayPalTransactionId = (orderId: string) => (paypalTransactionId = orderId);
+
+  const pushToConfirmationPage = useCallback(
+    (orderId: string, key: string) => {
+      router.push(`/checkout/order-received/${orderId}?key=${key}`);
+    },
+    [router]
+  );
+
+  const paypalApproveHandler = useCallback(
+    async (orderId: string | null) => {
+      if (orderId) {
+        try {
+          const { data } = await axios.post('api/setpaid-order', {
+            orderId: orderId,
+            isPaid: true,
+          });
+          const key = data.order_key;
+          clearCart();
+          pushToConfirmationPage(orderId, key);
+        } catch (error) {
+          console.log('Error updating order');
+        }
+      } else console.log('No order ID present!');
+    },
+    [pushToConfirmationPage, clearCart]
+  );
 
   const submitHandler = useCallback(async () => {
-    setIsLoading(true);
+    if (formFields.payment !== 'paypal') setIsLoading(true);
     // Create order payload
     const lineItems = cart.contents.nodes.map((cartItem) => {
       return {
@@ -131,7 +157,7 @@ const Checkout: NextPage = () => {
       createOrderPayload.fee_lines = [
         { name: 'PayPal processing fee 5% (min €1)', total: String(actualFee) },
       ];
-      createOrderPayload.transaction_id = paypalTransactionId;
+      // createOrderPayload.transaction_id = paypalTransactionId;
     }
     // Create order and process payment
     try {
@@ -149,16 +175,19 @@ const Checkout: NextPage = () => {
           .post('/api/stripe-session', stripePayload)
           .then((data: any) => window.open(data.data.url as string, '_self'));
         // .catch((error) => console.log(error));
-      } else if (orderData) {
+        // if not PayPal, clear cart and redirect to order confirmation page
+      } else if (createOrderPayload.payment_method !== 'paypal' && orderData) {
         clearCart();
-        router.push(`/checkout/order-received/${orderData.id}?key=${orderData.order_key}`);
+        pushToConfirmationPage(orderData.id, orderData.order_key);
       }
+      // return orderId for Paypal
+      return orderData.id;
     } catch (error) {
       console.log(error);
     } finally {
       setIsLoading(false);
     }
-  }, [cart, clearCart, formFields, actualFee, router, paypalTransactionId]);
+  }, [cart, clearCart, formFields, actualFee, pushToConfirmationPage]);
 
   if (isLoading) return <Loader />;
 
@@ -195,7 +224,8 @@ const Checkout: NextPage = () => {
             formFieldsErrors={formFieldsErrors}
             isBtnDisabled={isBtnDisabled}
             total={total()}
-            setTransactionId={setPayPalTransactionId}
+            // setTransactionId={setPayPalTransactionId}
+            payPalApproveHandler={paypalApproveHandler}
           />
         </section>
       </div>
