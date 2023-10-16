@@ -1,5 +1,5 @@
 import { PayPalButtons } from '@paypal/react-paypal-js';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useCart } from '../../store/Cart';
 import { FormFields } from '../../types/cart.types';
 import { Button } from '../../ui-kit/Button';
@@ -30,6 +30,15 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
   total,
 }) => {
   const [{ cart }, {}] = useCart();
+
+  const [isOrderError, setIsOrderError] = useState(false);
+
+  useEffect(() => {
+    if (isOrderError)
+      setTimeout(() => {
+        setIsOrderError(false);
+      }, 10000);
+  }, [isOrderError]);
 
   let wcOrderId: null | string = null;
 
@@ -141,6 +150,12 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
       ) : (
         <></>
       )}
+      {isOrderError && (
+        <span className={styles.error}>
+          There was an error while placing your order. Please try again or contact me to resolve the
+          problem
+        </span>
+      )}
       {formFields.payment != 'paypal' ? (
         <Button
           type='button'
@@ -161,18 +176,24 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
           className={styles.button}
           createOrder={async (data, actions) => {
             const getWcOrderId = await onSubmit();
-            wcOrderId = getWcOrderId;
-            const paypalOrderId = await actions.order.create({
-              purchase_units: [
-                {
-                  amount: { value: total.replace('€', '') },
-                  description: `bestpicture.pro order #${getWcOrderId}`,
-                },
-              ],
-              application_context: {},
-            });
-            // setTransactionId(paypalOrderId);
-            return paypalOrderId;
+            if (getWcOrderId) {
+              wcOrderId = getWcOrderId;
+              const paypalOrderId = await actions.order.create({
+                purchase_units: [
+                  {
+                    amount: { value: total.replace('€', '') },
+                    description: `bestpicture.pro order #${getWcOrderId}`,
+                  },
+                ],
+                application_context: {},
+              });
+              // setTransactionId(paypalOrderId);
+              return paypalOrderId;
+            } else throw new Error('Error creating order');
+          }}
+          onError={(error) => {
+            console.log(error);
+            setIsOrderError(true);
           }}
           onApprove={async (data, actions) => {
             await actions.order!.capture();
