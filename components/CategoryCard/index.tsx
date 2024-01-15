@@ -5,7 +5,7 @@ import { backendUrl, publicUrl } from '../../utils/constants';
 import styles from './categoryCard.module.css';
 
 export const CategoryCard: React.FC<CategoryCardProps> = ({ productCategory, isLarge }) => {
-  const videos = productCategory.count == 1 ? '1 video' : `${productCategory.count} videos`;
+  const videos = productCategory.count == 1 ? '1 item' : `${productCategory.count} items`;
   const url = productCategory.link.replace(`${publicUrl}product-category`, '/videos');
 
   return (
