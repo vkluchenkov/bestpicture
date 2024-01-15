@@ -1,8 +1,8 @@
 export const questions = [
   {
-    question: 'When will I receive my videos?',
+    question: 'When will I receive my order?',
     answer:
-      'After your payment and order are confirmed it usually takes a day or two to prepare and upload your videos. However, as I am a "one man band" it may take longer due to my travels and other factors. 99% of orders sent to buyers within 5 days.',
+      'After your payment and order are confirmed it usually takes a day or two to prepare and upload your order. However, as I am a "one man band" it may take longer due to my travels and other factors. 99% of orders sent to buyers within 5 days.',
   },
   {
     question: 'What payments do you accept?',
@@ -10,9 +10,9 @@ export const questions = [
       'I accept PayPal, card and wallet payments with Stripe and bank transfers. You will be given the choice of your preferred payment method during the checkout process. With PayPal and Stripe your payment is confirmed immediately, with bank transfer it may take a few days for the money to arrive on my account.',
   },
   {
-    question: 'How do I get my videos?',
+    question: 'How do I get my items after the order?',
     answer:
-      'After your payment is confirmed and videos prepared you will receive an email with the download links. Please note, download time is limited.',
+      'After your payment is confirmed and files prepared you will receive an email with the download links. Please note, download time is limited.',
   },
   {
     question: "And what if I don't download in time?",

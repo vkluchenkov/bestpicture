@@ -5,7 +5,7 @@ import { backendUrl, publicUrl } from '../../utils/constants';
 import styles from './categoryCard.module.css';
 
 export const CategoryCard: React.FC<CategoryCardProps> = ({ productCategory, isLarge }) => {
-  const videos = productCategory.count == 1 ? '1 item' : `${productCategory.count} items`;
+  const items = productCategory.count == 1 ? '1 item' : `${productCategory.count} items`;
   const url = productCategory.link.replace(`${publicUrl}product-category`, '/videos');
 
   return (
@@ -33,7 +33,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({ productCategory, isL
         <h2 className={isLarge ? styles.title + ' ' + styles.title_large : styles.title}>
           {productCategory.name}
         </h2>
-        <p className={isLarge ? styles.count + ' ' + styles.count_large : styles.count}>{videos}</p>
+        <p className={isLarge ? styles.count + ' ' + styles.count_large : styles.count}>{items}</p>
       </div>
     </Link>
   );
