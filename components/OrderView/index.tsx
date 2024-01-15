@@ -62,7 +62,7 @@ export const OrderVeiw: React.FC<OrderViewProps> = ({ orderData }) => {
         </p>
       )}
 
-      <h2 className={styles.subtitle}>Videos</h2>
+      <h2 className={styles.subtitle}>Items</h2>
       <ul className={styles.listItems}>{lineItems}</ul>
 
       {!!feeItems.length && (

@@ -197,7 +197,7 @@ const Checkout: NextPage = () => {
         <Head>
           <title>Checkout | bestpicture.pro</title>
         </Head>
-        <h2 className={styles.subtitle}>Your cart is empty. Please put some videos in it</h2>
+        <h2 className={styles.subtitle}>Your cart is empty. Please put some items in it</h2>
       </Layout>
     );
 
@@ -209,7 +209,7 @@ const Checkout: NextPage = () => {
       <h1 className={styles.title}>Checkout</h1>
       <div className={styles.sections}>
         <section className={styles.productsSection}>
-          <h2 className={styles.subtitle}>Videos</h2>
+          <h2 className={styles.subtitle}>Items</h2>
           <CartProducts />
           <Coupons />
           <p className={styles.subtotal}>Subtotal: {cart.subtotal}</p>
