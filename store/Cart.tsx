@@ -9,10 +9,12 @@ import {
   RemoveFromCartMutation,
   ApplyCouponMutation,
   RemoveCouponsMutation,
+  AddFeeMutation,
 } from '../types/cart.types';
 import {
   ADD_TO_CART,
   APPLY_COUPON,
+  ADD_FEE,
   GET_CART,
   REMOVE_COUPONS,
   REMOVE_FROM_CART,
@@ -28,6 +30,7 @@ interface CartStore {
 
 interface CartStoreActions {
   addProduct: (productId: number) => void;
+  addFee: (name: string, amount: number) => void;
   removeProduct: (cartKey: string) => void;
   applyCoupon: (code: string) => void;
   removeCoupons: (codes: string[]) => void;
@@ -79,6 +82,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [addMutation, { data: addData, error: addError, loading: addLoading }] =
     useMutation<AddToCartMutation>(ADD_TO_CART, {
       onError: (e) => handleError(e, 'addError'),
+    });
+
+  const [addFeeMutation, { data: addFeeData, error: addFeeError, loading: addFeeLoading }] =
+    useMutation<AddFeeMutation>(ADD_FEE, {
+      onError: (e) => handleError(e, 'addFeeError'),
     });
 
   const [removeMutation, { data: removeData, error: removeError, loading: removeLoading }] =
@@ -146,6 +154,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     [addMutation]
   );
 
+  const addFee: CartStoreActions['addFee'] = useCallback(
+    async (name, amount) => await addFeeMutation({ variables: { name: name, amount: amount } }),
+    [addFeeMutation]
+  );
+
   const removeProduct: CartStoreActions['removeProduct'] = useCallback(
     async (cartKey) => await removeMutation({ variables: { keys: [cartKey] } }),
     [removeMutation]
@@ -187,6 +200,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         },
         {
           addProduct,
+          addFee,
           removeProduct,
           applyCoupon,
           removeCoupons,

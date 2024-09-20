@@ -51,6 +51,14 @@ export const ADD_TO_CART = gql`
   }
 `;
 
+export const ADD_FEE = gql`
+  mutation AddFee($name: String!, $amount: Float!) {
+  addFee(input: {name: $name, amount: $amount}) {
+    ${cartData}
+  }
+}
+`;
+
 export const APPLY_COUPON = gql`
   mutation ApplyCoupon($code: String!) {
     applyCoupon(input: { code: $code }) {

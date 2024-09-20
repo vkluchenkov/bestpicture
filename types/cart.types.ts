@@ -62,6 +62,10 @@ export interface AddToCartMutation {
   addToCart: CartItems;
 }
 
+export interface AddFeeMutation {
+  addFee: CartItems;
+}
+
 export interface RemoveFromCartMutation {
   removeItemsFromCart: CartItems;
 }
