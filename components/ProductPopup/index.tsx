@@ -7,6 +7,7 @@ import styles from './ProductPopup.module.css';
 import { InputCheckbox } from '../../ui-kit/Checkbox/InputCheckbox';
 import { FormControlLabel, ThemeProvider } from '@mui/material';
 import { darkTheme, cropFee } from '../../utils/constants';
+import Link from 'next/link';
 
 interface ProductPopupProps {
   product: Product;
@@ -111,6 +112,13 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
             label={`Square crop +€${cropFee}`}
           />
         </div>
+        <button
+          type='button'
+          className={styles.buttonBack}
+          onClick={() => window.open('/faq', '_blank')}
+        >
+          Learn more about crops
+        </button>
       </ThemeProvider>
       {productButton}
       <button type='button' className={styles.buttonBack} onClick={onClose}>
