@@ -1,3 +1,5 @@
+import { createTheme } from '@mui/material';
+
 interface Menu {
   name: string;
   link: string;
@@ -57,3 +59,19 @@ export const INITIAL_CARDS_EXTRALARGE = 14;
 // Paypal and Stripe processing fee, %
 export const processingFee = 5;
 export const minProcessingFee = 1;
+
+// Extra fee for vertical videos
+export const cropFee = 5;
+
+// MUI form theme
+export const darkTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#ffffff',
+    },
+    mode: 'dark',
+  },
+  // typography: {
+  //   fontFamily: montserrat.style.fontFamily,
+  // },
+});

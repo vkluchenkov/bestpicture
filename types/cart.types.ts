@@ -12,6 +12,10 @@ export interface CartProduct {
       price: string;
     };
   };
+  extraData: {
+    key: string;
+    value: string;
+  }[];
   key?: string;
 }
 
@@ -60,6 +64,10 @@ export interface CartProviderProps {
 
 export interface AddToCartMutation {
   addToCart: CartItems;
+}
+
+export interface AddFeeMutation {
+  addFee: CartItems;
 }
 
 export interface RemoveFromCartMutation {

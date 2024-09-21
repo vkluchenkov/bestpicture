@@ -9,15 +9,18 @@ import {
   RemoveFromCartMutation,
   ApplyCouponMutation,
   RemoveCouponsMutation,
+  AddFeeMutation,
 } from '../types/cart.types';
 import {
   ADD_TO_CART,
   APPLY_COUPON,
+  ADD_FEE,
   GET_CART,
   REMOVE_COUPONS,
   REMOVE_FROM_CART,
   CLEAR_CART_MUTATION,
 } from '../wooApi/wooApiGQL';
+import { cropFee } from '../utils/constants';
 
 interface CartStore {
   cart: CartContents;
@@ -27,7 +30,8 @@ interface CartStore {
 }
 
 interface CartStoreActions {
-  addProduct: (productId: number) => void;
+  addProduct: (productId: number, extraData: string) => void;
+  addFee: (name: string, amount: number) => void;
   removeProduct: (cartKey: string) => void;
   applyCoupon: (code: string) => void;
   removeCoupons: (codes: string[]) => void;
@@ -81,6 +85,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       onError: (e) => handleError(e, 'addError'),
     });
 
+  const [addFeeMutation, { data: addFeeData, error: addFeeError, loading: addFeeLoading }] =
+    useMutation<AddFeeMutation>(ADD_FEE, {
+      onError: (e) => handleError(e, 'addFeeError'),
+    });
+
   const [removeMutation, { data: removeData, error: removeError, loading: removeLoading }] =
     useMutation<RemoveFromCartMutation>(REMOVE_FROM_CART, {
       onError: (e) => handleError(e, 'removeError'),
@@ -104,34 +113,92 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   const { data: cartData, refetch: refetchCart } = useQuery<CartItems>(GET_CART, { skip: skip });
 
+  // Handle crops and amend cart total and subtotal
+  const getTotals = useCallback((cartData: CartItems) => {
+    const numberOfVerticals = cartData.cart.contents.nodes.filter((p) =>
+      p.extraData.find((d) => d.key === 'is_vertical' && d.value === 'true')
+    ).length;
+
+    const numberOfSquares = cartData.cart.contents.nodes.filter((p) =>
+      p.extraData.find((d) => d.key === 'is_square' && d.value === 'true')
+    ).length;
+
+    if (numberOfVerticals > 0 || numberOfSquares > 0) {
+      const totalAdd = (numberOfVerticals + numberOfSquares) * cropFee;
+      const total = parseFloat(cartData.cart.total.replace('€', '')) + totalAdd;
+      const subtotal = parseFloat(cartData.cart.subtotal.replace('€', '')) + totalAdd;
+      return { total: '€' + total.toFixed(2), subtotal: '€' + subtotal.toFixed(2) };
+    }
+    return {
+      total: cartData.cart.total,
+      subtotal: cartData.cart.subtotal,
+    };
+  }, []);
+
   // Effects
   // Populate cart on initial loading
   useEffect(() => {
     if (cartData) {
-      setCartContent(cartData);
+      const totals = getTotals(cartData);
+      setCartContent({
+        ...cartData,
+        cart: { ...cartData.cart, total: totals.total, subtotal: totals.subtotal },
+      });
       setSkip(true);
     }
-  }, [cartData]);
+  }, [cartData, getTotals]);
 
   // Set cart after add mutation complete
   useEffect(() => {
-    if (addData) setCartContent(addData.addToCart);
-  }, [addData]);
+    if (addData) {
+      const totals = getTotals(addData.addToCart);
+      setCartContent({
+        ...addData.addToCart,
+        cart: { ...addData.addToCart.cart, total: totals.total, subtotal: totals.subtotal },
+      });
+    }
+  }, [addData, getTotals]);
 
   // Set cart after remove mutation complete
   useEffect(() => {
-    if (removeData) setCartContent(removeData.removeItemsFromCart);
-  }, [removeData]);
+    if (removeData) {
+      const totals = getTotals(removeData.removeItemsFromCart);
+      setCartContent({
+        ...removeData.removeItemsFromCart,
+        cart: {
+          ...removeData.removeItemsFromCart.cart,
+          total: totals.total,
+          subtotal: totals.subtotal,
+        },
+      });
+    }
+  }, [removeData, getTotals]);
 
   // Set cart after coupon mutation complete
   useEffect(() => {
-    if (couponData) setCartContent(couponData.applyCoupon);
-  }, [couponData]);
+    if (couponData) {
+      const totals = getTotals(couponData.applyCoupon);
+      setCartContent({
+        ...couponData.applyCoupon,
+        cart: { ...couponData.applyCoupon.cart, total: totals.total, subtotal: totals.subtotal },
+      });
+    }
+  }, [couponData, getTotals]);
 
   // Set cart after remove coupons mutation complete
   useEffect(() => {
-    if (removeCouponsData) setCartContent(removeCouponsData.removeCoupons);
-  }, [removeCouponsData]);
+    if (removeCouponsData) {
+      const totals = getTotals(removeCouponsData.removeCoupons);
+      setCartContent({
+        ...removeCouponsData.removeCoupons,
+        cart: {
+          ...removeCouponsData.removeCoupons.cart,
+          total: totals.total,
+          subtotal: totals.subtotal,
+        },
+      });
+    }
+  }, [removeCouponsData, getTotals]);
 
   // Set loading state for all requests
   const isLoading = useMemo(() => {
@@ -142,8 +209,14 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   // Cart handlers
   const addProduct: CartStoreActions['addProduct'] = useCallback(
-    async (productId) => await addMutation({ variables: { productId: productId } }),
+    async (productId, extraData) =>
+      await addMutation({ variables: { productId: productId, extraData: extraData } }),
     [addMutation]
+  );
+
+  const addFee: CartStoreActions['addFee'] = useCallback(
+    async (name, amount) => await addFeeMutation({ variables: { name: name, amount: amount } }),
+    [addFeeMutation]
   );
 
   const removeProduct: CartStoreActions['removeProduct'] = useCallback(
@@ -187,6 +260,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         },
         {
           addProduct,
+          addFee,
           removeProduct,
           applyCoupon,
           removeCoupons,

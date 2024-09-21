@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import Head from 'next/head';
+
 import { Layout } from '../../components/Layout';
 import styles from '../../styles/Faq.module.css';
 import { questions } from '../../utils/faqQuestions';

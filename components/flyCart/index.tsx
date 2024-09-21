@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import { useCart } from '../../store/Cart';
 import { Button } from '../../ui-kit/Button';
 import { CartProducts } from '../CartProducts';

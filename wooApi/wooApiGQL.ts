@@ -12,6 +12,10 @@ const cartData = `cart {
   }
   contents(first: 100) {
     nodes {
+      extraData {
+        key
+        value
+      }
       product {
         node {
           ... on SimpleProduct {
@@ -44,11 +48,19 @@ export const REMOVE_FROM_CART = gql`
 `;
 
 export const ADD_TO_CART = gql`
-  mutation AddToCart($productId: Int!) {
-    addToCart(input: { productId: $productId }) {
+  mutation AddToCart($productId: Int!, $extraData: String!) {
+    addToCart(input: { productId: $productId, extraData: $extraData }) {
       ${cartData}
     }
   }
+`;
+
+export const ADD_FEE = gql`
+  mutation AddFee($name: String!, $amount: Float!) {
+  addFee(input: {name: $name, amount: $amount}) {
+    ${cartData}
+  }
+}
 `;
 
 export const APPLY_COUPON = gql`
