@@ -23,6 +23,6 @@ export const styles = createStyles({
   },
 
   largeCheckbox: {
-    '& .MuiSvgIcon-root': { fontSize: 30 },
+    '& .MuiSvgIcon-root': { fontSize: 25 },
   },
 });

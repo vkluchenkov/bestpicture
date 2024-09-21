@@ -97,13 +97,15 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
         />
       </div>
       <p className={styles.price}>{price ? `${price}` : 'Free'}</p>
+      <hr className={styles.separator} />
       <ThemeProvider theme={darkTheme}>
+        <h2 className={styles.options_title}>Additional Social media formats:</h2>
         <div className={styles.checkboxGroupWrapper}>
           <FormControlLabel
             control={
               <InputCheckbox value={isVertical} name='vertical' onChange={handleCheckboxChange} />
             }
-            label={`Vertical crop +€${cropFee}`}
+            label={`Vertical crop (reels) +€${cropFee}`}
           />
           <FormControlLabel
             control={
@@ -120,6 +122,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
           Learn more about crops
         </button>
       </ThemeProvider>
+      <hr className={styles.separator} />
       {productButton}
       <button type='button' className={styles.buttonBack} onClick={onClose}>
         Go back to category

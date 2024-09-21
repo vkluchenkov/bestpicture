@@ -10,6 +10,7 @@
   z-index: 99;
   padding: 30px 10px;
   gap: 15px;
+  overflow-y: scroll;
 }
 
 .popup_open {
@@ -23,7 +24,7 @@
   position: relative;
   aspect-ratio: 16/9;
   width: 95%;
-  max-width: 1200px;
+  max-width: 1000px;
   background: url('/images/loader.svg') center no-repeat;
 }
 
@@ -34,8 +35,8 @@
 .name {
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 19px;
+  font-size: 18px;
+  line-height: 1.2;
   margin: 0;
   padding: 0 10px 0;
   text-align: center;
@@ -45,7 +46,15 @@
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
-  line-height: 19px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.options_title {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.2;
   margin: 0;
 }
 
@@ -80,15 +89,20 @@
   margin: -5px 0;
 }
 
+.separator {
+  margin: 0 0 10px;
+  border-bottom: 1px solid var(--text-color);
+  width: 95%;
+  max-width: 1000px;
+}
+
 @media screen and (min-width: 768px) {
   .name {
     font-size: 20px;
-    line-height: 26px;
   }
 
   .price {
     font-size: 20px;
-    line-height: 26px;
   }
 
   .checkboxGroupWrapper {
