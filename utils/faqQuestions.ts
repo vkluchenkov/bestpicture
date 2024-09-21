@@ -2,7 +2,7 @@ export const questions = [
   {
     question: 'How does it work with crops?',
     answer:
-      'When you choose a crop, I will crop the video to the selected aspect ratio, making sure the most important parts of the video are visible (basically you, as the dancer will be all the time in the middle of the frame). If you have any special requests, please let me know in the order notes. Please note, that cropping of the group performances may not be possible. In this case I will send you the original video fitted in the selected crop ratio of the best possible fit.',
+      'When you choose a crop, I will crop the video to the selected aspect ratio, making sure the most important parts of the video are visible (basically you — the dancer — will be in the middle of the frame). If you have any special requests, please let me know in the order notes. Please note, that cropping of the group performances may not be possible. In this case I will send you the original video fitted in the selected crop ratio of the best possible fit.',
   },
   {
     question: 'When will I receive my order?',

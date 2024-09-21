@@ -129,7 +129,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
             onChange={onChange}
           />
           <RadioInput
-            label='PayPal (fee 5%, min €1)'
+            label='PayPal (fee 5%)'
             id='paypal'
             name='payment'
             required
@@ -138,7 +138,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
             onChange={onChange}
           />
           <RadioInput
-            label='Stripe (cards, Apply Pay, Google Pay and more. Fee 5%, min €1)'
+            label='Stripe (cards, Apply Pay, Google Pay and more. Fee 5%)'
             id='stripe'
             name='payment'
             required
