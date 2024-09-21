@@ -12,6 +12,10 @@ export interface CartProduct {
       price: string;
     };
   };
+  extraData: {
+    key: string;
+    value: string;
+  }[];
   key?: string;
 }
 

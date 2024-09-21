@@ -1,17 +1,18 @@
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useState } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import { loadStripe } from '@stripe/stripe-js';
+
 import styles from '../styles/Checkout.module.css';
 import { FormFields } from '../types/cart.types';
-import { CreateOrderPayload, OrderData } from '../types/order.types';
-import axios, { AxiosResponse } from 'axios';
-import { Order, loadStripe } from '@stripe/stripe-js';
+import { CreateOrderPayload, FeeItem } from '../types/order.types';
 import { useCart } from '../store/Cart';
 import { Coupons } from '../components/Coupons';
 import { CartProducts } from '../components/CartProducts';
 import { CheckoutForm } from '../components/CheckoutForm';
-import { minProcessingFee, processingFee } from '../utils/constants';
+import { minProcessingFee, processingFee, cropFee } from '../utils/constants';
 import { Loader } from '../components/Loader';
 import { Layout } from '../components/Layout';
 
@@ -61,10 +62,6 @@ const Checkout: NextPage = () => {
     setIsBtnDisabled(!form!.checkValidity());
   }, []);
 
-  // PayPal transaction id (used for webhook, now not needed)
-  // let paypalTransactionId = '';
-  // const setPayPalTransactionId = (orderId: string) => (paypalTransactionId = orderId);
-
   const pushToConfirmationPage = useCallback(
     (orderId: string, key: string) => {
       router.push(`/checkout/order-received/${orderId}?key=${key}`);
@@ -95,6 +92,46 @@ const Checkout: NextPage = () => {
     if (formFields.payment !== 'paypal') setIsLoading(true);
     // Create order payload
     const lineItems = cart.contents.nodes.map((cartItem) => {
+      const isVertical = cartItem.extraData.find(
+        (d) => d.key === 'is_vertical' && d.value === 'true'
+      );
+      const isSquare = cartItem.extraData.find((d) => d.key === 'is_square' && d.value === 'true');
+
+      if (isVertical || isSquare) {
+        const price = cartItem.product.node.price;
+        const productPrice = price ? parseFloat(price.replace('€', '')) : 0;
+
+        const getName = () => {
+          if (isVertical && isSquare) {
+            return cartItem.product.node.name + ' + vertical and square crop';
+          }
+          if (isVertical) {
+            return cartItem.product.node.name + ' + vertical crop';
+          }
+          if (isSquare) {
+            return cartItem.product.node.name + ' + square crop';
+          }
+          return cartItem.product.node.name;
+        };
+
+        const getTotal = () => {
+          if (isVertical && isSquare) {
+            return (productPrice + cropFee * 2).toFixed(2);
+          }
+          if (isVertical || isSquare) {
+            return (productPrice + cropFee).toFixed(2);
+          }
+          return price;
+        };
+
+        return {
+          name: getName(),
+          product_id: cartItem.product.node.id,
+          quantity: 1,
+          total: getTotal(),
+        };
+      }
+
       return {
         product_id: cartItem.product.node.id,
         quantity: 1,
@@ -116,6 +153,7 @@ const Checkout: NextPage = () => {
       status: 'pending',
       line_items: lineItems,
       coupon_lines: couponLines,
+      fee_lines: [],
     };
 
     if (!formFields.payment && cart.total === '€0.00') {
@@ -146,18 +184,19 @@ const Checkout: NextPage = () => {
     if (formFields.payment == 'stripe') {
       createOrderPayload.payment_method = 'stripe';
       createOrderPayload.payment_method_title = 'Stripe (cards and wallets)';
-      createOrderPayload.fee_lines = [
-        { name: 'Stripe processing fee 5% (min €1)', total: String(actualFee) },
-      ];
+      createOrderPayload.fee_lines.push({
+        name: 'Stripe processing fee 5%',
+        total: String(actualFee),
+      });
     }
 
     if (formFields.payment == 'paypal') {
       createOrderPayload.payment_method = 'paypal';
       createOrderPayload.payment_method_title = 'PayPal';
-      createOrderPayload.fee_lines = [
-        { name: 'PayPal processing fee 5% (min €1)', total: String(actualFee) },
-      ];
-      // createOrderPayload.transaction_id = paypalTransactionId;
+      createOrderPayload.fee_lines.push({
+        name: 'PayPal processing fee 5%',
+        total: String(actualFee),
+      });
     }
     // Create order and process payment
     try {
@@ -224,7 +263,6 @@ const Checkout: NextPage = () => {
             formFieldsErrors={formFieldsErrors}
             isBtnDisabled={isBtnDisabled}
             total={total()}
-            // setTransactionId={setPayPalTransactionId}
             payPalApproveHandler={paypalApproveHandler}
           />
         </section>

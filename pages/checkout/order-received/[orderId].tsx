@@ -1,11 +1,12 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
-import { Loader } from '../../../components/Loader';
 import axios from 'axios';
+import Head from 'next/head';
+
+import { Loader } from '../../../components/Loader';
 import styles from '../../../styles/Order.module.css';
 import { OrderData } from '../../../types/order.types';
-import Head from 'next/head';
 import { OrderVeiw } from '../../../components/OrderView';
 import { useCart } from '../../../store/Cart';
 import { Layout } from '../../../components/Layout';

@@ -22,7 +22,14 @@
 .cartItem__info {
   width: 100%;
   display: flex;
-  gap: 5px;
+  gap: 7px;
+  flex-direction: column;
+}
+
+.cartItem__infoWrapper {
+  width: 100%;
+  display: flex;
+  gap: 7px;
   flex-direction: column;
 }
 
@@ -36,6 +43,16 @@
 }
 
 .cartItem__price {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  margin: 0;
+  padding: 5px 0 0;
+  text-align: right;
+}
+
+.cartItem__price_crop {
   font-style: normal;
   font-weight: 200;
   font-size: 14px;
@@ -60,7 +77,7 @@
 }
 
 @media screen and (min-width: 768px) {
-  .cartItem__info {
+  .cartItem__infoWrapper {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;

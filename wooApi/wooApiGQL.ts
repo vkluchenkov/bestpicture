@@ -12,6 +12,10 @@ const cartData = `cart {
   }
   contents(first: 100) {
     nodes {
+      extraData {
+        key
+        value
+      }
       product {
         node {
           ... on SimpleProduct {
@@ -44,8 +48,8 @@ export const REMOVE_FROM_CART = gql`
 `;
 
 export const ADD_TO_CART = gql`
-  mutation AddToCart($productId: Int!) {
-    addToCart(input: { productId: $productId }) {
+  mutation AddToCart($productId: Int!, $extraData: String!) {
+    addToCart(input: { productId: $productId, extraData: $extraData }) {
       ${cartData}
     }
   }

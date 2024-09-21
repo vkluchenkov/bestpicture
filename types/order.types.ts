@@ -1,14 +1,15 @@
 interface LineItem {
   product_id: number;
   name?: string;
-  price?: number;
+  price?: string;
+  total?: string;
   subtotal?: number;
   quantity: number;
 }
 
 interface CouponItem {}
 
-interface FeeItem {
+export interface FeeItem {
   id?: number;
   name: string;
   total: string;
@@ -45,7 +46,7 @@ export interface CreateOrderPayload {
   payment_method_title?: PaymentMethodTitle;
   line_items?: LineItem[];
   coupon_lines?: CouponItem[];
-  fee_lines?: FeeItem[];
+  fee_lines: FeeItem[];
   meta_data?: {
     key: string;
     value: string;

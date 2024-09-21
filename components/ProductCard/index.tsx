@@ -1,6 +1,6 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
+
 import { useCart } from '../../store/Cart';
 import { Product } from '../../types/categoryListing.types';
 import { Button } from '../../ui-kit/Button';
@@ -24,10 +24,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart, cat
   const clickHandler = () => setIsProductPopapOpen(true);
   const closeHandler = () => setIsProductPopapOpen(false);
 
-  const addToCartHandler = useCallback(() => {
-    addProduct(id);
-    showCart();
-  }, [addProduct, showCart, id]);
+  const addToCartHandler = useCallback(
+    (id: number, extraData: string) => {
+      addProduct(id, extraData);
+      closeHandler();
+      showCart();
+    },
+    [addProduct, showCart]
+  );
 
   const productLink: string = categoryPath + '#' + slug;
 
@@ -49,16 +53,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart, cat
       &#10003; Added to cart
     </Button>
   ) : (
-    <Button type='button' className={styles.button} onClick={addToCartHandler}>
+    <Button type='button' className={styles.button} onClick={clickHandler}>
       Add to cart
     </Button>
   );
-
-  const variants = {
-    hidden: { opacity: 0 },
-    enter: { opacity: 1 },
-    exit: { opacity: 0 },
-  };
 
   return (
     <li className={styles.card}>
@@ -85,22 +83,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, isInCart, cat
       <p className={styles.price}>{price ? `${price}` : 'Free'}</p>
       {productButton}
       {isProductPopupOpen && (
-        // <motion.div
-        //   initial='hidden'
-        //   animate='enter'
-        //   exit='exit'
-        //   variants={variants}
-        //   transition={{ type: 'linear', duration: 0.3 }}
-        //   style={{ zIndex: 99 }}
-        // >
         <ProductPopup
           isOpen={isProductPopupOpen}
           product={product}
           onClose={closeHandler}
-          onClick={addProduct}
+          onClick={addToCartHandler}
           isInCart={isInCart}
         />
-        // </motion.div>
       )}
     </li>
   );
