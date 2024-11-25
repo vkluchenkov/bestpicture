@@ -110,7 +110,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
             checked={formFields.payment === 'cod'}
             onChange={onChange}
           />
-          <RadioInput
+          {/* <RadioInput
             label='Revolut'
             id='cheque'
             name='payment'
@@ -118,7 +118,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
             value='cheque'
             checked={formFields.payment === 'cheque'}
             onChange={onChange}
-          />
+          /> */}
           <RadioInput
             label='Direct bank transfer'
             id='bacs'
