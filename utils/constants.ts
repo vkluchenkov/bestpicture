@@ -13,16 +13,16 @@ export const wooShopBase = '/videos';
 // TMP menu
 export const menu: Menu[] = [
   {
+    name: '2025',
+    link: '/videos/2025',
+  },
+  {
     name: '2024',
     link: '/videos/2024',
   },
   {
     name: '2023',
     link: '/videos/2023',
-  },
-  {
-    name: '2022',
-    link: '/videos/2022',
   },
   {
     name: 'All events',
