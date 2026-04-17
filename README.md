@@ -26,3 +26,4 @@ The task was to create a Next.js fromntend application for existing e-commerce s
 ### Live deployment
 
 https://bestpicture.pro
+.
