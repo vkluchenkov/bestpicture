@@ -114,7 +114,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
 
   return (
     <div className={`${styles.popup} ${styles.popup_open}`} onClick={handleClickClose}>
-      <p className={styles.name}>{name}</p>
+      {/* <p className={styles.name}>{name}</p> */}
       <div className={styles.imageWrapper}>
         <Image
           src={image.large}
@@ -126,7 +126,9 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
           id='image'
         />
       </div>
-      <p className={styles.price}>{price ? `${price}` : 'Free'}</p>
+      <p className={styles.price}>
+        {name} ({price ? `${price}` : 'Free'})
+      </p>
       <hr className={styles.separator} />
       <ThemeProvider theme={darkTheme}>
         <h2 className={styles.options_title}>Additional Social media formats:</h2>
