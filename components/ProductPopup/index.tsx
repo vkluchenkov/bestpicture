@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Product } from '../../types/categoryListing.types';
 import { Button } from '../../ui-kit/Button';
@@ -31,6 +31,80 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
 
   const [isVertical, setIsVertical] = useState(false);
   const [isSquare, setIsSquare] = useState(false);
+
+  // Image zoom / pan state
+  const ZOOM = 2;
+  const DRAG_THRESHOLD = 5;
+  const [scale, setScale] = useState(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const pointerRef = useRef<{
+    startX: number;
+    startY: number;
+    startOffsetX: number;
+    startOffsetY: number;
+    pointerId: number;
+    moved: boolean;
+  } | null>(null);
+
+  // Clamp a pan offset so the zoomed image edges never pull inside the frame.
+  const clampOffset = (x: number, y: number, currentScale: number) => {
+    const rect = wrapperRef.current?.getBoundingClientRect();
+    if (!rect) return { x, y };
+    const maxX = (rect.width * (currentScale - 1)) / 2;
+    const maxY = (rect.height * (currentScale - 1)) / 2;
+    return {
+      x: Math.max(-maxX, Math.min(maxX, x)),
+      y: Math.max(-maxY, Math.min(maxY, y)),
+    };
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    pointerRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      startOffsetX: offset.x,
+      startOffsetY: offset.y,
+      pointerId: e.pointerId,
+      moved: false,
+    };
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const p = pointerRef.current;
+    if (!p || p.pointerId !== e.pointerId) return;
+    const dx = e.clientX - p.startX;
+    const dy = e.clientY - p.startY;
+    if (!p.moved && Math.hypot(dx, dy) > DRAG_THRESHOLD) p.moved = true;
+    if (p.moved && scale > 1) {
+      setOffset(clampOffset(p.startOffsetX + dx, p.startOffsetY + dy, scale));
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    const p = pointerRef.current;
+    if (!p || p.pointerId !== e.pointerId) return;
+    e.currentTarget.releasePointerCapture(e.pointerId);
+
+    if (!p.moved) {
+      // A tap toggles the zoom.
+      if (scale > 1) {
+        setScale(1);
+        setOffset({ x: 0, y: 0 });
+      } else {
+        // Zoom toward the tapped point so it stays under the cursor.
+        const rect = wrapperRef.current?.getBoundingClientRect();
+        if (rect) {
+          const cx = e.clientX - (rect.left + rect.width / 2);
+          const cy = e.clientY - (rect.top + rect.height / 2);
+          setOffset(clampOffset(-(ZOOM - 1) * cx, -(ZOOM - 1) * cy, ZOOM));
+        }
+        setScale(ZOOM);
+      }
+    }
+    pointerRef.current = null;
+  };
 
   // Blocking body scroll when popup visible
   useEffect(() => {
@@ -82,8 +156,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
   }, [product, onClose]);
 
   const handleClickClose = (e: React.MouseEvent<HTMLElement>) => {
-    const target = e.target as HTMLElement;
-    (target.classList.contains(styles.popup) || target.id == 'image') && onClose();
+    if ((e.target as HTMLElement).classList.contains(styles.popup)) onClose();
   };
 
   const handleAddToCart = () => {
@@ -114,19 +187,37 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
 
   return (
     <div className={`${styles.popup} ${styles.popup_open}`} onClick={handleClickClose}>
-      <p className={styles.name}>{name}</p>
-      <div className={styles.imageWrapper}>
-        <Image
-          src={image.large}
-          alt={name}
-          layout='fill'
-          objectFit='contain'
-          objectPosition='center'
-          className={styles.image}
-          id='image'
-        />
+      {/* <p className={styles.name}>{name}</p> */}
+      <div
+        ref={wrapperRef}
+        className={styles.imageWrapper}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+      >
+        <div
+          className={styles.imageTransform}
+          style={{
+            transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
+            transition: pointerRef.current?.moved ? 'none' : 'transform 0.2s ease',
+            cursor: scale > 1 ? 'grab' : 'zoom-in',
+          }}
+        >
+          <Image
+            src={image.large}
+            alt={name}
+            layout='fill'
+            objectFit='contain'
+            objectPosition='center'
+            className={styles.image}
+            draggable={false}
+          />
+        </div>
       </div>
-      <p className={styles.price}>{price ? `${price}` : 'Free'}</p>
+      <p className={styles.price}>
+        {name} ({price ? `${price}` : 'Free'})
+      </p>
       <hr className={styles.separator} />
       <ThemeProvider theme={darkTheme}>
         <h2 className={styles.options_title}>Additional Social media formats:</h2>

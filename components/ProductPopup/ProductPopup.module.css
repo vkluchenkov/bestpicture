@@ -26,13 +26,21 @@
   width: 95%;
   max-width: 1000px;
   background: url('/images/loader.svg') center no-repeat;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.imageTransform {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
 }
 
 .image {
   display: block;
 }
 
-.name {
+/* .name {
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
@@ -40,7 +48,7 @@
   margin: 0;
   padding: 0 10px 0;
   text-align: center;
-}
+} */
 
 .price {
   font-style: normal;
