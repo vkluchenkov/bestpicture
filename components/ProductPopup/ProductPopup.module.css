@@ -26,6 +26,14 @@
   width: 95%;
   max-width: 1000px;
   background: url('/images/loader.svg') center no-repeat;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.imageTransform {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
 }
 
 .image {
