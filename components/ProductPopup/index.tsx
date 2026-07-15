@@ -45,6 +45,11 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
   // Push a history entry on open so the browser Back button closes the popup
   // instead of navigating away from the category page.
   useEffect(() => {
+    // Opt out of the browser's scroll restoration for this entry so Back closes
+    // the popup in place (like ESC/click) instead of rewinding to the top.
+    const prevScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
+
     window.history.pushState({ productPopup: true }, '');
 
     const handlePopState = () => onClose();
@@ -59,6 +64,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
       if (window.history.state?.productPopup) {
         window.history.back();
       }
+      window.history.scrollRestoration = prevScrollRestoration;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
