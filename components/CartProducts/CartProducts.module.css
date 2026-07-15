@@ -49,7 +49,7 @@
   line-height: 16px;
   margin: 0;
   padding: 5px 0 0;
-  text-align: center;
+  /* text-align: center; */
 }
 
 .cartItem__price_crop {
@@ -86,5 +86,10 @@
   .cartItem__title {
     font-size: 14px;
     line-height: 16px;
+  }
+
+  .cartItem__price {
+    padding: 0;
+    text-align: center;
   }
 }
