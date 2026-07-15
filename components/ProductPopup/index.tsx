@@ -42,6 +42,27 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
     };
   }, [isOpen]);
 
+  // Push a history entry on open so the browser Back button closes the popup
+  // instead of navigating away from the category page.
+  useEffect(() => {
+    window.history.pushState({ productPopup: true }, '');
+
+    const handlePopState = () => onClose();
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      // If the marker is still present, the popup was closed programmatically
+      // (Escape / click / button) rather than by Back — pop our pushed entry so
+      // history stays consistent. If it was closed by Back, the entry is already
+      // gone and we must not call back() again.
+      if (window.history.state?.productPopup) {
+        window.history.back();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   //Handling close on ESC
   useEffect(() => {
     const handleEscClose = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
