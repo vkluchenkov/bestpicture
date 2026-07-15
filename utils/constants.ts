@@ -60,8 +60,11 @@ export const INITIAL_CARDS_EXTRALARGE = 14;
 export const processingFee = 5;
 export const minProcessingFee = 1;
 
-// Extra fee for vertical videos
-export const cropFee = 5;
+// Crop fee, % of product price
+export const cropFeePercent = 20;
+
+// Minimum crop fee, €
+export const minCropFee = 7;
 
 // MUI form theme
 export const darkTheme = createTheme({

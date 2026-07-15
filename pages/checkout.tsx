@@ -12,7 +12,8 @@ import { useCart } from '../store/Cart';
 import { Coupons } from '../components/Coupons';
 import { CartProducts } from '../components/CartProducts';
 import { CheckoutForm } from '../components/CheckoutForm';
-import { minProcessingFee, processingFee, cropFee } from '../utils/constants';
+import { minProcessingFee, processingFee } from '../utils/constants';
+import { getCropFee } from '../utils/getCropFee';
 import { Loader } from '../components/Loader';
 import { Layout } from '../components/Layout';
 
@@ -100,6 +101,7 @@ const Checkout: NextPage = () => {
       if (isVertical || isSquare) {
         const price = cartItem.product.node.price;
         const productPrice = price ? parseFloat(price.replace('€', '')) : 0;
+        const cropFee = getCropFee(productPrice);
 
         const getName = () => {
           if (isVertical && isSquare) {

@@ -20,7 +20,7 @@ import {
   REMOVE_FROM_CART,
   CLEAR_CART_MUTATION,
 } from '../wooApi/wooApiGQL';
-import { cropFee } from '../utils/constants';
+import { getCropFee } from '../utils/getCropFee';
 
 interface CartStore {
   cart: CartContents;
@@ -115,16 +115,14 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   // Handle crops and amend cart total and subtotal
   const getTotals = useCallback((cartData: CartItems) => {
-    const numberOfVerticals = cartData.cart.contents.nodes.filter((p) =>
-      p.extraData.find((d) => d.key === 'is_vertical' && d.value === 'true')
-    ).length;
+    const totalAdd = cartData.cart.contents.nodes.reduce((acc, p) => {
+      const isVertical = p.extraData.find((d) => d.key === 'is_vertical' && d.value === 'true');
+      const isSquare = p.extraData.find((d) => d.key === 'is_square' && d.value === 'true');
+      const fee = getCropFee(p.product.node.price);
+      return acc + (isVertical ? fee : 0) + (isSquare ? fee : 0);
+    }, 0);
 
-    const numberOfSquares = cartData.cart.contents.nodes.filter((p) =>
-      p.extraData.find((d) => d.key === 'is_square' && d.value === 'true')
-    ).length;
-
-    if (numberOfVerticals > 0 || numberOfSquares > 0) {
-      const totalAdd = (numberOfVerticals + numberOfSquares) * cropFee;
+    if (totalAdd > 0) {
       const total = parseFloat(cartData.cart.total.replace('€', '')) + totalAdd;
       const subtotal = parseFloat(cartData.cart.subtotal.replace('€', '')) + totalAdd;
       return { total: '€' + total.toFixed(2), subtotal: '€' + subtotal.toFixed(2) };

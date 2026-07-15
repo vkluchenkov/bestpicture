@@ -1,5 +1,5 @@
 import { useCart } from '../../store/Cart';
-import { cropFee } from '../../utils/constants';
+import { getCropFee } from '../../utils/getCropFee';
 import styles from './CartProducts.module.css';
 
 export const CartProducts: React.FC = () => {
@@ -16,6 +16,8 @@ export const CartProducts: React.FC = () => {
         const isSquare = extraData.find((d) => d.key === 'is_square' && d.value === 'true');
         // const isVertical = { key: 'is_vertical', value: 'true' };
         // const isVertical = undefined;
+
+        const cropFee = getCropFee(price);
 
         const getFinalPrice = () => {
           const productPrice = price ? parseFloat(price.replace('€', '')) : 0;
