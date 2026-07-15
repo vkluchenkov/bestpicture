@@ -6,7 +6,8 @@ import { Button } from '../../ui-kit/Button';
 import styles from './ProductPopup.module.css';
 import { InputCheckbox } from '../../ui-kit/Checkbox/InputCheckbox';
 import { FormControlLabel, ThemeProvider } from '@mui/material';
-import { darkTheme, cropFee } from '../../utils/constants';
+import { darkTheme } from '../../utils/constants';
+import { getCropFee } from '../../utils/getCropFee';
 import Link from 'next/link';
 
 interface ProductPopupProps {
@@ -25,6 +26,8 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
   isInCart,
 }) => {
   const { id, name, image, price } = product;
+
+  const cropFee = getCropFee(price);
 
   const [isVertical, setIsVertical] = useState(false);
   const [isSquare, setIsSquare] = useState(false);
