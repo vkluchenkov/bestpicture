@@ -2,6 +2,8 @@ import '../styles/vendor/fonts/inter.css';
 import '../styles/vendor/normalize.css';
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
+import { useEffect } from 'react';
+import Router from 'next/router';
 import { Layout } from '../components/Layout';
 import Head from 'next/head';
 import {
@@ -21,6 +23,14 @@ import { setContext } from '@apollo/client/link/context';
 import { CartProvider } from '../store/Cart';
 
 function MyApp({ Component, pageProps, router }: AppProps) {
+  // Popups (see hooks/usePopupHistory) push a history entry that keeps the current URL,
+  // so when one is popped there is nothing to route to — letting Next re-run the route
+  // only costs a duplicate GA pageview and a scroll reset. Back-navigation to a
+  // different URL is handled as usual.
+  useEffect(() => {
+    Router.beforePopState(({ as }) => as !== Router.asPath);
+  }, []);
+
   // Apollo
   const gqlUrl = `${backendUrl}graphql`;
   const afterwareLink = new ApolloLink((operation, forward) => {

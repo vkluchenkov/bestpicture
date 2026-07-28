@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
+import { usePopupHistory } from '../../hooks/usePopupHistory';
 import { Product } from '../../types/categoryListing.types';
 import { Button } from '../../ui-kit/Button';
 import styles from './ProductPopup.module.css';
@@ -28,6 +29,9 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
   const { id, name, image, price } = product;
 
   const cropFee = getCropFee(price);
+
+  // Browser Back closes the popup instead of navigating away from the category page
+  const releaseHistoryEntry = usePopupHistory(onClose);
 
   const [isVertical, setIsVertical] = useState(false);
   const [isSquare, setIsSquare] = useState(false);
@@ -116,33 +120,6 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
     };
   }, [isOpen]);
 
-  // Push a history entry on open so the browser Back button closes the popup
-  // instead of navigating away from the category page.
-  useEffect(() => {
-    // Opt out of the browser's scroll restoration for this entry so Back closes
-    // the popup in place (like ESC/click) instead of rewinding to the top.
-    const prevScrollRestoration = window.history.scrollRestoration;
-    window.history.scrollRestoration = 'manual';
-
-    window.history.pushState({ productPopup: true }, '');
-
-    const handlePopState = () => onClose();
-    window.addEventListener('popstate', handlePopState);
-
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-      // If the marker is still present, the popup was closed programmatically
-      // (Escape / click / button) rather than by Back — pop our pushed entry so
-      // history stays consistent. If it was closed by Back, the entry is already
-      // gone and we must not call back() again.
-      if (window.history.state?.productPopup) {
-        window.history.back();
-      }
-      window.history.scrollRestoration = prevScrollRestoration;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   //Handling close on ESC
   useEffect(() => {
     const handleEscClose = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -166,6 +143,7 @@ export const ProductPopup: React.FC<ProductPopupProps> = ({
     if (isVertical && isSquare)
       extraData = JSON.stringify({ is_vertical: 'true', is_square: 'true' });
 
+    releaseHistoryEntry(); // the cart popup takes over our history entry
     onClick(id, extraData);
     onClose();
   };
