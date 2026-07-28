@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
+import { usePopupHistory } from '../../hooks/usePopupHistory';
 import { useCart } from '../../store/Cart';
 import { Button } from '../../ui-kit/Button';
 import { CartProducts } from '../CartProducts';
@@ -13,6 +14,9 @@ export const FlyCart: React.FC = () => {
   const [{ cart, isOpen, isLoading }, { removeProduct, hideCart }] = useCart();
 
   const router = useRouter();
+
+  // Browser Back closes the cart instead of navigating away from the page
+  const releaseHistoryEntry = usePopupHistory(hideCart);
 
   // Effects
 
@@ -31,30 +35,6 @@ export const FlyCart: React.FC = () => {
     };
   }, [hideCart]);
 
-  // Push a history entry on open so the browser Back button closes the cart
-  // instead of navigating away from the page.
-  useEffect(() => {
-    const prevScrollRestoration = window.history.scrollRestoration;
-    window.history.scrollRestoration = 'manual';
-
-    window.history.pushState({ cartPopup: true }, '');
-
-    const handlePopState = () => hideCart();
-    window.addEventListener('popstate', handlePopState);
-
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-      // If the marker is still present, the cart was closed programmatically
-      // (Escape / click / button) rather than by Back — pop our pushed entry so
-      // history stays consistent. If it was closed by Back, the entry is already gone.
-      if (window.history.state?.cartPopup) {
-        window.history.back();
-      }
-      window.history.scrollRestoration = prevScrollRestoration;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // Handlers
   const handleClickClose = (e: React.MouseEvent<HTMLElement>) => {
     const target = e.target as HTMLElement;
@@ -62,7 +42,11 @@ export const FlyCart: React.FC = () => {
   };
 
   const handleCheckout = () => {
-    router.push('/checkout');
+    // The checkout entry takes over the cart's own history entry: replacing it
+    // keeps Back going to the page behind the cart, and releasing it stops the
+    // unmount cleanup from popping the entry out from under the navigation.
+    releaseHistoryEntry();
+    router.replace('/checkout');
     hideCart();
   };
 
